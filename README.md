@@ -146,7 +146,6 @@ Tourify is a social app for sharing travel experiences. Users can share the mome
 * FontNormalization
 * Theme
 
-         \
 	
 
 
@@ -159,38 +158,39 @@ Tourify is a social app for sharing travel experiences. Users can share the mome
 ## Sequence Diagrams
 
 Sign Up  
-![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/sign%20up%20(1).jpg)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/sign%20up%20(1).jpg)  
 
 
-Sign In 
-![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/signin.jpg)
+Sign In  
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/signin.jpg)  
+
 
 Get Account Info  
-![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/accInfo%20(1).jpg)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/accInfo%20(1).jpg)  
 
 
-Change photo 
-![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/photochange%20(1).jpg)
+Change photo  
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/photochange%20(1).jpg)  
 
 
-Add comment and push Notification
-![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/addcomment%20(3).jpg)
+Add comment and push Notification  
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/addcomment%20(3).jpg)  
 
 
-Edit comment 
-![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/editcomment%20(1).jpg)
+Edit comment  
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/editcomment%20(1).jpg)  
 
 
-Delete comment 
-![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/delete%20comment%20(1).jpg)
+Delete comment  
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/delete%20comment%20(1).jpg)  
 
 
-Get Notifications  
-![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/getNotifications.jpg)
+Get Notifications   
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/getNotifications.jpg)  
 
 
-Connect to Network 
-![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/connectNetwork.jpg)
+Connect to Network  
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/connectNetwork.jpg)  
 
 
 Create Post
