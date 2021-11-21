@@ -159,38 +159,38 @@ Tourify is a social app for sharing travel experiences. Users can share the mome
 ## Sequence Diagrams
 
 Sign Up  
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/sign%20up%20(1).jpg)
 
 
 Sign In 
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/signin.jpg)
 
 Get Account Info  
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/accInfo%20(1).jpg)
 
 
 Change photo 
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/photochange%20(1).jpg)
 
 
 Add comment and push Notification
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/addcomment%20(3).jpg)
 
 
 Edit comment 
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/editcomment%20(1).jpg)
 
 
 Delete comment 
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/delete%20comment%20(1).jpg)
 
 
 Get Notifications  
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/getNotifications.jpg)
 
 
 Connect to Network 
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/Diagrams/connectNetwork.jpg)
 
 
 Create Post
@@ -226,7 +226,7 @@ Delete Like
 
 
 # Detailed class diagram  :
-
+![alt text](https://drive.google.com/file/d/1QEraF9HnXCDt2FAQs6pykjUaW9Hc4MrU/view)
 
 # CRC cards  :
 
