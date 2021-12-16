@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import { ThemeContext } from '../Context/ThemeContext';
 import {normalize} from '../util/FontNormalization';
 function SignIn() {
-    const {isLightTheme, light, dark} = useContext(ThemeContext);
+    const {light, dark, changeTheme, lightMode} = useContext(ThemeContext);
   return (
         <View style={styles.container}>
-            <Text style={{color: isLightTheme? light.Text : dark.Text, fontSize: normalize(30)}}>Hello</Text>
+            <Text style={{color: lightMode? light.Text : dark.Text, fontSize: normalize(30)}}>Hello</Text>
+            <Button onPress={()=> changeTheme()} title='Click'></Button>
         </View>
   );
 }
