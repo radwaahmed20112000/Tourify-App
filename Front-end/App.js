@@ -1,26 +1,42 @@
-import React,{ useState } from 'react';
-import { StyleSheet} from 'react-native';
-import { ThemeContext, Theme, changeTheme } from './app/Context/ThemeContext';
+import React,{ useEffect, useState } from 'react';
+import { StyleSheet, ActivityIndicator, View, Text} from 'react-native';
+import { ThemeContext, Theme} from './app/Context/ThemeContext';
 import Registeration from './app/Screens/Registeration';
 import Feed from './app/Screens/Feed';
-
 export default function App() {
-  const [lightMode, setTheme] = useState(true)
+  const [lightMode, setLightMode] = useState(true)
   const [signUp, setIsSignUp] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [theme, setTheme] = useState(Theme.light);
   function changeSigning()
   {
     setIsSignUp(!signUp);
   }
   function changeTheme()
   {
-      setTheme(!lightMode);
+      setLightMode(!lightMode);
+      if(lightMode) setTheme(Theme.light);
+      else setTheme(Theme.dark);
   }
-  return (
-    <ThemeContext.Provider value={{...Theme, lightMode, changeTheme}}>
-      {/* <Registeration isSignUp={signUp} changeSigning= {changeSigning}/> */}
-      <Feed/>
-    </ThemeContext.Provider>
-  );
+  useEffect(()=>{
+    //check if user logged in????????
+  }, [])
+  if(isLoading)
+  {
+    return(
+      <View style={styles.container}>
+        <ActivityIndicator size="large" animating={true} color={Theme.light.SecondaryPurple}/>
+      </View>
+    )
+  }
+  else{
+    return (
+      <ThemeContext.Provider value={{theme, changeTheme}}>
+        <Registeration isSignUp={signUp} changeSigning= {changeSigning}/>
+        <Feed/>
+      </ThemeContext.Provider>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
