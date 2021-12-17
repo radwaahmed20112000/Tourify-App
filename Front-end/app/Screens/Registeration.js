@@ -5,7 +5,7 @@ import {normalize} from '../util/FontNormalization';
 
 function Registeration(props) {
     const {isSignUp, changeSigning} = props;
-    const {light, dark, changeTheme, lightMode} = useContext(ThemeContext);
+    const {theme} = useContext(ThemeContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
@@ -13,15 +13,15 @@ function Registeration(props) {
         <View style={styles.container}>
             <Image source={{ uri: 'https://i.ibb.co/S02fhRW/Tourify-Logo-Black.png' }} style={styles.logo} />
             {isSignUp? <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText} selectionColor={light.SecondaryCyan} placeholder="Name" placeholderTextColor={light.subText} onChangeText = {text => setName(text)}></TextInput>
+                <TextInput style= {styles.inputText} selectionColor={theme.SecondaryCyan} placeholder="Name" placeholderTextColor={theme.subText} onChangeText = {text => setName(text)}></TextInput>
             </View> : null}
             <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText}  selectionColor={light.SecondaryCyan} placeholder="Email" placeholderTextColor={light.subText} onChangeText = {text => setEmail(text)}></TextInput>
+                <TextInput style= {styles.inputText}  selectionColor={theme.SecondaryCyan} placeholder="Email" placeholderTextColor={theme.subText} onChangeText = {text => setEmail(text)}></TextInput>
             </View>
             <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText} selectionColor={light.SecondaryCyan} placeholder="Password" placeholderTextColor={light.subText} onChangeText = {text => setPassword(text)}></TextInput>
+                <TextInput style= {styles.inputText} selectionColor={theme.SecondaryCyan} placeholder="Password" placeholderTextColor={theme.subText} onChangeText = {text => setPassword(text)}></TextInput>
             </View>
-            <TouchableOpacity style={[styles.signInBtn, {backgroundColor: light.SecondaryCyan}]}>
+            <TouchableOpacity style={[styles.signInBtn, {backgroundColor: theme.SecondaryCyan}]}>
                 <Text style={styles.btnTxt}>{isSignUp? "Sign Up" : "Sign In"}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.googleBtn}>
@@ -29,12 +29,12 @@ function Registeration(props) {
                 <Image source={{ uri: 'https://pngimg.com/uploads/google/google_PNG19635.png' }} style={styles.googleLogo} />
             </TouchableOpacity>
             {isSignUp?<View style={styles.signUpTexts}>
-              <Text style={{color:"#636363", fontSize:normalize(17)}}>Already have an account? </Text>
-              <Text onPress={()=> changeSigning()} style={{color:light.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign In here</Text>
+              <Text style={styles.signTxt}>Already have an account? </Text>
+              <Text onPress={()=> changeSigning()} style={{color:theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign In here</Text>
             </View> :
             <View style={styles.signUpTexts}>
-                <Text style={{color:"#636363", fontSize:normalize(17)}}>Don't have an account yet? </Text>
-                <Text onPress={()=> changeSigning()}  style={{color:light.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign up here</Text>
+                <Text style={styles.signTxt}>Don't have an account yet? </Text>
+                <Text onPress={()=> changeSigning()}  style={{color:theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign up here</Text>
             </View>}
         </View>
   );
@@ -104,7 +104,11 @@ const styles = StyleSheet.create({
       top:"20%",
       width:"75%",
       flexDirection:"row",
-     }
+  },
+  signTxt:{
+    color:"#636363", 
+    fontSize:normalize(17)
+  }
 
 });
  export default Registeration;
