@@ -2,6 +2,8 @@ import React,{ useState } from 'react';
 import { StyleSheet} from 'react-native';
 import { ThemeContext, Theme, changeTheme } from './app/Context/ThemeContext';
 import Registeration from './app/Screens/Registeration';
+import Feed from './app/Screens/Feed';
+
 export default function App() {
   const [lightMode, setTheme] = useState(true)
   const [signUp, setIsSignUp] = useState(false)
@@ -15,7 +17,8 @@ export default function App() {
   }
   return (
     <ThemeContext.Provider value={{...Theme, lightMode, changeTheme}}>
-      <Registeration isSignUp={signUp} changeSigning= {changeSigning}/>
+      {/* <Registeration isSignUp={signUp} changeSigning= {changeSigning}/> */}
+      <Feed/>
     </ThemeContext.Provider>
   );
 }
