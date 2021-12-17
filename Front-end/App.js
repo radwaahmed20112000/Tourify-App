@@ -1,16 +1,21 @@
 import React,{ useState } from 'react';
 import { StyleSheet} from 'react-native';
-import SignIn from './app/Screens/SignIn';
 import { ThemeContext, Theme, changeTheme } from './app/Context/ThemeContext';
+import Registeration from './app/Screens/Registeration';
 export default function App() {
   const [lightMode, setTheme] = useState(true)
+  const [signUp, setIsSignUp] = useState(false)
+  function changeSigning()
+  {
+    setIsSignUp(!signUp);
+  }
   function changeTheme()
   {
       setTheme(!lightMode);
   }
   return (
     <ThemeContext.Provider value={{...Theme, lightMode, changeTheme}}>
-      <SignIn/>
+      <Registeration isSignUp={signUp} changeSigning= {changeSigning}/>
     </ThemeContext.Provider>
   );
 }
