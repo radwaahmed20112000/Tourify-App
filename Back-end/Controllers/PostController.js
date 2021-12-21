@@ -1,4 +1,3 @@
-const DB = require("../DB/pool");
 
 exports.getFeedPosts = (req , res) =>{
     //let filters = req.query
@@ -22,4 +21,5 @@ exports.getFeedPosts = (req , res) =>{
 
 
 }
+
 }
