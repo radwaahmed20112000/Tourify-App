@@ -1,27 +1,35 @@
-import React, { useContext, useState } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
+import React, {useState } from 'react';
+import {StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
 import { ThemeContext } from '../Context/ThemeContext';
 import {normalize} from '../util/FontNormalization';
-
-function Registeration(props) {
-    const {isSignUp, changeSigning} = props;
-    const {theme} = useContext(ThemeContext);
+import { AuthContext } from '../Context/AuthContext';
+function Registeration({navigation, route}) {
+    const [isSignUp, setIsSignUp] = useState(route.params.isSignUp);
+    const {signIn, signUp} = React.useContext(AuthContext);
+    const Theme = React.useContext(ThemeContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const handleSignIn = ()=>{
+      signIn(email, password);
+    }
+    const handleSignUp = ()=>{
+      signUp(email, name, password);
+    }
+
   return (
         <View style={styles.container}>
             <Image source={{ uri: 'https://i.ibb.co/S02fhRW/Tourify-Logo-Black.png' }} style={styles.logo} />
             {isSignUp? <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText} selectionColor={theme.SecondaryCyan} placeholder="Name" placeholderTextColor={theme.subText} onChangeText = {text => setName(text)}></TextInput>
+                <TextInput style= {styles.inputText} selectionColor={Theme.SecondaryCyan} placeholder="Name" placeholderTextColor={Theme.subText} onChangeText = {text => setName(text)}></TextInput>
             </View> : null}
             <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText}  selectionColor={theme.SecondaryCyan} placeholder="Email" placeholderTextColor={theme.subText} onChangeText = {text => setEmail(text)}></TextInput>
+                <TextInput style= {styles.inputText}  selectionColor={Theme.SecondaryCyan} placeholder="Email" placeholderTextColor={Theme.subText} onChangeText = {text => setEmail(text)}></TextInput>
             </View>
             <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText} selectionColor={theme.SecondaryCyan} placeholder="Password" placeholderTextColor={theme.subText} onChangeText = {text => setPassword(text)}></TextInput>
+                <TextInput style= {styles.inputText} selectionColor={Theme.SecondaryCyan} placeholder="Password" placeholderTextColor={Theme.subText} onChangeText = {text => setPassword(text)}></TextInput>
             </View>
-            <TouchableOpacity style={[styles.signInBtn, {backgroundColor: theme.SecondaryCyan}]}>
+            <TouchableOpacity style={[styles.signInBtn, {backgroundColor: Theme.SecondaryCyan}]} onPress={()=>{isSignUp? handleSignUp() : handleSignIn()}}>
                 <Text style={styles.btnTxt}>{isSignUp? "Sign Up" : "Sign In"}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.googleBtn}>
@@ -30,11 +38,11 @@ function Registeration(props) {
             </TouchableOpacity>
             {isSignUp?<View style={styles.signUpTexts}>
               <Text style={styles.signTxt}>Already have an account? </Text>
-              <Text onPress={()=> changeSigning()} style={{color:theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign In here</Text>
+              <Text onPress={()=>setIsSignUp(!isSignUp)} style={{color:Theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign In here</Text>
             </View> :
             <View style={styles.signUpTexts}>
                 <Text style={styles.signTxt}>Don't have an account yet? </Text>
-                <Text onPress={()=> changeSigning()}  style={{color:theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign up here</Text>
+                <Text onPress={()=>setIsSignUp(!isSignUp)}  style={{color:Theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign up here</Text>
             </View>}
         </View>
   );

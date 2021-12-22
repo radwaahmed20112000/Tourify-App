@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ThemeContext = React.createContext();
-var Theme = {
+var AppTheme = {
     light: {SecondaryCyan : "#49DADB",
             SecondaryPurple : "#8B6AE6",
             SubText : "#828282",
@@ -14,4 +14,4 @@ var Theme = {
             Primary : "#000000" },
 }
 
-export {ThemeContext, Theme};
+export {ThemeContext, AppTheme};
