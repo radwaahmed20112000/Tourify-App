@@ -4,7 +4,7 @@ const ThemeContext = React.createContext();
 var Theme = {
     light: {SecondaryCyan : "#49DADB",
             SecondaryPurple : "#8B6AE6",
-            SubText : "#828282",
+            SubText : "#BDBDBD",
             Text : "#000000",
             Primary : "#ffffff" },
     dark: { SecondaryCyan : "#49DADB",

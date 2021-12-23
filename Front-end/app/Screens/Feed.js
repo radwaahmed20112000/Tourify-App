@@ -1,12 +1,14 @@
 import React, { useContext, useState } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity,Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { ThemeContext } from '../Context/ThemeContext';
-import {normalize} from '../util/FontNormalization';
+import {normalize,width} from '../util/FontNormalization';
+
+const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
 function Feed(props) {
-    const {light, dark, changeTheme, lightMode} = useContext(ThemeContext);
+    const {theme} = useContext(ThemeContext);
 
     return (
         <View style={styles.container}>
@@ -15,13 +17,19 @@ function Feed(props) {
             colors={['rgba(0,0,0,0.8)', 'transparent']}
             // style={styles.background}
           />
-          <LinearGradient
+          {/* <LinearGradient
             // Button Linear Gradient
-            colors={[light.SecondaryCyan,light.SecondaryPurple]}
+            colors={[theme.SecondaryCyan,theme.SecondaryPurple]}
             start={{ x: 0, y: 1 }}
   end={{ x: 1, y: 1 }}
             style={styles.button}>
             <Text style={styles.text}>Sign in with Facebook</Text>
+          </LinearGradient> */}
+                 <LinearGradient
+            colors={[theme.SecondaryCyan,theme.SecondaryPurple]}
+            start={{ x: 0, y: 1 }}
+  end={{ x: 1, y: 1 }}
+            style={styles.button}>
           </LinearGradient>
         </View>
       );
@@ -35,13 +43,14 @@ function Feed(props) {
           justifyContent: 'center',
         },
         button:{
-            width:"80%",
-            height:50,
+            width:100,
+            height:100,
             alignItems: 'center',
             justifyContent:"center",
             marginBottom:"3%",
             top:"7%",
-            borderRadius:50
+             borderRadius:50
+
         },
         text:{
             color:"white",
