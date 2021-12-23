@@ -4,7 +4,7 @@ import {StyleSheet, View, Image} from 'react-native';
 function Splash() {
   return (
         <View style={styles.container}>
-            <Image source={{ uri: 'https://i.ibb.co/S02fhRW/Tourify-Logo-Black.png' }} style={styles.logo} />
+            <Image source={{ uri: "https://i.ibb.co/S02fhRW/Tourify-Logo-Black.png" }} style={styles.logo} />
         </View>
   );
 }

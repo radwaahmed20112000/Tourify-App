@@ -1,17 +1,18 @@
 import React,{ useEffect, useState } from 'react';
-import { StyleSheet, ActivityIndicator, View, Text} from 'react-native';
+import { StyleSheet} from 'react-native';
 import { ThemeContext, AppTheme} from './app/Context/ThemeContext';
 import Registeration from './app/Screens/Registeration';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Test from './app/Screens/Test'
+import { createStackNavigator } from '@react-navigation/stack';
 import Splash from './app/Screens/Splash';
 import { AuthContext } from './app/Context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
+import PrivateApp from './app/Components/Navigation/PrivateApp';
 
 export default function App() {
   //navigation:
-  const Tab = createBottomTabNavigator();
+  const Stack = createStackNavigator();
   //theme:
   const [lightMode, setLightMode] = useState(true)
   const [Theme, setTheme] = useState(AppTheme.light);
@@ -22,46 +23,6 @@ export default function App() {
       else setTheme(AppTheme.dark);
   }
   //authuntication
-  const initialLoginState = {
-    isLoading : true,
-    userName : null,
-    userToken : null,
-    userPhoto : null
-  }
-  const loginReducer = (prevState, action) =>{
-    switch(action.type)
-    {
-      case 'RetrieveToken':
-        return{
-          ...prevState,
-          userToken : action.userToken,
-          isLoading : false
-        };
-      case 'Login':
-        return{
-          ...prevState,
-          userName : action.userName,
-          userPhoto : action.userPhoto,
-          userToken : action.userToken,
-          isLoading : false
-        };
-      case 'Logout':
-        return{
-          ...prevState,
-          userName : null,
-          userToken : null,
-          userPhoto : null
-        };
-      case 'Register':
-        return{
-          ...prevState,
-          userName : action.userName,
-          userPhoto : action.userPhoto,
-          userToken : action.userToken,
-          isLoading : false
-        };
-    }
-  }
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
   const authContext = React.useMemo(()=>{
     return{
@@ -84,7 +45,7 @@ export default function App() {
         }
         dispatch({type: 'Login', userName, userPhoto, userToken});
       },
-      signUp: async (email, userName, password)=>{
+      signUp: async (email, userName, password, country)=>{
         userToken = "fakeToken";
         userPhoto ="This is a photo";
         try {
@@ -129,19 +90,19 @@ export default function App() {
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
           <NavigationContainer>
-          <Tab.Navigator>
+          <Stack.Navigator screenOptions={{headerShown: false}}>
             {loginState.userToken?
-            <Tab.Screen name="Test"
-            component={Test}
-            initialParams={{userName: loginState.userName}} />
+            <Stack.Screen name="PrivateApp"
+            component={PrivateApp}
+            /*initialParams={{userName: loginState.userName}}*//>
             :
-            <Tab.Screen
+            <Stack.Screen
               name="Registeration"
               component={Registeration}
               initialParams={{isSignUp: false}}
             />
             }
-          </Tab.Navigator>
+          </Stack.Navigator>
         </NavigationContainer>
       </AuthContext.Provider>
     </ThemeContext.Provider>

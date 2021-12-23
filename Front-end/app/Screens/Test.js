@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
 import { ThemeContext } from '../Context/ThemeContext';
 import {normalize} from '../util/FontNormalization';
 import { AuthContext } from '../Context/AuthContext';
 
 function Test({navigation, route}) {
-    const Theme = useContext(ThemeContext);
+    const Theme = React.useContext(ThemeContext);
     const userName = route.params.userName;
     const {signOut} = React.useContext(AuthContext);
 

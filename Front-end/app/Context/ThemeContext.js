@@ -6,12 +6,16 @@ var AppTheme = {
             SecondaryPurple : "#8B6AE6",
             SubText : "#828282",
             Text : "#000000",
-            Primary : "#ffffff" },
+            Primary : "#ffffff",
+            Logo : "https://i.ibb.co/S02fhRW/Tourify-Logo-Black.png"
+        },
     dark: { SecondaryCyan : "#49DADB",
             SecondaryPurple : "#8B6AE6",
             SubText : "#D3D3D3",
             Text : "#ffffff",
-            Primary : "#000000" },
+            Primary : "#000000",
+            Logo : "https://i.ibb.co/S02fhRW/Tourify-Logo-Black.png"
+        },
 }
 
 export {ThemeContext, AppTheme};

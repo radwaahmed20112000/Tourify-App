@@ -1,8 +1,9 @@
 import React, {useState } from 'react';
-import {StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
+import {StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Picker} from 'react-native';
 import { ThemeContext } from '../Context/ThemeContext';
 import {normalize} from '../util/FontNormalization';
 import { AuthContext } from '../Context/AuthContext';
+import CountryPicker from 'react-native-country-picker-modal'
 function Registeration({navigation, route}) {
     const [isSignUp, setIsSignUp] = useState(route.params.isSignUp);
     const {signIn, signUp} = React.useContext(AuthContext);
@@ -10,16 +11,20 @@ function Registeration({navigation, route}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [country, setCountry] = useState("Egypt");
     const handleSignIn = ()=>{
       signIn(email, password);
     }
     const handleSignUp = ()=>{
-      signUp(email, name, password);
+      signUp(email, name, password, country);
+    }
+    const onSelect = (country) => {
+      setCountry(country.name);
     }
 
   return (
         <View style={styles.container}>
-            <Image source={{ uri: 'https://i.ibb.co/S02fhRW/Tourify-Logo-Black.png' }} style={styles.logo} />
+            <Image source={{ uri: Theme.Logo }} style={styles.logo} />
             {isSignUp? <View style={styles.inputBox}>
                 <TextInput style= {styles.inputText} selectionColor={Theme.SecondaryCyan} placeholder="Name" placeholderTextColor={Theme.subText} onChangeText = {text => setName(text)}></TextInput>
             </View> : null}
@@ -29,6 +34,12 @@ function Registeration({navigation, route}) {
             <View style={styles.inputBox}>
                 <TextInput style= {styles.inputText} selectionColor={Theme.SecondaryCyan} placeholder="Password" placeholderTextColor={Theme.subText} onChangeText = {text => setPassword(text)}></TextInput>
             </View>
+            {isSignUp?
+            <View style={[styles.countryPicker, {backgroundColor:'#ededed'}]}>
+            <CountryPicker {...{onSelect, withCloseButton:true, withFilter:true}} visible={false} style={{fontSize:50}}/>
+            <Text numberOfLines={1} style={[styles.country, {color:Theme.SecondaryCyan}]}>{country}</Text>
+            </View>
+            : null}
             <TouchableOpacity style={[styles.signInBtn, {backgroundColor: Theme.SecondaryCyan}]} onPress={()=>{isSignUp? handleSignUp() : handleSignIn()}}>
                 <Text style={styles.btnTxt}>{isSignUp? "Sign Up" : "Sign In"}</Text>
             </TouchableOpacity>
@@ -72,7 +83,7 @@ const styles = StyleSheet.create({
   logo:{
     width: 220,
     height: 120,
-    bottom:"7%",
+    bottom:"4%",
   },
   signInBtn:{
       width:"80%",
@@ -80,7 +91,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent:"center",
       marginBottom:"3%",
-      top:"7%",
+      top:"5%",
       borderRadius:50
   },
   btnTxt:{
@@ -96,7 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor:"black",
     flexDirection:"row",
     paddingLeft:"6%",
-    top:"15%",
+    top:"10%",
     borderRadius:50
   },
   btnTxtgoogle:{
@@ -116,6 +127,16 @@ const styles = StyleSheet.create({
   signTxt:{
     color:"#636363", 
     fontSize:normalize(17)
+  },
+  countryPicker:{
+    width:"50%",
+    alignItems:"center",
+    justifyContent:"center",
+    borderRadius:10,
+    height:60,
+  },
+  country:{
+    fontSize:normalize(19)
   }
 
 });
