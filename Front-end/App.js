@@ -1,6 +1,6 @@
-import React,{ useEffect, useState } from 'react';
-import { StyleSheet, ActivityIndicator, View, Text} from 'react-native';
-import { ThemeContext, Theme} from './app/Context/ThemeContext';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, ActivityIndicator, View, Text } from 'react-native';
+import { ThemeContext, Theme } from './app/Context/ThemeContext';
 import Registeration from './app/Screens/Registeration';
 import Feed from './app/Screens/Feed';
 import PostCreation from './app/Screens/PostCreation';
@@ -13,34 +13,40 @@ export default function App() {
   const [signUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [theme, setTheme] = useState(Theme.light);
-
-  function changeSigning()
-  {
+  function changeSigning() {
     setIsSignUp(!signUp);
   }
-  function changeTheme()
-  {
-      setLightMode(!lightMode);
-      if(lightMode) setTheme(Theme.light);
-      else setTheme(Theme.dark);
+  function changeTheme() {
+    setLightMode(!lightMode);
+    if (lightMode) setTheme(Theme.light);
+    else setTheme(Theme.dark);
   }
-  useEffect(()=>{
+  useEffect(() => {
     //check if user logged in????????
   }, [])
-  if(isLoading)
-  {
-    return(
+
+
+  // return (
+  //   <ThemeContext.Provider value={{theme, changeTheme}}>
+  //    <NavigationContainer>
+  //      <Tabs/>
+  //      </NavigationContainer>
+
+  //   </ThemeContext.Provider>
+  // );
+
+  if (isLoading) {
+    return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" animating={true} color={Theme.light.SecondaryPurple}/>
+        <ActivityIndicator size="large" animating={true} color={Theme.light.SecondaryPurple} />
       </View>
     )
   }
-  else{
+  else {
     return (
-      <ThemeContext.Provider value={{theme, changeTheme}}>
-        <PostCreation></PostCreation>
-        {/* <Registeration isSignUp={signUp} changeSigning= {changeSigning}/>
-        <Feed/> */}
+      <ThemeContext.Provider value={{ theme, changeTheme }}>
+        <Registeration isSignUp={signUp} changeSigning={changeSigning} />
+        <Feed />
       </ThemeContext.Provider>
     );
   }
