@@ -6,8 +6,13 @@ module.exports= {
    getFeedPosts: (req, res) =>{
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
-        
-      Post.findAll(null, limit, offset, (err, posts) =>{
+      
+      if (!userId)
+         res.status(403)
+      
+      let query = `USER.userId != ${userId}`;
+
+      Post.findAll(query, limit, offset, (err, posts) =>{
          
          if(err)
             return res.status(500).json(err);
