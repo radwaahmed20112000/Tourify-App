@@ -12,6 +12,7 @@ port: process.env.DB_PORT,
 })
 
 module.exports = (query) =>{
+    query = mysql.format(query);
     return new Promise((resolve , reject)=>{
         pool.query(query , (error , result)=>{
             if(error)

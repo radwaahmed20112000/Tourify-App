@@ -1,25 +1,43 @@
-const DB = require("../DB/pool");
+const DB = require('../DB/pool')
+const Post = require('../Models/Post')
 
-exports.getFeedPosts = (req , res) =>{
-    //let filters = req.query
-    
-    let limit = query.limit || 100;
-    let offset =query.offset || 0;
+module.exports= {
 
-    let selectQuery = `SELECT * FROM POST LIMIT ${limit} OFFSET ${offset} `;
-    
-    // TODO ADD FILTER SERVICE TO GENERATE QUERY
+   getFeedPosts: (req, res) =>{
+      let limit = req.query.limit || 100;
+      let offset = req.query.offset || 0;
+      
+      if (!userId)
+         res.status(403)
+      
+      let query = `USER.userId != ${userId}`;
+
+      Post.findAll(query, limit, offset, (err, posts) =>{
+         
+         if(err)
+            return res.status(500).json(err);
+         
+         return res.json(posts);
 
 
-    let query = mysql.format(selectQuery);
+      })
 
- try {
-    let posts = DB(query)
-    return res.json(posts);
+   },
+   getFeedPostsCount: (req, res) => {
 
- } catch(e){
-     return res.code(500).json(e);
+      Post.count(null, (err, count) => {
+
+         if (err)
+            return res.status(500).json(err);
+
+         return res.json(count);
+
+
+      })
+
+   },
+
 
 
 }
-}
+
