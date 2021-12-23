@@ -6,7 +6,7 @@ import { ThemeContext } from '../Context/ThemeContext';
 import {normalize} from '../util/FontNormalization';
 
 function Feed(props) {
-    const {light, dark, changeTheme, lightMode} = useContext(ThemeContext);
+    const {theme} = useContext(ThemeContext);
 
     return (
         <View style={styles.container}>
@@ -17,7 +17,7 @@ function Feed(props) {
           />
           <LinearGradient
             // Button Linear Gradient
-            colors={[light.SecondaryCyan,light.SecondaryPurple]}
+            colors={[theme.SecondaryCyan,theme.SecondaryPurple]}
             start={{ x: 0, y: 1 }}
   end={{ x: 1, y: 1 }}
             style={styles.button}>

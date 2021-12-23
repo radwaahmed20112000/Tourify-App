@@ -3,11 +3,17 @@ import { StyleSheet, ActivityIndicator, View, Text} from 'react-native';
 import { ThemeContext, Theme} from './app/Context/ThemeContext';
 import Registeration from './app/Screens/Registeration';
 import Feed from './app/Screens/Feed';
+import PostCreation from './app/Screens/PostCreation';
+import TagsList from './app/Components/PostCreation/TagsList';
+import ImageSharing from './app/Components/PostCreation/ImageSharing';
+import Map from './app/Screens/Map/';
+
 export default function App() {
   const [lightMode, setLightMode] = useState(true)
   const [signUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [theme, setTheme] = useState(Theme.light);
+
   function changeSigning()
   {
     setIsSignUp(!signUp);
@@ -32,8 +38,9 @@ export default function App() {
   else{
     return (
       <ThemeContext.Provider value={{theme, changeTheme}}>
-        <Registeration isSignUp={signUp} changeSigning= {changeSigning}/>
-        <Feed/>
+        <PostCreation></PostCreation>
+        {/* <Registeration isSignUp={signUp} changeSigning= {changeSigning}/>
+        <Feed/> */}
       </ThemeContext.Provider>
     );
   }

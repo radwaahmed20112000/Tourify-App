@@ -16,6 +16,11 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
+      },
+      "config":{
+        "googleMaps":{
+          "apiKey":"AIzaSyCgXGqBPMhmTBa-1UKzcMaRvjAJ4oTKEjc"
+        }
       }
     }
     
