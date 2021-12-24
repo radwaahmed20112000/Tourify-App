@@ -15,13 +15,13 @@ function Registeration({navigation, route}) {
     const [name, setName] = useState("");
     const [country, setCountry] = useState(null);
     const [message, setMessage] = useState("");
-    const [photo, setPhoto] = useState(null);
+    const [photo, setPhoto] = useState("https://www.google.com/search?q=google+user+photo&sxsrf=AOaemvJvkzT8oxpBoiJ-bmZmvJ5mSW4y3w:1640333776137&tbm=isch&source=iu&ictx=1&fir=9T2hLo6aQx6YlM%252CX8JaXF6sFzBNAM%252C_%253BDpF8Hm_sa-53jM%252Clljpu_bc8bR5iM%252C_%253BAyxseCZU8nq6eM%252CimPhn2_EDQcIPM%252C_%253B63oKHPItaAV6TM%252CfN9oMPY7hqNldM%252C_%253BZluLiB4toI9ScM%252CimPhn2_EDQcIPM%252C_%253BaJNHN6kn5gphiM%252Cbch7RqdmdWTFjM%252C_%253BCCSe2EHFm0tNcM%252CimPhn2_EDQcIPM%252C_%253BlZgxKlN5po1QRM%252CMhtRhRgW_suEQM%252C_%253BFoRObteE0ANebM%252CbXBT54pzQQj07M%252C_%253BQE3OQDJuT9zyvM%252CimPhn2_EDQcIPM%252C_%253ByMOEGzgwMplHcM%252CiLC34UqEKs5eGM%252C_%253BNfyZ3Txe2qVL2M%252CKS3Q-XqcTxLNWM%252C_%253BfSLCZUDpcY2PIM%252C27FgZ0sSZtOXFM%252C_%253BsKHiZmdLMGcE6M%252CimPhn2_EDQcIPM%252C_%253BTBK0wsrDLPAf4M%252CBp-oFJsCrgqagM%252C_&vet=1&usg=AI4_-kQuIqF7C568wsfY1dgS7W3wcuZePg&sa=X&ved=2ahUKEwihmajA__v0AhVs5OAKHZAxBXQQ9QF6BAgIEAE#imgrc=DpF8Hm_sa-53jM");
     const handleSignIn = (googleBool)=>{
       let res = signIn(email, password, googleBool);
       
     }
     const handleSignUp = (googleBool)=>{
-      let res = signUp(email, name, password, country, photo, googleBool);
+      let res = signUp(email, name, password, country, photo, "false");
     }
     const onSelect = (country) => {
       setCountry(country.name);

@@ -36,7 +36,6 @@ module.exports = {signup: (req, res, next) => {
                             res.status(502).json({message: "error while creating the user"});
                         else {
                             const token = jwt.sign({ email: req.body.email }, 'secret', {});
-                            console.log("helllllllllllllooooo" + token);
                             res.status(200).json({message: "user created", token : token});
                         }
                             
