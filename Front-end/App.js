@@ -92,21 +92,21 @@ export default function App() {
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
           <NavigationContainer>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            {loginState.userToken?
-            <Stack.Screen name="NavigationTabs"
-            component={NavigationTabs}/>
-            :
-            <Stack.Screen
-              name="Registeration"
-              component={Registeration}
-              initialParams={{isSignUp: false}}
-            />
-            }
-          </Stack.Navigator>
-        </NavigationContainer>
-      </AuthContext.Provider>
-    </ThemeContext.Provider>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              {loginState.userToken ?
+                <Stack.Screen name="NavigationTabs"
+                  component={NavigationTabs} />
+                :
+                <Stack.Screen
+                  name="Registeration"
+                  component={Registeration}
+                  initialParams={{ isSignUp: false }}
+                />
+              }
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AuthContext.Provider>
+      </ThemeContext.Provider>
     );
   }
 }

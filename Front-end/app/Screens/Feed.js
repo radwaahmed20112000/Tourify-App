@@ -14,7 +14,7 @@ const BOTTOM_HEIGHT = SCREEN_HEIGHT - WINDOW_HEIGHT;
 
 function Feed(props) {
 
-  const url = "http://localhost:4000/"
+  const url = "http://192.168.1.9:8080/"
   const lorempIpsum = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia," +
     "    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum" +
     "    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium" +
@@ -64,13 +64,45 @@ function Feed(props) {
     photos: images
   }]
 
-  const theme = useContext(ThemeContext);
-  const [posts, setPosts] = useState(postsX);
-  const [onProcessing, setProcessing] = useState(true);
+  const useFetch = (url) => {
+    const [data, setData] = useState([]);
+    const [onProgress, setProgress] = useState(true);
+    const [error, setError] = useState(null);
+
+    const theme = useContext(ThemeContext);
+    const [posts, setPosts] = useState(postsX);
+    const [onProcessing, setProcessing] = useState(true);
+
+    useEffect(() => {
+      // if(data === []){
+      fetch(url)
+        .then(res => {
+          if (!res.ok) {
+            throw Error('Could not fetch the data for that resource');
+          }
+          return res.json();
+        })
+        .then(data => {
+          setPosts(data);
+        })
+        .catch(err => {
+          console.log(err)
+        });
+      //}
+    }, [url])
+
+    return { data };
+  }
+
+
   const userPhoto = 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4'
 
 
-  // const { error, onProgress, data } = useFetch(url + 'feed/');
+  const { data } = useFetch(url + 'feed/');
+  console.log("1")
+  console.log(data)
+  console.log("2")
+
   // useEffect(() => {
   //   setProcessing(onProgress);
   //   setPosts(data);
