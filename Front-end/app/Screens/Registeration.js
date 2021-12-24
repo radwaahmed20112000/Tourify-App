@@ -35,7 +35,7 @@ function Registeration({navigation, route}) {
                 <TextInput style= {styles.inputText}  selectionColor={Theme.SecondaryCyan} placeholder="Email" placeholderTextColor={Theme.subText} onChangeText = {text => setEmail(text)}></TextInput>
             </View>
             <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText} selectionColor={Theme.SecondaryCyan} placeholder="Password" placeholderTextColor={Theme.subText} onChangeText = {text => setPassword(text)}></TextInput>
+                <TextInput secureTextEntry={true} style= {styles.inputText} selectionColor={Theme.SecondaryCyan} placeholder="Password" placeholderTextColor={Theme.subText} onChangeText = {text => setPassword(text)}></TextInput>
             </View>
             {isSignUp?
             <View style={[styles.countryPicker, {backgroundColor:'#ededed'}]}>
