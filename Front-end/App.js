@@ -33,6 +33,7 @@ export default function App() {
           return response.message;
         }
         setMessage("");
+        //if user successfully logged in, save user token and store in local storage
         let userToken = response.userToken;
         try {
           await AsyncStorage.setItem('userToken', userToken)
@@ -48,6 +49,7 @@ export default function App() {
           return response.message;
         }
         setMessage("");
+        //if user successfully signed up, save user token and store in local storage
         let userToken = response.userToken;
         try {
           await AsyncStorage.setItem('userToken',userToken)
@@ -57,6 +59,7 @@ export default function App() {
         dispatch({type: 'Register', userToken});
       },
       signOut: async ()=>{
+        //remove token from local storage
         try {
           await AsyncStorage.removeItem('userToken')
         } catch (e) {
