@@ -1,4 +1,4 @@
-let API_URL = "http://localhost:4000/account";
+let API_URL = "http://192.168.1.13:8080/account";
 const signInRequest = async(email, password, bool)=>{
     let payload = {email:email, password:password, bool:bool};
     let response = await fetch(API_URL+"/login", {
@@ -11,6 +11,7 @@ const signInRequest = async(email, password, bool)=>{
         return {successful:false, message: "An error occurred, check your network"}
     });
     let data = await response.json();
+    console.log("heeeeloooo" + data);
     if(response.status === 200)
     {
         return {successful: true, userToken: data.token};

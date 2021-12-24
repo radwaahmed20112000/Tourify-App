@@ -3,7 +3,7 @@ const jwt =require('jsonwebtoken');
 
 const Account =  require('../Models/Account.js');
 
-const signup = (req, res, next) => {
+module.exports = {signup: (req, res, next) => {
     console.log("hello")
     var email = req.body.email;
     // checks if email already exists
@@ -36,7 +36,8 @@ const signup = (req, res, next) => {
                             res.status(502).json({message: "error while creating the user"});
                         else {
                             const token = jwt.sign({ email: req.body.email }, 'secret', {});
-                            res.status(200).json({message: "user created","token" : token});
+                            console.log("helllllllllllllooooo" + token);
+                            res.status(200).json({message: "user created", token : token});
                         }
                             
                     })
@@ -76,7 +77,7 @@ const signup = (req, res, next) => {
 
 
    
-};
+},
 
 
 
@@ -85,36 +86,49 @@ const signup = (req, res, next) => {
 
 
 
-const login = (req, res, next) => {
-    // checks if email exists
-    User.findOne({ where : {
-        email: req.body.email, 
-    }})
-    .then(dbUser => {
-        if (!dbUser) {
+login : (req, res, next) => {
+
+    var email = req.body.email;
+    // checks if email already exists
+
+
+    Account.findEmail(email,(err, user) =>{
+    
+        if(err){
+              return res.status(500).json(err);
+
+        }
+        if (user.length==0) {
             return res.status(404).json({message: "user not found"});
-        } else {
+        } 
+        else {
+            var password=Account.getPassword()
             // password hash
-            bcrypt.compare(req.body.password, dbUser.password, (err, compareRes) => {
-                if (err) { // error while comparing
-                    res.status(502).json({message: "error while checking user password"});
-                } else if (compareRes) { // password match
+            if(password){
+                bcrypt.compare(req.body.password, dbUser.password, (err, compareRes) => {
+                    if (err) { // error while comparing
+                        res.status(502).json({message: "error while checking user password"});
+                    } else if (compareRes) { // password match
+                        const token = jwt.sign({ email: req.body.email }, 'secret', {});
+                        res.status(200).json({message: "user logged in", "token": token});
+                    } else { // password doesnt match
+                        res.status(401).json({message: "invalid credentials"});
+                    };
+                });
+            }
+            else{
+                if(req.body.bool){
                     const token = jwt.sign({ email: req.body.email }, 'secret', {});
-                    res.status(200).json({message: "user logged in", "token": token});
-                } else { // password doesnt match
-                    res.status(401).json({message: "invalid credentials"});
-                };
-            });
+                        res.status(200).json({message: "user logged in", "token": token});
+                }
+            }
+            
         };
     })
     .catch(err => {
         console.log('error', err);
     });
-};
+}
 
+}
 
-
-
-
-
-module.exports = {signup:signup, login:login};
