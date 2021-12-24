@@ -9,7 +9,7 @@ import PostListComponent from '../Components/Shared/PostListComponent';
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
 function Feed(props) {
-  const { theme } = useContext(ThemeContext);
+  const theme = useContext(ThemeContext);
   const [posts, setPosts] = useState([]);
   const [onProcessing, setProcessing] = useState(true);
   const url = "http://localhost:3306/"
