@@ -9,8 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
 import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
-import Feed from './app/Screens/Feed';
-import PostListComponent from './app/Components/Shared/PostListComponent';
+
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 
 export default function App() {
@@ -89,26 +88,25 @@ export default function App() {
     )
   }
   else {
-    console.log(!loginState.userToken);
     return (
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
           <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              {!loginState.userToken ?
-                <Stack.Screen name="NavigationTabs"
-                  component={NavigationTabs} />
-                :
-                <Stack.Screen
-                  name="Registeration"
-                  component={Registeration}
-                  initialParams={{ isSignUp: false }}
-                />
-              }
-            </Stack.Navigator>
-          </NavigationContainer>
-        </AuthContext.Provider>
-      </ThemeContext.Provider>
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            {loginState.userToken?
+            <Stack.Screen name="NavigationTabs"
+            component={NavigationTabs}/>
+            :
+            <Stack.Screen
+              name="Registeration"
+              component={Registeration}
+              initialParams={{isSignUp: false}}
+            />
+            }
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </ThemeContext.Provider>
     );
   }
 }

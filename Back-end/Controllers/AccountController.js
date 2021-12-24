@@ -1,10 +1,10 @@
-import bcrypt from 'bcryptjs';
+const bcrypt = require('bcrypt');
+const jwt =require('jsonwebtoken');
 
-import jwt from 'jsonwebtoken';
-
-import Account from '../models/Account.js';
+const Account =  require('../models/Account.js');
 
 const signup = (req, res, next) => {
+    console.log("hello")
     var email = req.body.email;
     // checks if email already exists
 
@@ -117,4 +117,4 @@ const login = (req, res, next) => {
 
 
 
-export { signup, login };
+module.exports = {signup:signup, login:login};

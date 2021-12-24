@@ -5,11 +5,13 @@
   "main": "app.js",
   "scripts": {
     "start": "npx nodemon server.js",
-    "test": "mocha test/controllers/**/*.test.js"
+    "test": "mocha test/models/**/*.test.js  test/controllers/**/*.test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",

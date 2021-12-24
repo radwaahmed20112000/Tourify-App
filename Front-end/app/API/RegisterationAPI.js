@@ -1,7 +1,7 @@
-let API_URL = "url";
-const signInRequest = async(email, password)=>{
-    let payload = {email, password};
-    let response = await fetch(API_URL+"/signIn", {
+let API_URL = "http://localhost:4000/account";
+const signInRequest = async(email, password, bool)=>{
+    let payload = {email:email, password:password, bool:bool};
+    let response = await fetch(API_URL+"/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -26,15 +26,16 @@ const signInRequest = async(email, password)=>{
         return {successful: false, message: message};
     }
 }
-const signUpRequest = async(email, userName, password, country, photo)=>{
-    let payload = {email, userName, password, country};
-    let response = await fetch(API_URL+"/signUp", {
+const signUpRequest = async(email, name, password, country, photo, bool)=>{
+    let payload = {email:email, name:name, password:password, country:country, photo:photo, bool:bool};
+    let response = await fetch(API_URL+"/signup", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
     }).catch(error =>{
+        console.log("ERRRRRROR:" + error);
         return {successful:false, message: "An error occurred, check your network"}
     });
     let data = await response.json();
