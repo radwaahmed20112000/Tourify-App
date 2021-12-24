@@ -50,7 +50,42 @@ describe('Posts controller', function () {
             });
 
         });
+
+        describe('POST /posts/TripCreation', function () {
+          //  const token = jwt.sign({ email: "test@gmail.com" }, 'secret', {});
+            const body = {
+              //  user: token,
+                description: "Hello",
+                tags: ["hicking"],
+                photos: ["photo1", "photo2"],
+                organisation: "Faculty of Engineering",
+                rate: 5,
+                budget: "2000$",
+                latitude: "Alex",
+                longitude: "Egypt"
+            };
+            it('it should retrun no error', (done) => {
+                chai.request(server)
+                    .post(`/posts/feedCount`)
+                    .send(body)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        done();
+                    });
+            });
+
+        });   
+
+
+
+            
+
+   
    
     });
+
+
+
+
 
 });

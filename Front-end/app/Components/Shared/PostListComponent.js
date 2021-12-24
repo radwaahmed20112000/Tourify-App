@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, TouchableHighlight, ImageBackground, SafeAreaView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { RFValue } from "react-native-responsive-fontsize";
 
 import { ThemeContext } from '../../Context/ThemeContext';
@@ -19,7 +18,6 @@ function navigateToPost(postId) {
 function PostListComponent(props) {
     console.log("ALO")
 
-    console.log(props.item)
     const theme = useContext(ThemeContext);
     const { postId, userId, title, body, rating, userName, userPhoto, photos } = props.item;
 

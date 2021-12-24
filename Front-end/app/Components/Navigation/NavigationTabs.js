@@ -1,21 +1,24 @@
 import React, { useContext, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Feed from '../../Screens/Feed';
 import Profile from '../../Screens/Profile';
 import Notifications from '../../Screens/Notifications';
+import Map from '../../Screens/Map';
 import { RFValue } from "react-native-responsive-fontsize";
 import { View, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import GradientText from '../Shared/GradientText';
 import { ThemeContext } from '../../Context/ThemeContext';
+import { TokenContext } from '../../Context/TokenContext';
 import PostCreation from '../../Screens/PostCreation';
 import PostListComponent from '../Shared/PostListComponent';
+import Feed from '../../Screens/Feed';
 const Tab = createBottomTabNavigator();
 
 function NavigationTabs(props) {
     const theme = useContext(ThemeContext);
-
+    const token = useContext(TokenContext);
+    console.log(token);
     return (<Tab.Navigator
         screenOptions={({ route }) => ({
             tabBarShowLabel: false,
@@ -83,6 +86,7 @@ function NavigationTabs(props) {
         <Tab.Screen name="PostCreation" component={PostCreation} />
         <Tab.Screen name="Notifications" component={Notifications} />
         <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Map" component={Map} />
     </Tab.Navigator>)
 
 }
