@@ -11,7 +11,7 @@ const signInRequest = async (email, password, bool) => {
         return { successful: false, message: "An error occurred, check your network" }
     });
     let data = await response.json();
-    console.log("heeeeloooo" + data);
+    console.log("heeeeloooo" + data.message);
     if (response.status === 200) {
         return { successful: true, userToken: data.token };
     }
