@@ -8,7 +8,7 @@ import {normalize,width} from '../util/FontNormalization';
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
 function Feed(props) {
-    const {theme} = useContext(ThemeContext);
+    const theme = useContext(ThemeContext);
 
     return (
         <View style={styles.container}>

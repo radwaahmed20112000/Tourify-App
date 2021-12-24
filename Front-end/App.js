@@ -1,23 +1,15 @@
 import React,{ useEffect, useState } from 'react';
 import { StyleSheet} from 'react-native';
 import { ThemeContext, AppTheme} from './app/Context/ThemeContext';
-import Registeration from './app/Screens/Registeration';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Splash from './app/Screens/Splash';
 import { AuthContext } from './app/Context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
-import PrivateApp from './app/Components/Navigation/PrivateApp';
 import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
-import { StyleSheet, ActivityIndicator, View, Text } from 'react-native';
-import { ThemeContext, Theme } from './app/Context/ThemeContext';
 import Registeration from './app/Screens/Registeration';
-import Feed from './app/Screens/Feed';
-import PostCreation from './app/Screens/PostCreation';
-import TagsList from './app/Components/PostCreation/TagsList';
-import ImageSharing from './app/Components/PostCreation/ImageSharing';
-import Map from './app/Screens/Map/';
+import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 
 export default function App() {
   //navigation:
@@ -99,15 +91,15 @@ export default function App() {
     )
   }
   else {
+    console.log(!loginState.userToken);
     return (
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
           <NavigationContainer>
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            {loginState.userToken?
-            <Stack.Screen name="PrivateApp"
-            component={PrivateApp}
-            /*initialParams={{userName: loginState.userName}}*//>
+            {!loginState.userToken?
+            <Stack.Screen name="NavigationTabs"
+            component={NavigationTabs}/>
             :
             <Stack.Screen
               name="Registeration"

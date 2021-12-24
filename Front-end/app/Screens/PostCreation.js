@@ -9,7 +9,7 @@ import TagsList from '../Components/PostCreation/TagsList';
 function PostCreation() {
 
     const [value, onChangeText] = React.useState('');
-    const {theme} = useContext(ThemeContext);
+    const theme = useContext(ThemeContext);
     return (
         <View style={styles.container}>
             <Text style={{color: theme.Text, fontSize: normalize(30)}}>Let's Share Our Tour</Text>

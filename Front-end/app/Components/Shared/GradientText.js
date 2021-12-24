@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ThemeContext } from "../../Context/ThemeContext";
     
 const GradientText = (props) => {
-    const {theme} = useContext(ThemeContext);
+    const theme = useContext(ThemeContext);
 
   return (
     <MaskedView maskElement={<Text {...props} />}>
