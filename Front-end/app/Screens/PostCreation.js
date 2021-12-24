@@ -9,7 +9,7 @@ import TagsList from '../Components/PostCreation/TagsList';
 import ImageSharing from '../Components/PostCreation/ImageSharing';
 import { RFValue } from "react-native-responsive-fontsize";
 import { LinearGradient } from 'expo-linear-gradient';
-import { NetworkInfo } from "react-native-network-info";
+import { TokenContext } from '../Context/TokenContext';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
@@ -25,7 +25,8 @@ function PostCreation() {
     const [budget, setBudget] = useState(0);
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
-    var ipAddress ;
+    const token = useContext(TokenContext);
+    const ipAddress = "http://192.168.1.8:8080";
     const newTags = (newTags) => setTags(newTags)
     const newlatitude = (newLatitude) => setLatitude(newLatitude)
     const newlongitude = (newLongitude) => setLongitude(newLongitude)
@@ -53,7 +54,7 @@ function PostCreation() {
         }
           
         var body = JSON.stringify({
-            // user: token, //TODO
+            user: token, //TODO
             description: description,
             tags: newTags,
             photos: photos,  //TODO
@@ -65,7 +66,7 @@ function PostCreation() {
             longitude: longitude //TODO
         })
         console.log(body)
-        fetch(ipAddress+'/TripCreation', {
+        fetch(ipAddress+'/posts/TripCreation', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
