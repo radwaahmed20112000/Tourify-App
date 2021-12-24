@@ -12,7 +12,7 @@ describe('Account controller', function () {
                name: 'test@g',
                password: "333",
                photo: "ddd",
-               googleBool: false,
+               bool: false,
                country: 'dddd',
            }
            it('it should retrun 200 ok', (done) => {
@@ -21,18 +21,9 @@ describe('Account controller', function () {
                     .send(newUser)
                     .end((err, res) => {
                         res.should.have.status(200);
- 
-
                         done();
                     });
             });
-
-        
-
-
-
-
-
     });
 
 
@@ -41,6 +32,7 @@ describe('Account controller', function () {
         let newUser = {
             email: 'testgmail.com',
             password: "333",
+            bool:false
         }
         it('it should retrun 200 ok', (done) => {
             chai.request(server)
@@ -48,22 +40,9 @@ describe('Account controller', function () {
                 .send(newUser)
                 .end((err, res) => {
                     res.should.have.status(200);
-
-
                     done();
                 });
         });
-
-
-
-
-
-
-
     });
-
-
-
-
 
 });
