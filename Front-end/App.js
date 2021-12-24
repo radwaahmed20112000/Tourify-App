@@ -70,7 +70,6 @@ export default function App() {
   useEffect(() => {
     //check if user logged  in or not
     setTimeout(async () => {
-      let userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken')
       } catch (e) {

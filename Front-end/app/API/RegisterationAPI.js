@@ -1,58 +1,56 @@
-let API_URL = "http://192.168.1.13:8080/account";
-const signInRequest = async(email, password, bool)=>{
-    let payload = {email:email, password:password, bool:bool};
-    let response = await fetch(API_URL+"/login", {
+let API_URL = "http://192.168.1.8:8080/account";
+const signInRequest = async (email, password, bool) => {
+    let payload = { email: email, password: password, bool: bool };
+    let response = await fetch(API_URL + "/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
-    }).catch(error =>{
-        return {successful:false, message: "An error occurred, check your network"}
+    }).catch(error => {
+        return { successful: false, message: "An error occurred, check your network" }
     });
     let data = await response.json();
     console.log("heeeeloooo" + data);
-    if(response.status === 200)
-    {
-        return {successful: true, userToken: data.token};
+    if (response.status === 200) {
+        return { successful: true, userToken: data.token };
     }
-    else{
+    else {
         let message = "";
-        if(response.status === 404)
+        if (response.status === 404)
             message = "Wrong Email";
-        else if(response.status === 401)
-            message= "Wrong Password";
+        else if (response.status === 401)
+            message = "Wrong Password";
         else
             message = "An error occurred, please try again";
-        return {successful: false, message: message};
+        return { successful: false, message: message };
     }
 }
-const signUpRequest = async(email, name, password, country, photo, bool)=>{
-    let payload = {email:email, name:name, password:password, country:country, photo:photo, bool:bool};
-    let response = await fetch(API_URL+"/signup", {
+const signUpRequest = async (email, name, password, country, photo, bool) => {
+    let payload = { email: email, name: name, password: password, country: country, photo: photo, bool: bool };
+    let response = await fetch(API_URL + "/signup", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
-    }).catch(error =>{
+    }).catch(error => {
         console.log("ERRRRRROR:" + error);
-        return {successful:false, message: "An error occurred, check your network"}
+        return { successful: false, message: "An error occurred, check your network" }
     });
     let data = await response.json();
-    if(response.status === 200)
-    {
-        return {successful: true, userToken: data.token};
+    if (response.status === 200) {
+        return { successful: true, userToken: data.token };
     }
-    else{
+    else {
         let message = "";
-        if(response.status === 409)
+        if (response.status === 409)
             message = "Email already exists";
-        else if(response.status === 400)
-            message= "Enter email and password";
+        else if (response.status === 400)
+            message = "Enter email and password";
         else
             message = "An error occurred, please try again";
-        return {successful: false, message: message};
+        return { successful: false, message: message };
     }
 }
-export {signInRequest, signUpRequest}
+export { signInRequest, signUpRequest }
