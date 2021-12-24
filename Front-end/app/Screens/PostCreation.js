@@ -26,7 +26,7 @@ function PostCreation() {
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
     const token = useContext(TokenContext);
-    const ipAddress = "http://192.168.1.8:8080";
+    const ipAddress = "http://192.168.1.8:8000";
     const newTags = (newTags) => setTags(newTags)
     const newlatitude = (newLatitude) => setLatitude(newLatitude)
     const newlongitude = (newLongitude) => setLongitude(newLongitude)

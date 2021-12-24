@@ -7,7 +7,7 @@ class Post {
     constructor(user_id,post) {
         this.user_id = user_id;
         this.body = post.description;
-        this.created_at = new TIMESTAMP;
+        this.created_at = TIMESTAMP;
         this.updated_at = post.updated_at;
         this.duration = post.duration;
         this.organisation = post.organisation;
@@ -29,8 +29,6 @@ class Post {
         });
     }
 }
-
-module.exports = Post;
 
 module.exports = {
 
@@ -95,3 +93,4 @@ module.exports = {
 
     }
 }
+module.exports = Post;
