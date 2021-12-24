@@ -15,13 +15,13 @@ function Registeration({navigation, route}) {
     const [name, setName] = useState("");
     const [country, setCountry] = useState(null);
     const [message, setMessage] = useState("");
-    const [photo, setPhoto] = useState(null)
-    const handleSignIn = ()=>{
-      let res = signIn(email, password);
+    const [photo, setPhoto] = useState(null);
+    const handleSignIn = (googleBool)=>{
+      let res = signIn(email, password, googleBool);
       setMessage(res);
     }
-    const handleSignUp = ()=>{
-      let res = signUp(email, name, password, country, photo);
+    const handleSignUp = (googleBool)=>{
+      let res = signUp(email, name, password, country, photo, googleBool);
       setMessage(res);
     }
     const onSelect = (country) => {
@@ -41,7 +41,7 @@ function Registeration({navigation, route}) {
           setName(user.name);
           setPhoto(user.photoUrl);
           setEmail(user.email);
-          isSignUp? handleSignUp() : handleSignIn();
+          isSignUp? handleSignUp(true) : handleSignIn(true);
         }
         else{
           setMessage("An error occurred");
@@ -71,7 +71,7 @@ function Registeration({navigation, route}) {
             </View>
             : null}
             <Text style={styles.message}>{message}</Text>
-            <TouchableOpacity style={[styles.signInBtn, {backgroundColor: Theme.SecondaryCyan}]} onPress={()=>{isSignUp? handleSignUp() : handleSignIn()}}>
+            <TouchableOpacity style={[styles.signInBtn, {backgroundColor: Theme.SecondaryCyan}]} onPress={()=>{isSignUp? handleSignUp(false) : handleSignIn(false)}}>
                 <Text style={styles.btnTxt}>{isSignUp? "Sign Up" : "Sign In"}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.googleBtn} onPress={()=> handleGoogleSignIn()}>

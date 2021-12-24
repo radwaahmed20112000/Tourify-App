@@ -91,13 +91,12 @@ export default function App() {
     )
   }
   else {
-    console.log(!loginState.userToken);
     return (
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
           <NavigationContainer>
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            {!loginState.userToken?
+            {loginState.userToken?
             <Stack.Screen name="NavigationTabs"
             component={NavigationTabs}/>
             :

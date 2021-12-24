@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feed from '../../Screens/Feed';
 import Profile from '../../Screens/Profile';
 import Notifications from '../../Screens/Notifications';
-import Registeration from '../../Screens/Registeration';
 import { RFValue } from "react-native-responsive-fontsize";
 import { View, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';

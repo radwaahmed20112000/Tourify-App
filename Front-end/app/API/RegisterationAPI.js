@@ -1,6 +1,6 @@
 let API_URL = "url";
-const signInRequest = async(email, password)=>{
-    let payload = {email, password};
+const signInRequest = async(email, password, googleBool)=>{
+    let payload = {email, password, googleBool};
     let response = await fetch(API_URL+"/signIn", {
         method: 'POST',
         headers: {
@@ -26,8 +26,8 @@ const signInRequest = async(email, password)=>{
         return {successful: false, message: message};
     }
 }
-const signUpRequest = async(email, userName, password, country, photo)=>{
-    let payload = {email, userName, password, country};
+const signUpRequest = async(email, userName, password, country, photo, googleBool)=>{
+    let payload = {email, userName, password, country, photo, googleBool};
     let response = await fetch(API_URL+"/signUp", {
         method: 'POST',
         headers: {
