@@ -13,8 +13,8 @@ import { NetworkInfo } from "react-native-network-info";
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function PostCreation(navigation) {
-    const {theme} = useContext(ThemeContext);
+function PostCreation() {
+    const theme = useContext(ThemeContext);
     const [description, onChangeText] = useState('');
     const [tags, setTags] = useState([]);
     const [photos, setPhotos] = useState([]);
@@ -26,7 +26,7 @@ function PostCreation(navigation) {
     const [longitude, setLongitude] = useState(0);
     var ipAddress ;
     
-    NetworkInfo.getIPAddress(ip => ipAddress = ip);
+    // NetworkInfo.getIPAddress(ip => ipAddress = ip);
 
     const createPost = () => {
         if(description === '' || duration === '' || budget === 0 ) {
@@ -111,9 +111,10 @@ function PostCreation(navigation) {
                 imageSize={RFValue(2)}
                 onFinishRating={rate => setRate(rate)}
             />
-            <Button title="Add Location" onPress={() => navigation.navigate("Map",{setLatitude, setLongitude})}></Button>
+            {/* <Button title="Add Location" onPress={() => {navigation.navigate("Map",{setLatitude, setLongitude})}}></Button> */}
             {/* <TagsList setTags={setTags}></TagsList> */}
-            <ImagePicker setPhotos={setPhotos}></ImagePicker>
+            {/* <ImagePicker setPhotos={setPhotos}></ImagePicker> */}
+            {/* <Map initialParams={{ setLatitude: setLatitude, setLongitude:setLongitude }}></Map> */}
         </SafeAreaView>
     );
 }
