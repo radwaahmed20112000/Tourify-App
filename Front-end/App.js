@@ -1,6 +1,6 @@
-import React,{ useEffect, useState } from 'react';
-import { StyleSheet} from 'react-native';
-import { ThemeContext, AppTheme} from './app/Context/ThemeContext';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { ThemeContext, AppTheme } from './app/Context/ThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Splash from './app/Screens/Splash';
@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
 import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
+
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 
 export default function App() {
@@ -17,20 +18,18 @@ export default function App() {
   //theme:
   const [lightMode, setLightMode] = useState(true)
   const [Theme, setTheme] = useState(AppTheme.light);
-  function changeTheme()
-  {
-      setLightMode(!lightMode);
-      if(lightMode) setTheme(AppTheme.light);
-      else setTheme(AppTheme.dark);
+  function changeTheme() {
+    setLightMode(!lightMode);
+    if (lightMode) setTheme(AppTheme.light);
+    else setTheme(AppTheme.dark);
   }
   //authuntication
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
-  const authContext = React.useMemo(()=>{
-    return{
-      signIn: async (email, password)=>{
+  const authContext = React.useMemo(() => {
+    return {
+      signIn: async (email, password) => {
         let response = await signInRequest(email, password);
-        if(!response.successful)
-        { 
+        if (!response.successful) {
           return response.message;
         }
         setMessage("");
@@ -41,53 +40,51 @@ export default function App() {
         } catch (e) {
           console.log(e);
         }
-        dispatch({type: 'Login', userToken});
+        dispatch({ type: 'Login', userToken });
       },
-      signUp: async (email, userName, password, country)=>{
+      signUp: async (email, userName, password, country) => {
         let response = await signUpRequest(email, userName, password, country);
-        if(!response.successful)
-        {
+        if (!response.successful) {
           return response.message;
         }
         setMessage("");
         //if user successfully signed up, save user token and store in local storage
         let userToken = response.userToken;
         try {
-          await AsyncStorage.setItem('userToken',userToken)
+          await AsyncStorage.setItem('userToken', userToken)
         } catch (e) {
           console.log(e);
         }
-        dispatch({type: 'Register', userToken});
+        dispatch({ type: 'Register', userToken });
       },
-      signOut: async ()=>{
+      signOut: async () => {
         //remove token from local storage
         try {
           await AsyncStorage.removeItem('userToken')
         } catch (e) {
           console.log(e);
         }
-        dispatch({type: 'Logout'});
+        dispatch({ type: 'Logout' });
       }
     }
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     //check if user logged  in or not
-    setTimeout(async ()=>{
+    setTimeout(async () => {
       let userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken')
       } catch (e) {
         console.log(e);
       }
-      dispatch({type : "RetrieveToken", userToken})
+      dispatch({ type: "RetrieveToken", userToken })
     }, 1000)
   }, [])
 
-  if(loginState.isLoading)
-  {
-    return(
-      <Splash/>
+  if (loginState.isLoading) {
+    return (
+      <Splash />
     )
   }
   else {
@@ -113,6 +110,22 @@ export default function App() {
     );
   }
 }
+//   if (isLoading) {
+//     return (
+//       <View style={styles.container}>
+//         <ActivityIndicator size="large" animating={true} color={Theme.light.SecondaryPurple} />
+//       </View>
+//     )
+//   }
+//   else {
+//     return (
+//       <ThemeContext.Provider value={{ theme, changeTheme }}>
+//         <Registeration isSignUp={signUp} changeSigning={changeSigning} />
+//         <Feed />
+//       </ThemeContext.Provider>
+//     );
+//   }
+// }
 
 const styles = StyleSheet.create({
   container: {
@@ -121,4 +134,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})
