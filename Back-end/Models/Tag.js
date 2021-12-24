@@ -2,11 +2,11 @@ const table = 'Tag';
 const DB = require("../DB/pool");
 const tableName = 'Tag';
 
-class Tag {
-    constructor(tag) {
+var Tag = function(tag){
         this.tag_name = tag.tag_name;
-    }
-    static createTag(newTag, result) {
+}
+
+     createTag= (newTag, result) => {
 
         DB('INSERT INTO Tag SET ?', newTag, (err, res) => {
             if (err) {
@@ -18,7 +18,6 @@ class Tag {
                 result(null, res);
             }
         });
-    }
 }
 
 module.exports = Tag;

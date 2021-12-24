@@ -2,12 +2,12 @@ const table = 'PostTags';
 const DB = require("../DB/pool");
 const tableName = 'PostTags';
 
-class PostTags {
-    constructor(postId,tagId) {
+var PostTags = function(postId,tagId){
         this.post_id = postId;
         this.tag_id = tagId;
-    }
-    static createPostTags(newPostTags, result) {
+}
+
+ createPostTags = (newPostTags, result) => {
 
         DB('INSERT INTO PostTags SET ?', newPostTags, (err, res) => {
             if (err) {
@@ -19,7 +19,6 @@ class PostTags {
                 result(null, res);
             }
         });
-    }
 }
 
 module.exports = PostTags;

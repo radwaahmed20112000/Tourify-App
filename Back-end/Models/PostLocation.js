@@ -2,13 +2,13 @@ const table = 'PostLocation';
 const DB = require("../DB/pool");
 const tableName = 'PostLocation';
 
-class PostLocation {
-    constructor(postId,post_location) {
+var PostLocation = function(postId,post_location){
         this.post_id = postId;
         this.latitude = post_location.latitude;
         this.longitude = post_location.longitude;
-    }
-    static createPostLocation(newPostLocation, result) {
+}
+
+    PostLocation.createPostLocation = (newPostLocation, result) => {
 
         DB('INSERT INTO PostLocation SET ?', newPostLocation, (err, res) => {
             if (err) {
@@ -20,7 +20,7 @@ class PostLocation {
                 result(null, res);
             }
         });
-    }
+
 }
 module.exports = PostLocation;
 

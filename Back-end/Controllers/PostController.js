@@ -8,6 +8,8 @@ const PostPhoto = require('../Models/PostPhoto')
 const PostTags = require('../Models/PostTags')
 const Tag = require('../Models/Tag')
 const jwt = require("jsonwebtoken");
+const { createPostLocation } = require('../Models/PostLocation');
+const { createPostTags } = require('../Models/PostTags');
 
 module.exports= {
 
@@ -45,63 +47,122 @@ module.exports= {
 
    },
 
-   createPost:(req, res) => {    
-      console.log(req.body.user)
-      // const decoded = jwt.decode(req.body.user); 
-      // const temp = decoded.split("'");
-      // const userId = temp[1];
-      var postId;
-      var photoId;
-      var tagId;
-      var newPost = new Post(req.body.user,req.body);
 
-         if(req.body.constructor === Object && Object(req.body).length ===0){
+   create:(req, res) =>{    
+      //const decoded = jwt.decode(req.body.token); 
+      //const temp = decoded.split("'");
+      const userId = "Radwa";
+      var postId;
+      
+         if(req.body.constructor === Object && Object(req.body).length === 0){
             res.send(400).send({success: false, message: 'Please fill all field'});
             console.log("no data");
          }
 
          else{
+            const newPost = new Post(userId,req.body);
             Post.createPost(newPost,(err,post)=>{
-               if(err) res.send(err); 
+               if(err)res.send(err); 
                postId = post.insertId;
                res.json({status: true, message: 'Post created successfuly',data: post.insertId});
             });
-            
+            //createPhoto(req,res,postId);
+            //createPostLocation(req,res,postId);
+            //createTags(req,res,postId);
             for(let i = 0;i < req.body.photos;i++){
+               var photoId;
                var photo = req.body.photos[i];
                var newPhoto = new Photo(postId,photo);
+               
                Photo.createPhoto(newPhoto,(err,photo)=>{
                if(err)res.send(err);  
                photoId = photo.insertId;
                res.json({status: true, message: 'Photo created successfuly',data: photo.insertId});
                });
+               //createPostPhoto(res,postId,photoId);
                var newPostPhoto = new PostPhoto(postId,photoId);
                PostPhoto.createPostPhoto(newPostPhoto,(err,post_photo)=>{
                   if(err)res.send(err);
                   res.json({status: true, message: 'PostPhoto created successfuly'});
                });
-            }
-            // const newPostLocation = new PostLocation(postId,req.body);
-            // PostLocation.createPostLocation(newPostLocation,(err,post_location)=>{
-            //    if(err)res.send(err);
-            //    res.json({status: true, message: 'PostLocation created successfuly'});
-            // });
-
-            for(let i = 0;i < req.body.tags;i++){
-               var tag = req.body.tags[i];
-               const newTag = new Tag(tag);
-               Tag.createTag(newTag,(err,tag)=>{
-                  if(err)res.send(err);
-                  tagId = tag.insertId;
-                  res.json({status: true, message: 'Tag created successfuly',data: tag.insertId});
-               });
-               var newPostTags = new PostTags(tagId,req.body);
-               PostTags.createPostTags(newPostTags,(err,post_tags)=>{
-                  if(err)res.send(err);
-                  res.json({status: true, message: 'PostTags created successfuly'});
-               });
-            }
+         }
+         // const newPostLocation = new PostLocation(postId,req.body);
+         // PostLocation.createPostLocation(newPostLocation,(err,post_location)=>{
+         //    if(err)res.send(err);
+         //    res.json({status: true, message: 'PostLocation created successfuly'});
+         // });
+         for(let i = 0;i < req.body.tags;i++){
+            var tag = req.body.tags[i];
+            const newTag = new Tag(tag);
+   
+            Tag.createTag(newTag,(err,tag)=>{
+               if(err)res.send(err);
+               tagId = tag.insertId;
+               res.json({status: true, message: 'Tag created successfuly',data: tag.insertId});
+            });
+            var newPostTags = new PostTags(postId,tagId);
+            PostTags.createPostTags(newPostTags,(err,post_tags)=>{
+               if(err)res.send(err);
+               res.json({status: true, message: 'PostTags created successfuly'});
+            });
+   
          }
    }
+}
+ /*
+   createPhoto:(req,res,postId) =>{
+      for(let i = 0;i < req.body.photos;i++){
+         var photoId;
+         var photo = req.body.photos[i];
+         var newPhoto = new Photo(postId,photo);
+         
+         Photo.createPhoto(newPhoto,(err,photo)=>{
+         if(err)res.send(err);  
+         photoId = photo.insertId;
+         res.json({status: true, message: 'Photo created successfuly',data: photo.insertId});
+         });
+         createPostPhoto(res,postId,photoId);
+      }
+   },
+   
+   createPostPhoto:(res,postId,photoId) =>{
+      var newPostPhoto = new PostPhoto(postId,photoId);
+      PostPhoto.createPostPhoto(newPostPhoto,(err,post_photo)=>{
+         if(err)res.send(err);
+         res.json({status: true, message: 'PostPhoto created successfuly'});
+      });
+   },
+
+   createPostLocation:(req,res,postId) =>{
+      const newPostLocation = new PostLocation(postId,req.body);
+      PostLocation.createPostLocation(newPostLocation,(err,post_location)=>{
+         if(err)res.send(err);
+         res.json({status: true, message: 'PostLocation created successfuly'});
+      });
+   },
+
+   createTags:(req,res,postId) =>{
+      for(let i = 0;i < req.body.tags;i++){
+         var tag = req.body.tags[i];
+         const newTag = new Tag(tag);
+
+         Tag.createTag(newTag,(err,tag)=>{
+            if(err)res.send(err);
+            tagId = tag.insertId;
+            res.json({status: true, message: 'Tag created successfuly',data: tag.insertId});
+         });
+         createPostTags(postId,tagId);
+
+      }
+   },
+
+   createPostTag:(postId,tagId) =>{
+      var newPostTags = new PostTags(postId,tagId);
+      PostTags.createPostTags(newPostTags,(err,post_tags)=>{
+         if(err)res.send(err);
+         res.json({status: true, message: 'PostTags created successfuly'});
+      });
+   }
+*/
 }
 

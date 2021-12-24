@@ -2,13 +2,12 @@ const table = 'PostPhoto';
 const DB = require("../DB/pool");
 const tableName = 'PostPhoto';
 
-class PostPhoto {
-    constructor(postId,photoId) {
+var PostPhoto = function(postId,photoId){
         this.post_id = postId;
         this.photo_id = photoId;
-    }
+}
 
-    static createPostPhoto(newPostPhotos, result) {
+PostPhoto.createPostPhoto = (newPostPhotos, result) =>{
 
         DB('INSERT INTO PostPhotos SET ?', newPostPhotos, (err, res) => {
             if (err) {
@@ -20,7 +19,6 @@ class PostPhoto {
                 result(null, res);
             }
         });
-    }
 }
 
 module.exports = PostPhoto;

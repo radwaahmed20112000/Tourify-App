@@ -3,19 +3,18 @@ const { TIMESTAMP } = require("mysql/lib/protocol/constants/types");
 const DB = require("../DB/pool");
 const tableName = 'Post';
 
-class Post {
-    constructor(user_id,post) {
+var Post = function(user_id,post){
         this.user_id = user_id;
         this.body = post.description;
         this.created_at = TIMESTAMP;
-        this.updated_at = post.updated_at;
+        this.updated_at = TIMESTAMP;
         this.duration = post.duration;
         this.organisation = post.organisation;
         this.rate = post.rate;
         this.budget = post.budget;
-    }
+}
 
-    static createPost(newPost, result) {
+    Post.createPost = (newPost, result) => {
 
         DB('INSERT INTO Post SET ?', newPost, (err, res) => {
             if (err) {
@@ -26,9 +25,9 @@ class Post {
                 console.log("Post created successfuly");
                 result(null, res);
             }
-        });
-    }
+        })
 }
+
 
 module.exports = {
 
