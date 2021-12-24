@@ -7,10 +7,10 @@ module.exports= {
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
       
-      if (!userId)
+      if (!req.userId)
          res.status(403)
-      
-      let query = `USER.userId != ${userId}`;
+ 
+      let query = `USER.userId != ${req.userId}`;
 
       Post.findAll(query, limit, offset, (err, posts) =>{
          
