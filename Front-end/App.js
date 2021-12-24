@@ -10,6 +10,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
 import PrivateApp from './app/Components/Navigation/PrivateApp';
 import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
+import { StyleSheet, ActivityIndicator, View, Text } from 'react-native';
+import { ThemeContext, Theme } from './app/Context/ThemeContext';
+import Registeration from './app/Screens/Registeration';
+import Feed from './app/Screens/Feed';
+import PostCreation from './app/Screens/PostCreation';
+import TagsList from './app/Components/PostCreation/TagsList';
+import ImageSharing from './app/Components/PostCreation/ImageSharing';
+import Map from './app/Screens/Map/';
+
 export default function App() {
   //navigation:
   const Stack = createStackNavigator();
@@ -89,7 +98,7 @@ export default function App() {
       <Splash/>
     )
   }
-  else{
+  else {
     return (
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
