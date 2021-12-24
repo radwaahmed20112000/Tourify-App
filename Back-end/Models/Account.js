@@ -33,9 +33,8 @@ module.exports = {
          let selectQuery = `SELECT password FROM ${tableName} WHERE userId = "${email}" ;`;
     
          try {
-             let password = await DB(selectQuery)
-             console.log("user : ", password)
-             return cb(null, password);
+             let pass = await DB(selectQuery)
+             return cb(null, pass[0].password);
     
          } catch (e) {
              console.log(e)
