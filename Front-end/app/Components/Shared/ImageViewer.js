@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { TouchableOpacity, ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 import ImageView from "react-native-image-viewing";
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export default function ImageViewer(props) {   /// images  as props   
     const [images, setImages] = useState([]);
@@ -148,15 +149,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#e6f7fd',
         alignItems: 'center',
         justifyContent: 'center',
+        flex: 1,
     },
     c: {
-
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 350,
-        height: 350
-
     },
     row: {
         display: 'flex',
