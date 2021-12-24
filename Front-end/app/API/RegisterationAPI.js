@@ -7,6 +7,8 @@ const signInRequest = async(email, password)=>{
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
+    }).catch(error =>{
+        return {successful:false, message: "An error occurred, check your network"}
     });
     let data = await response.json();
     if(response.status === 200)
@@ -20,11 +22,11 @@ const signInRequest = async(email, password)=>{
         else if(response.status === 401)
             message= "Wrong Password";
         else
-            message = "An error occured, please try again";
+            message = "An error occurred, please try again";
         return {successful: false, message: message};
     }
 }
-const signUpRequest = async(email, userName, password, country)=>{
+const signUpRequest = async(email, userName, password, country, photo)=>{
     let payload = {email, userName, password, country};
     let response = await fetch(API_URL+"/signUp", {
         method: 'POST',
@@ -32,6 +34,8 @@ const signUpRequest = async(email, userName, password, country)=>{
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
+    }).catch(error =>{
+        return {successful:false, message: "An error occurred, check your network"}
     });
     let data = await response.json();
     if(response.status === 200)
@@ -45,7 +49,7 @@ const signUpRequest = async(email, userName, password, country)=>{
         else if(response.status === 400)
             message= "Enter email and password";
         else
-            message = "An error occured, please try again";
+            message = "An error occurred, please try again";
         return {successful: false, message: message};
     }
 }

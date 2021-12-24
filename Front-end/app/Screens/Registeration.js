@@ -3,7 +3,9 @@ import {StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Picker} from
 import { ThemeContext } from '../Context/ThemeContext';
 import {normalize} from '../util/FontNormalization';
 import { AuthContext } from '../Context/AuthContext';
-import CountryPicker from 'react-native-country-picker-modal'
+import CountryPicker from 'react-native-country-picker-modal';
+import * as Google from 'expo-google-app-auth';
+
 function Registeration({navigation, route}) {
     const [isSignUp, setIsSignUp] = useState(route.params.isSignUp);
     const {signIn, signUp} = React.useContext(AuthContext);
@@ -11,18 +13,43 @@ function Registeration({navigation, route}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
-    const [country, setCountry] = useState("Egypt");
+    const [country, setCountry] = useState(null);
     const [message, setMessage] = useState("");
+    const [photo, setPhoto] = useState(null)
     const handleSignIn = ()=>{
       let res = signIn(email, password);
       setMessage(res);
     }
     const handleSignUp = ()=>{
-      let res = signUp(email, name, password, country);
+      let res = signUp(email, name, password, country, photo);
       setMessage(res);
     }
     const onSelect = (country) => {
       setCountry(country.name);
+    }
+    const handleGoogleSignIn = ()=>{
+      const config = {
+        iosClientId: "568488060081-cdjfp9cp382ed7gbkhmbekda4u9105se.apps.googleusercontent.com",
+        androidClientId: "568488060081-sa2lakshiboq3ko58j759cd1jaioja9i.apps.googleusercontent.com",
+        scopes: ["profile", "email"]
+      }
+      Google.logInAsync(config)
+      .then((result)=>{
+        const {type, user} = result;
+        if(type == "success")
+        {
+          setName(user.name);
+          setPhoto(user.photoUrl);
+          setEmail(user.email);
+          isSignUp? handleSignUp() : handleSignIn();
+        }
+        else{
+          setMessage("An error occurred");
+        }
+      })
+      .catch((error) =>{
+        setMessage("An error occured, check your network");
+      });
     }
 
   return (
@@ -47,7 +74,7 @@ function Registeration({navigation, route}) {
             <TouchableOpacity style={[styles.signInBtn, {backgroundColor: Theme.SecondaryCyan}]} onPress={()=>{isSignUp? handleSignUp() : handleSignIn()}}>
                 <Text style={styles.btnTxt}>{isSignUp? "Sign Up" : "Sign In"}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.googleBtn}>
+            <TouchableOpacity style={styles.googleBtn} onPress={()=> handleGoogleSignIn()}>
                 <Text style={styles.btnTxtgoogle}>{isSignUp? "Sign Up With Google" : "Sign In With Google"}</Text>
                 <Image source={{ uri: 'https://pngimg.com/uploads/google/google_PNG19635.png' }} style={styles.googleLogo} />
             </TouchableOpacity>
