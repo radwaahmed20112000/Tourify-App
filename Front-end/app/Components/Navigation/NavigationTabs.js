@@ -3,14 +3,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feed from '../../Screens/Feed';
 import Profile from '../../Screens/Profile';
 import Notifications from '../../Screens/Notifications';
-import Registeration from '../../Screens/Registeration';
 import { RFValue } from "react-native-responsive-fontsize";
 import { View, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import GradientText from '../Shared/GradientText';
 import { ThemeContext } from '../../Context/ThemeContext';
-
+import PostCreation from '../../Screens/PostCreation';
 const Tab = createBottomTabNavigator();
 
 function NavigationTabs(props) {
@@ -45,6 +44,10 @@ function NavigationTabs(props) {
                     iconName = 'person'
                     text = 'Profile'
                 }
+                else if (route.name === 'PostCreation') {
+                    iconName = 'add'
+                    text = 'New Trip'
+                }
 
                 if (focused)
                     return <View style={{
@@ -75,7 +78,7 @@ function NavigationTabs(props) {
             }
         })}>
         <Tab.Screen name="Feed" component={Feed} />
-        {/* <Tab.Screen name = "CreatePost" component = {Feed}/> */}
+        <Tab.Screen name="PostCreation" component={PostCreation} />
         <Tab.Screen name="Notifications" component={Notifications} />
         <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>)

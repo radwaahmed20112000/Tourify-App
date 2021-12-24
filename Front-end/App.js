@@ -11,9 +11,6 @@ import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
 import Feed from './app/Screens/Feed';
 import PostListComponent from './app/Components/Shared/PostListComponent';
-import { NavigationContainer } from '@react-navigation/native';
-import Tabs from './app/Navigation/NavigationTabs';
-
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 
 export default function App() {

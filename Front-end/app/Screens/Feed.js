@@ -1,23 +1,26 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+// import useFetch from '../api/useFetch';
 
 import { ThemeContext } from '../Context/ThemeContext';
 import { normalize, width } from '../util/FontNormalization';
 import PostListComponent from '../Components/Shared/PostListComponent';
 
-const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
+const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
+const WINDOW_HEIGHT = Dimensions.get('window').height;
+const BOTTOM_HEIGHT = SCREEN_HEIGHT - WINDOW_HEIGHT;
 
 function Feed(props) {
   const theme = useContext(ThemeContext);
   const [posts, setPosts] = useState([]);
   const [onProcessing, setProcessing] = useState(true);
   const url = "http://localhost:3306/"
-  const { error, onProgress, data } = useFetch(url + 'feed/');
-  useEffect(() => {
-    setProcessing(onProgress);
-    setPosts(data);
-  });
+  // const { error, onProgress, data } = useFetch(url + 'feed/');
+  // useEffect(() => {
+  //   setProcessing(onProgress);
+  //   setPosts(data);
+  // });
   // const [search, setSearch] = useState('');
   // const updateSearch = value => {
   //   setSearch(value);
