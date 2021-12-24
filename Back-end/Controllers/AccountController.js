@@ -105,7 +105,7 @@ module.exports = {
                 var password = Account.getPassword()
                 // password hash
                 if (password) {
-                    bcrypt.compare(req.body.password, dbUser.password, (err, compareRes) => {
+                    bcrypt.compare(req.body.password, req.body.password, (err, compareRes) => {
                         if (err) { // error while comparing
                             res.status(502).json({ message: "error while checking user password" });
                         } else if (compareRes) { // password match
@@ -131,4 +131,3 @@ module.exports = {
     }
 
 }
-

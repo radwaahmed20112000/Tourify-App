@@ -45,14 +45,15 @@ module.exports= {
 
    },
 
-   createPost:(req, res) =>{    
-      const decoded = jwt.decode(req.body.token); 
-      const temp = decoded.split("'");
-      const userId = temp[1];
+   createPost:(req, res) => {    
+      console.log(req.body.user)
+      // const decoded = jwt.decode(req.body.user); 
+      // const temp = decoded.split("'");
+      // const userId = temp[1];
       var postId;
       var photoId;
       var tagId;
-      const newPost = new Post(userId,req.body);
+      const newPost = new Post(req.body.user,req.body);
 
          if(req.body.constructor === Object && Object(req.body).length ===0){
             res.send(400).send({success: false, message: 'Please fill all field'});
@@ -80,11 +81,11 @@ module.exports= {
                   res.json({status: true, message: 'PostPhoto created successfuly'});
                });
             }
-            const newPostLocation = new PostLocation(postId,req.body);
-            PostLocation.createPostLocation(newPostLocation,(err,post_location)=>{
-               if(err)res.send(err);
-               res.json({status: true, message: 'PostLocation created successfuly'});
-            });
+            // const newPostLocation = new PostLocation(postId,req.body);
+            // PostLocation.createPostLocation(newPostLocation,(err,post_location)=>{
+            //    if(err)res.send(err);
+            //    res.json({status: true, message: 'PostLocation created successfuly'});
+            // });
 
             for(let i = 0;i < req.body.tags;i++){
                var tag = req.body.tags[i];
