@@ -2,8 +2,13 @@
 import * as React from "react"
 import { Dimensions, StyleSheet, Text, View } from "react-native"
 import MapView, { Callout, Circle, Marker } from "react-native-maps"
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faArrowLeft, } from '@fortawesome/free-solid-svg-icons';
+import { RFValue } from "react-native-responsive-fontsize";
 
-function Map() {
+const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
+
+function Map({navigation, setLatitude, setLongitude}) {
 	const [ pin, setPin ] = React.useState({
 		latitude: 37.78825,
 		longitude: -122.4324
@@ -17,6 +22,21 @@ function Map() {
     })
 	return (
 		<View style={{ marginTop: 50, flex: 1 }}>
+			<View style={styles.upperSection}>
+				<TouchableOpacity> 
+					<FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) } color={theme.SecondaryPurple}  style={{marginRight :15, marginTop : 8, alignSelf:"flex-end" }}/>
+				</TouchableOpacity>
+				<TouchableOpacity onPress= {() => navigation.goBack()}>
+					<LinearGradient
+						colors={[theme.SecondaryCyan, theme.SecondaryPurple]}
+						start={{ x: 0, y: 1 }}
+						end={{ x: 1, y: 1 }}
+						style={styles.button}>
+						<Text style={{color:"white"}}>Done</Text>
+					</LinearGradient>
+				</TouchableOpacity>
+			</View>
+
             <MapView
 				style={styles.map}
 				region={region}
@@ -37,6 +57,8 @@ function Map() {
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421
                         })
+						setLatitude(pin.latitude)
+						setLongitude(pin.longitude)
 					}}
 				>
 					<Callout>
@@ -59,6 +81,13 @@ const styles = StyleSheet.create({
 	map: {
 		width: Dimensions.get("window").width,
 		height: Dimensions.get("window").height
-	}
+	},
+	upperSection : {
+        flexDirection : 'row',
+        padding : "5%",
+        paddingBottom: "5%",
+        borderBottomWidth:RFValue(0.5),
+        width:SCREEN_WIDTH,
+    },
 })
 export default Map;

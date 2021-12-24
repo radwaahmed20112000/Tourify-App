@@ -45,8 +45,10 @@ export default function App() {
   else {
     return (
       <ThemeContext.Provider value={{ theme, changeTheme }}>
-        <Registeration isSignUp={signUp} changeSigning={changeSigning} />
-        <Feed />
+        <PostCreation></PostCreation>
+        {/* <PostCreation></PostCreation> */}
+        {/* <Registeration isSignUp={signUp} changeSigning={changeSigning} />
+        <Feed /> */}
       </ThemeContext.Provider>
     );
   }

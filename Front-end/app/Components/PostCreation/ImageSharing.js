@@ -2,8 +2,8 @@ import React from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-function ImageSharing() {
-    const [selectedImage, setSelectedImage] = React.useState(null);
+function ImageSharing(setPhotos) {
+    const [selectedImages, setSelectedImages] = React.useState([]);
 
     let openImagePickerAsync = async () => {
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -19,14 +19,15 @@ function ImageSharing() {
             return;
         }
     
-        setSelectedImage({ localUri: pickerResult.uri });
+        setSelectedImages(selectedImages.concat({ localUri: pickerResult.uri }));
+        setPhotos(selectedImages);
     };
   
-    if (selectedImage !== null) {
+    if (selectedImages !== null) {
         return (
             <View style={styles.container}>
             <Image
-                source={{ uri: selectedImage.localUri }}
+                source={{ uri: selectedImages.localUri }}
                 style={styles.thumbnail}
             />
             </View>
