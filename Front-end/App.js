@@ -93,7 +93,7 @@ export default function App() {
         <AuthContext.Provider value={authContext}>
           <NavigationContainer>
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            {loginState.userToken?
+            {!loginState.userToken?
             <Stack.Screen name="NavigationTabs"
             component={NavigationTabs}/>
             :

@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt =require('jsonwebtoken');
 
-const Account =  require('../models/Account.js');
+const Account =  require('../Models/Account.js');
 
 const signup = (req, res, next) => {
     console.log("hello")
