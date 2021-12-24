@@ -54,7 +54,7 @@ function PostCreation() {
         }
           
         var body = JSON.stringify({
-            user: token, //TODO
+            user: "radwa", //TODO
             description: description,
             tags: newTags,
             photos: photos,  //TODO
