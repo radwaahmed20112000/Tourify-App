@@ -53,7 +53,7 @@ module.exports= {
       var postId;
       var photoId;
       var tagId;
-      const newPost = new Post(req.body.user,req.body);
+      var newPost = new Post(req.body.user,req.body);
 
          if(req.body.constructor === Object && Object(req.body).length ===0){
             res.send(400).send({success: false, message: 'Please fill all field'});
@@ -62,7 +62,7 @@ module.exports= {
 
          else{
             Post.createPost(newPost,(err,post)=>{
-               if(err)res.send(err); 
+               if(err) res.send(err); 
                postId = post.insertId;
                res.json({status: true, message: 'Post created successfuly',data: post.insertId});
             });
