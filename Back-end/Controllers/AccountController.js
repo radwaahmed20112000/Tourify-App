@@ -80,12 +80,6 @@ module.exports = {
     },
 
 
-
-
-
-
-
-
     login: (req, res, next) => {
 
         var email = req.body.email;
@@ -103,10 +97,10 @@ module.exports = {
             }
             else {
                 Account.getPassword(email, (err, password)=>{
-                    if(password) console.log("I'M PASSWORD");
+                    if(password) console.log(password);
                     // password hash
                     if (password) {
-                        bcrypt.compare(password, req.body.password, (err, compareRes) => {
+                        bcrypt.compare(req.body.password, password, (err, compareRes) => {
                             if (err) { // error while comparing
                                 res.status(502).json({ message: "error while checking user password" });
                             } else if (compareRes) { // password match
