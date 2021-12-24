@@ -43,6 +43,14 @@ function Feed(props) {
 
   ]
 
+  const images1 = [
+    {
+      uri: 'https://d2dnvwecfdx5as.cloudfront.net/post_images/61c2e34cad97f50001314f70/large.jpg'
+    },
+    {
+      uri: 'https://d3i4lqsaxjar6n.cloudfront.net/post_images/61958e4b490a7c0003244ab4/large.jpg'
+    }
+  ]
 
   const postsX = [{
     postId: 100,
@@ -51,57 +59,59 @@ function Feed(props) {
     title: "",
     body: lorempIpsum,
     rating: 5,
-    userName: "RIP my bird",
+    userName: "John Smith",
     photos: images
   }, {
     postId: 10,
     userId: 10,
-    userPhoto: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
+    userPhoto: "https://d3i4lqsaxjar6n.cloudfront.net/post_images/61958e4b490a7c0003244ab4/large.jpg",
     title: "",
-    body: lorempIpsum,
+    body: "Quaerat provident commodi consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo " +
+      "fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore " +
+      "suscipit quas? Nulla, placeat.",
     rating: 5,
-    userName: "RIP my bird",
-    photos: images
+    userName: "Sarah Osama",
+    photos: images1
   }]
 
-  const useFetch = (url) => {
-    const [data, setData] = useState([]);
-    const [onProgress, setProgress] = useState(true);
-    const [error, setError] = useState(null);
+  // const useFetch = (url) => {
+  //   const [data, setData] = useState([]);
+  //   const [onProgress, setProgress] = useState(true);
+  //   const [error, setError] = useState(null);
 
-    const theme = useContext(ThemeContext);
-    const [posts, setPosts] = useState(postsX);
-    const [onProcessing, setProcessing] = useState(true);
+  //   const theme = useContext(ThemeContext);
+  //   const [posts, setPosts] = useState(postsX);
+  //   const [onProcessing, setProcessing] = useState(true);
 
-    useEffect(() => {
-      // if(data === []){
-      fetch(url)
-        .then(res => {
-          if (!res.ok) {
-            throw Error('Could not fetch the data for that resource');
-          }
-          return res.json();
-        })
-        .then(data => {
-          setPosts(data);
-        })
-        .catch(err => {
-          console.log(err)
-        });
-      //}
-    }, [url])
+  //   useEffect(() => {
+  //     // if(data === []){
+  //     fetch(url)
+  //       .then(res => {
+  //         if (!res.ok) {
+  //           throw Error('Could not fetch the data for that resource');
+  //         }
+  //         return res.json();
+  //       })
+  //       .then(data => {
+  //         setPosts(data);
+  //       })
+  //       .catch(err => {
+  //         console.log(err)
+  //       });
+  //     //}
+  //   }, [url])
 
-    return { data };
-  }
+  //   return { data };
+  // }
 
 
   const userPhoto = 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4'
 
 
-  const { data } = useFetch(url + 'feed/');
-  console.log("1")
-  console.log(data)
-  console.log("2")
+  // const { data } = useFetch(url + 'feed/');
+  // console.log("1")
+  // console.log(data)
+  // console.log("2")
 
   // useEffect(() => {
   //   setProcessing(onProgress);
@@ -156,7 +166,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: RFValue(20)
+    marginVertical: RFValue(50)
   },
   button: {
     width: 100,
