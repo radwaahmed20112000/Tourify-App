@@ -1,32 +1,34 @@
 import React, { useContext } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, TextInput, } from 'react-native';
+import { Rating, AirbnbRating } from 'react-native-ratings';
 import { ThemeContext } from '../Context/ThemeContext';
 import {normalize} from '../util/FontNormalization';
+import ImagePicker from 'react-native-image-picker';
+import TagsList from '../Components/PostCreation/TagsList';
 
 function PostCreation() {
-    const [value, onChangeText] = React.useState('Useless Placeholder');
 
-    const {light, dark, changeTheme, lightMode} = useContext(ThemeContext);
+    const [value, onChangeText] = React.useState('');
+    const theme = useContext(ThemeContext);
     return (
         <View style={styles.container}>
-            <Text style={{color: lightMode? light.Text : dark.Text, fontSize: normalize(30)}}>Let's Start Our Tour</Text>
-            <ScrollView horizontal={true} style={styles.filterSection}>
-                <TouchableOpacity onPress={() => {setTag("All");}} style={selectedFilter == "All" ? [styles.filterButtons, {backgroundColor: "white"}] : styles.filterButtons}>
-                    <Text style={selectedFilter == "All" ? {fontSize: 17, color:"#010621", fontWeight:"bold"} : {fontSize: 17, color:"white"}}>All</Text>
-                </TouchableOpacity>
-            </ScrollView>
+            <Text style={{color: theme.Text, fontSize: normalize(30)}}>Let's Share Our Tour</Text>
             <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onChangeText={text => onChangeText(text)}
-            value={value}
+                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 0.3}}
+                onChangeText={text => onChangeText(text)}
+                placeholder= "How was your trip?"
+                value={value}
+                multiline={true}
             />
-            <StarRating
-                disabled={false}
-                maxStars={5}
-                rating={this.state.starCount}
-                selectedStar={(rating) => this.onStarRatingPress(rating)}
+            <AirbnbRating
+                type='star'
+                ratingCount={5}
+                showRating
+                
+            // onFinishRating={this.ratingCompleted}
             />
-            <Button onPress={()=> changeTheme()} title='Post'></Button>
+            <TagsList></TagsList>
+            {/* <Button onPress={()=> changeTheme()} title='Post'></Button> */}
         </View>
     );
 }
