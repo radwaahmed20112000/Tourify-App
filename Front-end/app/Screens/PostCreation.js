@@ -6,6 +6,7 @@ import { AirbnbRating } from 'react-native-ratings';
 import { ThemeContext } from '../Context/ThemeContext';
 import ImagePicker from 'react-native-image-picker';
 import TagsList from '../Components/PostCreation/TagsList';
+import ImageSharing from '../Components/PostCreation/ImageSharing';
 import { RFValue } from "react-native-responsive-fontsize";
 import { LinearGradient } from 'expo-linear-gradient';
 import { NetworkInfo } from "react-native-network-info";
@@ -25,6 +26,11 @@ function PostCreation() {
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
     var ipAddress ;
+    const newTags = (newTags) => setTags(newTags)
+    const newlatitude = (newLatitude) => setLatitude(newLatitude)
+    const newlongitude = (newLongitude) => setLongitude(newLongitude)
+    const newPhotos = (newPhotos) => setLongitude(newPhotos)
+
     
     // NetworkInfo.getIPAddress(ip => ipAddress = ip);
 
@@ -65,7 +71,7 @@ function PostCreation() {
         <SafeAreaView style={[{backgroundColor: theme.primary}, styles.container]}>
             <View style={[styles.upperSection, {borderColor:theme.SecondaryPurple}]}>
                 <TouchableOpacity >
-                    <FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) }  color={theme.SecondaryPurple}  style={{marginRight :15, marginTop : 8, alignSelf:"flex-end" }}/>
+                    <FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) }  color={theme.SecondaryPurple}  style={{marginRight :SCREEN_WIDTH*0.7, marginTop : 8,  }}/>
                 </TouchableOpacity>
                 {/* <Text style={{color: theme.Text, fontSize: RFValue(16)}}>Let's Share Our Tour</Text> */}
                 <TouchableOpacity onPress={() => createPost()}>
@@ -79,27 +85,27 @@ function PostCreation() {
                 </TouchableOpacity>
 
             </View>
-            
-            <TextInput
-                style={[{borderColor: theme.SecondaryPurple}, styles.description]}
-                onChangeText={text => onChangeText(text)}
-                placeholder= "How was your trip?"
-                value={description}
-                multiline={true}
-            />
-            <TextInput
-                onChangeText={text => setBudget(text)}
-                placeholder="..$"
-            />
-            <TextInput
-                onChangeText={text => setDuration(text)}
-                placeholder="..days"
-            />
-            <TextInput
-                onChangeText={text => setOrganisation(text)}
-                placeholder=".."
-                
-            />
+            <View style={{flexDirection:"column"}}>
+                <TextInput
+                    style={[{borderColor: theme.SecondaryPurple}, styles.description]}
+                    onChangeText={text => onChangeText(text)}
+                    placeholder= "How was your trip?"
+                    value={description}
+                    multiline={true}
+                />
+                <TextInput
+                    onChangeText={text => setBudget(text)}
+                    placeholder="budget"
+                />
+                <TextInput
+                    onChangeText={text => setDuration(text)}
+                    placeholder="Days"
+                />
+                <TextInput
+                    onChangeText={text => setOrganisation(text)}
+                    placeholder="Organisation"
+                />
+            </View>
             <AirbnbRating
                 type='star'
                 ratingCount={5}
@@ -112,8 +118,9 @@ function PostCreation() {
                 onFinishRating={rate => setRate(rate)}
             />
             {/* <Button title="Add Location" onPress={() => {navigation.navigate("Map",{setLatitude, setLongitude})}}></Button> */}
-            {/* <TagsList setTags={setTags}></TagsList> */}
-            {/* <ImagePicker setPhotos={setPhotos}></ImagePicker> */}
+            <ImageSharing setPhotos={newPhotos} ></ImageSharing>
+
+            <TagsList setTags={newTags}></TagsList>
             {/* <Map initialParams={{ setLatitude: setLatitude, setLongitude:setLongitude }}></Map> */}
         </SafeAreaView>
     );
@@ -136,11 +143,11 @@ const styles = StyleSheet.create({
         flexDirection : 'row',
         padding : "5%",
         paddingBottom: "5%",
-        borderBottomWidth:RFValue(0.5),
         width:SCREEN_WIDTH,
     },
     description: {
-        height: RFValue(SCREEN_HEIGHT*0.1), 
+        height: RFValue(SCREEN_HEIGHT*0.05), 
+        width:RFValue(SCREEN_WIDTH*0.8),
         fontSize:RFValue(18),
         borderBottomWidth: 0.3
     }

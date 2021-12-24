@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feed from '../../Screens/Feed';
 import Profile from '../../Screens/Profile';
 import Notifications from '../../Screens/Notifications';
+import Map from '../../Screens/Map';
 import { RFValue } from "react-native-responsive-fontsize";
 import { View, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -81,6 +82,7 @@ function NavigationTabs(props) {
         <Tab.Screen name="PostCreation" component={PostCreation} />
         <Tab.Screen name="Notifications" component={Notifications} />
         <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Map" component={Map} />
     </Tab.Navigator>)
 
 }

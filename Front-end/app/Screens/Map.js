@@ -8,7 +8,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function Map(setLatitude, setLongitude) {
+function Map({setLatitude, setLongitude}) {
 	const [ pin, setPin ] = React.useState({
 		latitude: 37.78825,
 		longitude: -122.4324

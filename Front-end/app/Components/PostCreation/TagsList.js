@@ -3,7 +3,7 @@ import { View, StyleSheet, Button, FlatList, SafeAreaView, Dimensions, Text } fr
 import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
 
 
-function TagsList(setTags) {
+function TagsList({setTags}) {
     const tags = [ "Historical", "Beach", "Fun", "Romantic", "Relaxation",
     "Camping", "Volunteer", "Road", "Custom" ];
     var choosenTags = {"Historical":false, "Beach":false, "Fun":false, "Romantic":false, "Relaxation":false,
@@ -20,7 +20,7 @@ function TagsList(setTags) {
     };
     
     return (
-        <SafeAreaView style={{paddingTop:"50%"}}>
+        <SafeAreaView >
         <Collapse>
             <CollapseHeader>
                 <View>
