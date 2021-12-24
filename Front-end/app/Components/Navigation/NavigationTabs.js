@@ -11,6 +11,7 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { TokenContext } from '../../Context/TokenContext';
 import PostCreation from '../../Screens/PostCreation';
 import PostListComponent from '../Shared/PostListComponent';
+import Feed from '../../Screens/Feed';
 const Tab = createBottomTabNavigator();
 
 function NavigationTabs(props) {
