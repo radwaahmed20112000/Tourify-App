@@ -8,10 +8,7 @@ module.exports = {
         console.log("hello")
         var email = req.body.email;
         // checks if email already exists
-
-
         Account.findEmail(email, (err, user) => {
-
             if (err)
                 return res.status(500).json(err);
 
@@ -97,7 +94,6 @@ module.exports = {
             }
             else {
                 Account.getPassword(email, (err, password)=>{
-                    if(password) console.log(password);
                     // password hash
                     if (password) {
                         bcrypt.compare(req.body.password, password, (err, compareRes) => {
@@ -112,11 +108,8 @@ module.exports = {
                         });
                     }
                     else {
-                        if (req.body.bool) {
-                            const token = jwt.sign({ email: req.body.email }, 'secret', {});
-                            res.status(200).json({ message: "user logged in", token: token });
+                            res.status(404).json({ message: "invalid credentials"});
                         }
-                    }
                 })
 
             };

@@ -27,9 +27,10 @@ export default function App() {
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
   const authContext = React.useMemo(() => {
     return {
-      signIn: async (email, password) => {
-        let response = await signInRequest(email, password);
+      signIn: async (email, password, bool) => {
+        let response = await signInRequest(email, password, bool);
         if (!response.successful) {
+          console.log(response.message);
           return response.message;
         }
         //if user successfully logged in, save user token and store in local storage
@@ -41,8 +42,8 @@ export default function App() {
         }
         dispatch({ type: 'Login', userToken });
       },
-      signUp: async (email, userName, password, country) => {
-        let response = await signUpRequest(email, userName, password, country);
+      signUp: async (email, userName, password, country, photo, bool) => {
+        let response = await signUpRequest(email, userName, password, country, photo, bool);
         if (!response.successful) {
           return response.message;
         }

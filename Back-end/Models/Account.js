@@ -47,7 +47,7 @@ module.exports = {
 
 
     create: async (account, cb) => {
-        let insertQuery = `INSERT INTO ${tableName}  VALUES  ("${account.email}","${account.name}","${account.password}","${account.photo}","${account.googleBool}", "${account.country}" ) ;`;
+        let insertQuery = `INSERT INTO ${tableName}  VALUES  ("${account.email}","${account.name}","${account.password}","${account.photo}",${account.googleBool}, "${account.country}" ) ;`;
         try {
             let user = await DB(insertQuery)
             console.log("inserted account : ", user)
