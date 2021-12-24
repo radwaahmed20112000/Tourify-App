@@ -92,7 +92,7 @@ export default function App() {
           <TokenContext.Provider value={loginState.userToken}>
             <NavigationContainer>
               <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {!loginState.userToken ?
+                {loginState.userToken ?
                   <Stack.Screen name="NavigationTabs"
                     component={NavigationTabs} />
                   :
