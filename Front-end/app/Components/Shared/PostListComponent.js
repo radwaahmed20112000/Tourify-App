@@ -17,36 +17,11 @@ function navigateToPost(postId) {
 }
 
 function PostListComponent(props) {
-    const theme = useContext(ThemeContext);
-    const lorempIpsum = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia," +
-        "    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum" +
-        "    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium" +
-        "    optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis" +
-        "    obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam"
-    // const { postId, userId, title, body, rating, userName, userPhoto, photos } = props;
-    const userPhoto = 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4'
-    const userName = "RIP my bird"
-    const images = [
-        {
-            uri: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
-        },
-        {
-            uri: "https://images.unsplash.com/photo-1573273787173-0eb81a833b34",
-        },
-        {
-            uri: "https://images.unsplash.com/photo-1569569970363-df7b6160d111",
-        },
-        {
-            uri: 'https://d2dnvwecfdx5as.cloudfront.net/post_images/61c2e2a4ad97f50001314f56/large.jpg'
-        },
-        {
-            uri: 'https://d2dnvwecfdx5as.cloudfront.net/post_images/61c2e34cad97f50001314f70/large.jpg'
-        },
-        {
-            uri: 'https://d3i4lqsaxjar6n.cloudfront.net/post_images/61958e4b490a7c0003244ab4/large.jpg'
-        }
+    console.log("ALO")
 
-    ]
+    console.log(props.item)
+    const theme = useContext(ThemeContext);
+    const { postId, userId, title, body, rating, userName, userPhoto, photos } = props.item;
 
     return (
         <View style={styles.container}>
@@ -56,7 +31,7 @@ function PostListComponent(props) {
                         borderRadius: SCREEN_WIDTH * 0.15, borderColor: theme.PrimaryColor,
                         borderWidth: 0.25
                     }}></ImageBackground>
-                    <View style={{ padding: "1.5%", paddingLeft: RFValue(10), width: "100%", justifyContent: 'center' }}>
+                    <View style={{ paddingLeft: RFValue(10), width: "100%", justifyContent: 'center' }}>
                         <SafeAreaView style={{ width: "85%" }}>
                             <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.PrimaryColor }}>{userName}</Text>
                             {/* TODO add time stamp */}
@@ -70,14 +45,13 @@ function PostListComponent(props) {
 
             <TouchableHighlight onPress={() => navigateToPost(postId)}>
                 <SafeAreaView style={styles.postDescription}>
-                    <Text style={{ fontSize: RFValue(12), color: theme.PrimaryColor }}>{ }{lorempIpsum}</Text>
+                    <Text style={{ fontSize: RFValue(12), color: theme.PrimaryColor }}>{ }{body}</Text>
                 </SafeAreaView>
             </TouchableHighlight>
             <View style={{
-                height: RFValue(300), width: "100%", paddingHorizontal: RFValue(20), paddingVertical: RFValue(10)
+                height: RFValue(300), width: "100%", paddingVertical: RFValue(10)
             }}>
-                <ImageViewer images={images}  ></ImageViewer>
-
+                <ImageViewer images={photos}  ></ImageViewer>
             </View>
         </View>
     );
@@ -89,6 +63,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
+        paddingRight: RFValue(30),
+        paddingLeft: RFValue(10),
     },
     button: {
         width: 100,
@@ -121,7 +97,7 @@ const styles = StyleSheet.create({
     postDescription: {
         flexDirection: 'row',
         paddingTop: RFValue(8),
-        paddingHorizontal: RFValue(20),
+
     }
 });
 export default PostListComponent;

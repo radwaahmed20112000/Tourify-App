@@ -11,6 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import GradientText from '../Shared/GradientText';
 import { ThemeContext } from '../../Context/ThemeContext';
 import PostCreation from '../../Screens/PostCreation';
+import PostListComponent from '../Shared/PostListComponent';
 const Tab = createBottomTabNavigator();
 
 function NavigationTabs(props) {
@@ -19,6 +20,7 @@ function NavigationTabs(props) {
     return (<Tab.Navigator
         screenOptions={({ route }) => ({
             tabBarShowLabel: false,
+            headerShown: false,
             tabBarStyle: {
                 position: 'absolute',
                 bottom: RFValue(10),
