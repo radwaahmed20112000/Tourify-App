@@ -9,8 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
 import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
-
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
+import { TokenContext } from './app/Context/TokenContext';
 
 export default function App() {
   //navigation:
@@ -32,7 +32,6 @@ export default function App() {
         if (!response.successful) {
           return response.message;
         }
-        setMessage("");
         //if user successfully logged in, save user token and store in local storage
         let userToken = response.userToken;
         try {
@@ -47,7 +46,6 @@ export default function App() {
         if (!response.successful) {
           return response.message;
         }
-        setMessage("");
         //if user successfully signed up, save user token and store in local storage
         let userToken = response.userToken;
         try {
@@ -91,20 +89,22 @@ export default function App() {
     return (
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
-          <NavigationContainer>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            {loginState.userToken?
-            <Stack.Screen name="NavigationTabs"
-            component={NavigationTabs}/>
-            :
-            <Stack.Screen
-              name="Registeration"
-              component={Registeration}
-              initialParams={{isSignUp: false}}
-            />
-            }
-          </Stack.Navigator>
-        </NavigationContainer>
+          <TokenContext.Provider value={loginState.userToken}>
+            <NavigationContainer>
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              {loginState.userToken?
+                  <Stack.Screen name="NavigationTabs"
+                  component={NavigationTabs}/>
+                :
+                <Stack.Screen
+                name="Registeration"
+                component={Registeration}
+                initialParams={{isSignUp: false}}
+              />
+              }
+            </Stack.Navigator>
+          </NavigationContainer>
+        </TokenContext.Provider>
       </AuthContext.Provider>
     </ThemeContext.Provider>
     );

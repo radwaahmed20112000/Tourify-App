@@ -10,7 +10,7 @@ module.exports = {
     
         email =email || '';
       
-         let selectQuery = `SELECT * FROM ${tableName} WHERE  email = ${email} ;`;
+         let selectQuery = `SELECT * FROM ${tableName} WHERE userId = "${email}" ;`;
     
          try {
              let user = await DB(selectQuery)
@@ -26,13 +26,29 @@ module.exports = {
      
      },
 
+     getPassword : async ( email, cb )=>{
+    
+        email =email || '';
+      
+         let selectQuery = `SELECT password FROM ${tableName} WHERE userId = "${email}" ;`;
+    
+         try {
+             let password = await DB(selectQuery)
+             console.log("user : ", password)
+             return cb(null, password);
+    
+         } catch (e) {
+             console.log(e)
+             return cb(e, null);
+    
+         }
+    
+     
+     },
 
 
     create: async (account, cb) => {
-
-
-        let insertQuery = `INSERT INTO ${tableName}  VALUES  (${account.email},${account.name},${account.password},${account.photo},${account.googleBool} ) ;`;
-
+        let insertQuery = `INSERT INTO ${tableName}  VALUES  ("${account.email}","${account.name}","${account.password}","${account.photo}","${account.googleBool}", "${account.country}" ) ;`;
         try {
             let user = await DB(insertQuery)
             console.log("inserted account : ", user)

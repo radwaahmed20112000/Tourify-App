@@ -18,11 +18,10 @@ function Registeration({navigation, route}) {
     const [photo, setPhoto] = useState(null);
     const handleSignIn = (googleBool)=>{
       let res = signIn(email, password, googleBool);
-      setMessage(res);
+      
     }
     const handleSignUp = (googleBool)=>{
       let res = signUp(email, name, password, country, photo, googleBool);
-      setMessage(res);
     }
     const onSelect = (country) => {
       setCountry(country.name);
@@ -70,7 +69,7 @@ function Registeration({navigation, route}) {
             <Text numberOfLines={1} style={[styles.country, {color:Theme.SecondaryCyan}]}>{country}</Text>
             </View>
             : null}
-            <Text style={styles.message}>{message}</Text>
+            {/* <Text style={styles.message}>{message}</Text> */}
             <TouchableOpacity style={[styles.signInBtn, {backgroundColor: Theme.SecondaryCyan}]} onPress={()=>{isSignUp? handleSignUp(false) : handleSignIn(false)}}>
                 <Text style={styles.btnTxt}>{isSignUp? "Sign Up" : "Sign In"}</Text>
             </TouchableOpacity>

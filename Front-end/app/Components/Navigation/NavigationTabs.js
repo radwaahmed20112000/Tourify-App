@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Feed from '../../Screens/Feed';
 import Profile from '../../Screens/Profile';
 import Notifications from '../../Screens/Notifications';
 import { RFValue } from "react-native-responsive-fontsize";
@@ -9,13 +8,15 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import GradientText from '../Shared/GradientText';
 import { ThemeContext } from '../../Context/ThemeContext';
+import { TokenContext } from '../../Context/TokenContext';
 import PostCreation from '../../Screens/PostCreation';
 import PostListComponent from '../Shared/PostListComponent';
 const Tab = createBottomTabNavigator();
 
 function NavigationTabs(props) {
     const theme = useContext(ThemeContext);
-
+    const token = useContext(TokenContext);
+    console.log(token);
     return (<Tab.Navigator
         screenOptions={({ route }) => ({
             tabBarShowLabel: false,
