@@ -12,11 +12,14 @@ function Registeration({navigation, route}) {
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
     const [country, setCountry] = useState("Egypt");
+    const [message, setMessage] = useState("");
     const handleSignIn = ()=>{
-      signIn(email, password);
+      let res = signIn(email, password);
+      setMessage(res);
     }
     const handleSignUp = ()=>{
-      signUp(email, name, password, country);
+      let res = signUp(email, name, password, country);
+      setMessage(res);
     }
     const onSelect = (country) => {
       setCountry(country.name);
@@ -40,6 +43,7 @@ function Registeration({navigation, route}) {
             <Text numberOfLines={1} style={[styles.country, {color:Theme.SecondaryCyan}]}>{country}</Text>
             </View>
             : null}
+            <Text style={styles.message}>{message}</Text>
             <TouchableOpacity style={[styles.signInBtn, {backgroundColor: Theme.SecondaryCyan}]} onPress={()=>{isSignUp? handleSignUp() : handleSignIn()}}>
                 <Text style={styles.btnTxt}>{isSignUp? "Sign Up" : "Sign In"}</Text>
             </TouchableOpacity>
@@ -91,7 +95,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent:"center",
       marginBottom:"3%",
-      top:"5%",
+      top:"3%",
       borderRadius:50
   },
   btnTxt:{
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
     backgroundColor:"black",
     flexDirection:"row",
     paddingLeft:"6%",
-    top:"10%",
+    top:"7%",
     borderRadius:50
   },
   btnTxtgoogle:{
@@ -120,7 +124,7 @@ const styles = StyleSheet.create({
       height:40
   },
   signUpTexts:{
-      top:"20%",
+      top:"15%",
       width:"75%",
       flexDirection:"row",
   },
@@ -134,9 +138,14 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     borderRadius:10,
     height:60,
+    marginBottom:"2%"
   },
   country:{
     fontSize:normalize(19)
+  },
+  message:{
+    fontSize:normalize(16),
+    color:"#fc0339",
   }
 
 });

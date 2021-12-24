@@ -9,7 +9,7 @@ import { AuthContext } from './app/Context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
 import PrivateApp from './app/Components/Navigation/PrivateApp';
-
+import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 export default function App() {
   //navigation:
   const Stack = createStackNavigator();
@@ -27,33 +27,34 @@ export default function App() {
   const authContext = React.useMemo(()=>{
     return{
       signIn: async (email, password)=>{
-        fakeEmail = "aya";
-        fakePassword = "hello";
-        userToken = null;
-        userName = null;
-        userPhoto = null;
-        if(fakeEmail == email && fakePassword == password)
-        {
-          userToken = "fakeToken";
-          userName = "ayaa";
-          userPhoto = "This is a photo";
-          try {
-            await AsyncStorage.setItem('userToken', userToken)
-          } catch (e) {
-            console.log(e);
-          }
+        let response = await signInRequest(email, password);
+        if(!response.successful)
+        { 
+          return response.message;
         }
-        dispatch({type: 'Login', userName, userPhoto, userToken});
-      },
-      signUp: async (email, userName, password, country)=>{
-        userToken = "fakeToken";
-        userPhoto ="This is a photo";
+        setMessage("");
+        let userToken = response.userToken;
         try {
           await AsyncStorage.setItem('userToken', userToken)
         } catch (e) {
           console.log(e);
         }
-        dispatch({type: 'Register', userName, userPhoto, userToken});
+        dispatch({type: 'Login', userToken});
+      },
+      signUp: async (email, userName, password, country)=>{
+        let response = await signUpRequest(email, userName, password, country);
+        if(!response.successful)
+        {
+          return response.message;
+        }
+        setMessage("");
+        let userToken = response.userToken;
+        try {
+          await AsyncStorage.setItem('userToken',userToken)
+        } catch (e) {
+          console.log(e);
+        }
+        dispatch({type: 'Register', userToken});
       },
       signOut: async ()=>{
         try {
