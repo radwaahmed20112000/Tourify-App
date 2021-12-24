@@ -3,7 +3,9 @@ let chaiHttp = require('chai-http');
 let server = require('../../server');
 let should = chai.should();
 chai.use(chaiHttp);
+const jwt = require("jsonwebtoken");
 
+/*
 describe('Posts controller', function () {
   
     describe('GET /posts/feed', function () {
@@ -50,12 +52,12 @@ describe('Posts controller', function () {
             });
 
         });
-
+*/
         describe('POST /posts/TripCreation', function () {
-          //  const token = jwt.sign({ email: "test@gmail.com" }, 'secret', {});
+          //const token = jwt.sign({ email: "test@gmail.com" }, 'secret', {});
             const body = {
-              //  user: token,
-                description: "Hello",
+              user: "token",
+              description: "Hello",
                 tags: ["hicking"],
                 photos: ["photo1", "photo2"],
                 organisation: "Faculty of Engineering",
@@ -64,13 +66,13 @@ describe('Posts controller', function () {
                 latitude: "Alex",
                 longitude: "Egypt"
             };
-            it('it should retrun no error', (done) => {
+            it('it should retrun no error', () => {
                 chai.request(server)
-                    .post(`/posts/feedCount`)
+                    .post(`/posts/TripCreation`)
                     .send(body)
                     .end((err, res) => {
                         res.should.have.status(200);
-                        done();
+                        console.log(res);
                     });
             });
 
@@ -82,10 +84,8 @@ describe('Posts controller', function () {
 
    
    
-    });
 
 
 
 
 
-});

@@ -3,6 +3,7 @@ require('dotenv').config();
 const app = express();
 const bodyParser = require('body-parser');
 const PostRouter =require('./Routes/PostRoutes');
+const AccountRouters =require('./Routes/AccountRoutes');
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({extended:false}));

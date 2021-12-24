@@ -1,3 +1,4 @@
+/*
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../../server');
@@ -67,3 +68,4 @@ describe('Account controller', function () {
 
 
 });
+*/

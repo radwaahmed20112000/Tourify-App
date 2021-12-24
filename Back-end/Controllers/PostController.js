@@ -48,12 +48,10 @@ module.exports= {
    },
 
 
- 
-
-   createPost:(req, res) =>{    
-      const decoded = jwt.decode(req.body.token); 
-      const temp = decoded.split("'");
-      const userId = temp[1];
+   create:(req, res) =>{    
+      //const decoded = jwt.decode(req.body.token); 
+      //const temp = decoded.split("'");
+      const userId = "sdfg";
       var postId;
       
          if(req.body.constructor === Object && Object(req.body).length === 0){
@@ -68,14 +66,53 @@ module.exports= {
                postId = post.insertId;
                res.json({status: true, message: 'Post created successfuly',data: post.insertId});
             });
-            this.createPhoto(req,res,postId);
-            createPostLocation(req,res,postId);
-            this.createTags(req,res,postId);
+            //createPhoto(req,res,postId);
+            //createPostLocation(req,res,postId);
+            //createTags(req,res,postId);
+            for(let i = 0;i < req.body.photos;i++){
+               var photoId;
+               var photo = req.body.photos[i];
+               var newPhoto = new Photo(postId,photo);
+               
+               Photo.createPhoto(newPhoto,(err,photo)=>{
+               if(err)res.send(err);  
+               photoId = photo.insertId;
+               res.json({status: true, message: 'Photo created successfuly',data: photo.insertId});
+               });
+               //createPostPhoto(res,postId,photoId);
+               var newPostPhoto = new PostPhoto(postId,photoId);
+               PostPhoto.createPostPhoto(newPostPhoto,(err,post_photo)=>{
+                  if(err)res.send(err);
+                  res.json({status: true, message: 'PostPhoto created successfuly'});
+               });
          }
-   },
+         const newPostLocation = new PostLocation(postId,req.body);
+         PostLocation.createPostLocation(newPostLocation,(err,post_location)=>{
+            if(err)res.send(err);
+            res.json({status: true, message: 'PostLocation created successfuly'});
+         });
+         for(let i = 0;i < req.body.tags;i++){
+            var tag = req.body.tags[i];
+            const newTag = new Tag(tag);
    
-   createPhoto:(req,res,postId,photoId) =>{
+            Tag.createTag(newTag,(err,tag)=>{
+               if(err)res.send(err);
+               tagId = tag.insertId;
+               res.json({status: true, message: 'Tag created successfuly',data: tag.insertId});
+            });
+            var newPostTags = new PostTags(postId,tagId);
+            PostTags.createPostTags(newPostTags,(err,post_tags)=>{
+               if(err)res.send(err);
+               res.json({status: true, message: 'PostTags created successfuly'});
+            });
+   
+         }
+   }
+}
+ /*
+   createPhoto:(req,res,postId) =>{
       for(let i = 0;i < req.body.photos;i++){
+         var photoId;
          var photo = req.body.photos[i];
          var newPhoto = new Photo(postId,photo);
          
@@ -84,8 +121,8 @@ module.exports= {
          photoId = photo.insertId;
          res.json({status: true, message: 'Photo created successfuly',data: photo.insertId});
          });
+         createPostPhoto(res,postId,photoId);
       }
-      this.createPostPhoto(res,postId,photoId);
    },
    
    createPostPhoto:(res,postId,photoId) =>{
@@ -125,7 +162,7 @@ module.exports= {
          if(err)res.send(err);
          res.json({status: true, message: 'PostTags created successfuly'});
       });
-   },
-
+   }
+*/
 }
 

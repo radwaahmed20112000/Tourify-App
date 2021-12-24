@@ -1,0 +1,22 @@
+{
+  "name": "tourify-app-1",
+  "version": "1.0.0",
+  "description": "Tourify is a social app for sharing travel experiences. Users can share the moments of their trips to inspire the other users and help them decide on their next destination. The application provides a way for users to filter trips' posts according to their preferences and interact with other users' posts.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radwaahmed20112000/Tourify-App.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/radwaahmed20112000/Tourify-App/issues"
+  },
+  "homepage": "https://github.com/radwaahmed20112000/Tourify-App#readme",
+  "dependencies": {
+    "chai": "^4.3.4"
+  }
+}
