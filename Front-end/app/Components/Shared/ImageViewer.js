@@ -11,52 +11,29 @@ export default function ImageViewer(props) {   /// images  as props
     const [extraImgs, setExtra] = useState(0);
     const [visible, setIsVisible] = useState(false);
     const [openInd, setOpenInd] = useState(0);
-    // images = [
-    //     {
-    //         uri: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
-    //     },
-    //     {
-    //         uri: "https://images.unsplash.com/photo-1573273787173-0eb81a833b34",
-    //     },
-    //     {
-    //         uri: "https://images.unsplash.com/photo-1569569970363-df7b6160d111",
-    //     },
-    //     {
-    //         uri: 'https://d2dnvwecfdx5as.cloudfront.net/post_images/61c2e2a4ad97f50001314f56/large.jpg'
-    //     },
-    //     {
-    //         uri: 'https://d2dnvwecfdx5as.cloudfront.net/post_images/61c2e34cad97f50001314f70/large.jpg'
-    //     },
-    //     {
-    //         uri: 'https://d3i4lqsaxjar6n.cloudfront.net/post_images/61958e4b490a7c0003244ab4/large.jpg'
-    //     }
-
-    // ]
-
-
 
     useEffect(() => {
         let xx = props.images ? props.images : [];
         console.log(images)
 
         setImages(xx);
-        let x = images.length;
+        let x = xx.length;
         setExtra(0);
         if (x == 1) {
             setTopImgs([xx[0]]);
             setBottomImgs([])
         }
         else if (x == 2) {
-            setTopImgs([images[0]]);
-            setBottomImgs([images[1]])
+            setTopImgs([xx[0]]);
+            setBottomImgs([xx[1]])
         }
         else if (x == 3) {
-            setTopImgs([images[0]]);
-            setBottomImgs([images[1], images[2]])
+            setTopImgs([xx[0]]);
+            setBottomImgs([xx[1], xx[2]])
         }
         else if (x == 4) {
-            setTopImgs([images[0], images[1]]);
-            setBottomImgs([images[2], images[3]])
+            setTopImgs([xx[0], xx[1]]);
+            setBottomImgs([xx[2], xx[3]])
         }
         else if (x == 5) {
             setTopImgs([xx[0], xx[1]]);
@@ -72,9 +49,6 @@ export default function ImageViewer(props) {   /// images  as props
         else {
             setExtra(0);
         }
-
-
-
 
     }, [props])
 
