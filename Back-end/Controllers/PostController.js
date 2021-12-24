@@ -15,10 +15,10 @@ module.exports= {
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
       
-      if (!userId)
+      if (!req.userId)
          res.status(403)
-      
-      let query = `USER.userId != ${userId}`;
+ 
+      let query = `USER.userId != ${req.userId}`;
 
       Post.findAll(query, limit, offset, (err, posts) =>{
          
@@ -26,9 +26,11 @@ module.exports= {
             return res.status(500).json(err);
          
          return res.json(posts);
+
+
       })
+
    },
-   
    getFeedPostsCount: (req, res) => {
 
       Post.count(null, (err, count) => {
@@ -37,11 +39,13 @@ module.exports= {
             return res.status(500).json(err);
 
          return res.json(count);
+
+
       })
 
    },
 
-   createPost: (req, res) =>{    
+   createPost:(req, res) =>{    
       const decoded = jwt.decode(req.body.token); 
       const temp = decoded.split("'");
       const userId = temp[1];
@@ -97,6 +101,6 @@ module.exports= {
                });
             }
          }
-   },
+   }
 }
 

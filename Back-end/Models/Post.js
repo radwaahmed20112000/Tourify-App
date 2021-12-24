@@ -83,7 +83,7 @@ module.exports = {
 
         try {
             let count = await DB(selectQuery)
-            console.log("posts count: ", count)
+          
             return cb(null, count[0]);
 
         } catch (e) {
@@ -91,6 +91,7 @@ module.exports = {
             return cb(e, null);
 
         }
-    }
 
+
+    }
 }

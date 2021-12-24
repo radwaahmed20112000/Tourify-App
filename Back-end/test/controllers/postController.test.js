@@ -4,6 +4,8 @@ let server = require('../../server');
 let should = chai.should();
 chai.use(chaiHttp);
 
+describe('Posts controller', function () {
+  
     describe('GET /posts/feed', function () {
         const tests = [
             {limit:10 , offset :0 },
@@ -48,10 +50,6 @@ chai.use(chaiHttp);
             });
 
         });
-
-            
-
-   
    
     });
 

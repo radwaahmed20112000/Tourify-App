@@ -1,40 +1,90 @@
-import React, { useContext, useState } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
+import React, {useState } from 'react';
+import {StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Picker} from 'react-native';
 import { ThemeContext } from '../Context/ThemeContext';
 import {normalize} from '../util/FontNormalization';
+import { AuthContext } from '../Context/AuthContext';
+import CountryPicker from 'react-native-country-picker-modal';
+import * as Google from 'expo-google-app-auth';
 
-function Registeration(props) {
-    const {isSignUp, changeSigning} = props;
-    const {theme} = useContext(ThemeContext);
+function Registeration({navigation, route}) {
+    const [isSignUp, setIsSignUp] = useState(route.params.isSignUp);
+    const {signIn, signUp} = React.useContext(AuthContext);
+    const Theme = React.useContext(ThemeContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [country, setCountry] = useState(null);
+    const [message, setMessage] = useState("");
+    const [photo, setPhoto] = useState(null);
+    const handleSignIn = (googleBool)=>{
+      let res = signIn(email, password, googleBool);
+      setMessage(res);
+    }
+    const handleSignUp = (googleBool)=>{
+      let res = signUp(email, name, password, country, photo, googleBool);
+      setMessage(res);
+    }
+    const onSelect = (country) => {
+      setCountry(country.name);
+    }
+    const handleGoogleSignIn = ()=>{
+      const config = {
+        iosClientId: "568488060081-cdjfp9cp382ed7gbkhmbekda4u9105se.apps.googleusercontent.com",
+        androidClientId: "568488060081-sa2lakshiboq3ko58j759cd1jaioja9i.apps.googleusercontent.com",
+        scopes: ["profile", "email"]
+      }
+      Google.logInAsync(config)
+      .then((result)=>{
+        const {type, user} = result;
+        if(type == "success")
+        {
+          setName(user.name);
+          setPhoto(user.photoUrl);
+          setEmail(user.email);
+          isSignUp? handleSignUp(true) : handleSignIn(true);
+        }
+        else{
+          setMessage("An error occurred");
+        }
+      })
+      .catch((error) =>{
+        setMessage("An error occured, check your network");
+      });
+    }
+
   return (
         <View style={styles.container}>
-            <Image source={{ uri: 'https://i.ibb.co/S02fhRW/Tourify-Logo-Black.png' }} style={styles.logo} />
+            <Image source={{ uri: Theme.Logo }} style={styles.logo} />
             {isSignUp? <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText} selectionColor={theme.SecondaryCyan} placeholder="Name" placeholderTextColor={theme.subText} onChangeText = {text => setName(text)}></TextInput>
+                <TextInput style= {styles.inputText} selectionColor={Theme.SecondaryCyan} placeholder="Name" placeholderTextColor={Theme.subText} onChangeText = {text => setName(text)}></TextInput>
             </View> : null}
             <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText}  selectionColor={theme.SecondaryCyan} placeholder="Email" placeholderTextColor={theme.subText} onChangeText = {text => setEmail(text)}></TextInput>
+                <TextInput style= {styles.inputText}  selectionColor={Theme.SecondaryCyan} placeholder="Email" placeholderTextColor={Theme.subText} onChangeText = {text => setEmail(text)}></TextInput>
             </View>
             <View style={styles.inputBox}>
-                <TextInput style= {styles.inputText} selectionColor={theme.SecondaryCyan} placeholder="Password" placeholderTextColor={theme.subText} onChangeText = {text => setPassword(text)}></TextInput>
+                <TextInput secureTextEntry={true} style= {styles.inputText} selectionColor={Theme.SecondaryCyan} placeholder="Password" placeholderTextColor={Theme.subText} onChangeText = {text => setPassword(text)}></TextInput>
             </View>
-            <TouchableOpacity style={[styles.signInBtn, {backgroundColor: theme.SecondaryCyan}]}>
+            {isSignUp?
+            <View style={[styles.countryPicker, {backgroundColor:'#ededed'}]}>
+            <CountryPicker {...{onSelect, withCloseButton:true, withFilter:true}} visible={false} style={{fontSize:50}}/>
+            <Text numberOfLines={1} style={[styles.country, {color:Theme.SecondaryCyan}]}>{country}</Text>
+            </View>
+            : null}
+            <Text style={styles.message}>{message}</Text>
+            <TouchableOpacity style={[styles.signInBtn, {backgroundColor: Theme.SecondaryCyan}]} onPress={()=>{isSignUp? handleSignUp(false) : handleSignIn(false)}}>
                 <Text style={styles.btnTxt}>{isSignUp? "Sign Up" : "Sign In"}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.googleBtn}>
+            <TouchableOpacity style={styles.googleBtn} onPress={()=> handleGoogleSignIn()}>
                 <Text style={styles.btnTxtgoogle}>{isSignUp? "Sign Up With Google" : "Sign In With Google"}</Text>
                 <Image source={{ uri: 'https://pngimg.com/uploads/google/google_PNG19635.png' }} style={styles.googleLogo} />
             </TouchableOpacity>
             {isSignUp?<View style={styles.signUpTexts}>
               <Text style={styles.signTxt}>Already have an account? </Text>
-              <Text onPress={()=> changeSigning()} style={{color:theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign In here</Text>
+              <Text onPress={()=>setIsSignUp(!isSignUp)} style={{color:Theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign In here</Text>
             </View> :
             <View style={styles.signUpTexts}>
                 <Text style={styles.signTxt}>Don't have an account yet? </Text>
-                <Text onPress={()=> changeSigning()}  style={{color:theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign up here</Text>
+                <Text onPress={()=>setIsSignUp(!isSignUp)}  style={{color:Theme.SecondaryCyan, textDecorationLine: 'underline', fontSize:normalize(17)}}>Sign up here</Text>
             </View>}
         </View>
   );
@@ -64,7 +114,7 @@ const styles = StyleSheet.create({
   logo:{
     width: 220,
     height: 120,
-    bottom:"7%",
+    bottom:"4%",
   },
   signInBtn:{
       width:"80%",
@@ -72,7 +122,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent:"center",
       marginBottom:"3%",
-      top:"7%",
+      top:"3%",
       borderRadius:50
   },
   btnTxt:{
@@ -88,7 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor:"black",
     flexDirection:"row",
     paddingLeft:"6%",
-    top:"15%",
+    top:"7%",
     borderRadius:50
   },
   btnTxtgoogle:{
@@ -101,13 +151,28 @@ const styles = StyleSheet.create({
       height:40
   },
   signUpTexts:{
-      top:"20%",
+      top:"15%",
       width:"75%",
       flexDirection:"row",
   },
   signTxt:{
     color:"#636363", 
     fontSize:normalize(17)
+  },
+  countryPicker:{
+    width:"50%",
+    alignItems:"center",
+    justifyContent:"center",
+    borderRadius:10,
+    height:60,
+    marginBottom:"2%"
+  },
+  country:{
+    fontSize:normalize(19)
+  },
+  message:{
+    fontSize:normalize(16),
+    color:"#fc0339",
   }
 
 });
