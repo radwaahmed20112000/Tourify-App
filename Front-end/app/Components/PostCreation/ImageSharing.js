@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCamera, } from '@fortawesome/free-solid-svg-icons';
+import { faImage, } from '@fortawesome/free-solid-svg-icons';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RFValue } from "react-native-responsive-fontsize";
@@ -11,8 +11,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function ImageSharing({setPhotos}) {
-    const [selectedImages, setSelectedImages] = React.useState([]);
+function ImageSharing({setPhotos, photos}) {
     const theme = useContext(ThemeContext);
 
     let openImagePickerAsync = async () => {
@@ -29,20 +28,13 @@ function ImageSharing({setPhotos}) {
             return;
         }
     
-        setSelectedImages(selectedImages.concat({ localUri: pickerResult.uri }));
-        setPhotos(selectedImages);
+        setPhotos(photos.concat({ localUri: pickerResult.uri }));
     };
   
     return (
         <SafeAreaView style={styles.container}>
             <TouchableOpacity onPress={openImagePickerAsync}>
-                <LinearGradient
-                    colors={[theme.SecondaryCyan, theme.SecondaryPurple]}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.button}>
-                    <FontAwesomeIcon icon={faCamera} size={ RFValue(18) }  color="white"  style={{color:theme.SecondaryPurple }}/>
-                </LinearGradient>
+                <FontAwesomeIcon icon={faImage} size={ SCREEN_WIDTH*0.075 }  color={theme.SecondaryPurple}  style={{color:theme.SecondaryPurple }}/>
             </TouchableOpacity>
         </SafeAreaView>
         
@@ -52,10 +44,12 @@ const styles = StyleSheet.create({
     button:{
         backgroundColor:"black"
     },
-    button: {
+    container: {
         alignItems: 'center',
         justifyContent: "center",
         width:RFValue(SCREEN_WIDTH*0.15),
+        marginLeft:SCREEN_WIDTH*0.3,
+        flexDirection:"row",
         height:RFValue(40),
         borderRadius: RFValue(40),
     },

@@ -1,15 +1,17 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, Dimensions, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, Dimensions, Alert } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faArrowLeft, } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faMapMarkerAlt  } from '@fortawesome/free-solid-svg-icons';
 import { AirbnbRating } from 'react-native-ratings';
 import { ThemeContext } from '../Context/ThemeContext';
-import ImagePicker from 'react-native-image-picker';
 import TagsList from '../Components/PostCreation/TagsList';
 import ImageSharing from '../Components/PostCreation/ImageSharing';
 import { RFValue } from "react-native-responsive-fontsize";
 import { LinearGradient } from 'expo-linear-gradient';
 import { TokenContext } from '../Context/TokenContext';
+import BudgetInput from '../Components/PostCreation/BudgetInput';
+import PhotosList from '../Components/PostCreation/PhotosList';
+
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
@@ -23,15 +25,16 @@ function PostCreation() {
     const [rate, setRate] = useState(3);
     const [duration, setDuration] = useState('');
     const [budget, setBudget] = useState(0);
+    const [currency, setCurrancy] = useState('');
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
     const token = useContext(TokenContext);
-    const ipAddress = "http://192.168.1.8:8080";
+    const ipAddress = "http://192.168.1.8:8000";
     const newTags = (newTags) => setTags(newTags)
     const newlatitude = (newLatitude) => setLatitude(newLatitude)
     const newlongitude = (newLongitude) => setLongitude(newLongitude)
     const newPhotos = (newPhotos) => setPhotos(newPhotos)
-
+ 
     
     // NetworkInfo.getIPAddress(ip => ipAddress = ip);
 
@@ -52,7 +55,6 @@ function PostCreation() {
                 newTags.push(key)
             }
         }
-          
         var body = JSON.stringify({
             user: "radwa", //TODO
             description: description,
@@ -61,7 +63,7 @@ function PostCreation() {
             organisation : organisation,
             rate: rate,
             duration: duration,
-            budget: budget,
+            budget: budget + currency,
             latitude: latitude, //TODO
             longitude: longitude //TODO
         })
@@ -76,13 +78,13 @@ function PostCreation() {
         }).then((res)=>console.log(JSON.stringify(res)));
     }
 
+
     return (
         <SafeAreaView style={[{backgroundColor: theme.primary}, styles.container]}>
             <View style={[styles.upperSection, {borderColor:theme.SecondaryPurple}]}>
                 <TouchableOpacity >
                     <FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) }  color={theme.SecondaryPurple}  style={{marginRight :SCREEN_WIDTH*0.7, marginTop : 8,  }}/>
                 </TouchableOpacity>
-                {/* <Text style={{color: theme.Text, fontSize: RFValue(16)}}>Let's Share Our Tour</Text> */}
                 <TouchableOpacity onPress={() => createPost()}>
                     <LinearGradient
                         colors={[theme.SecondaryCyan, theme.SecondaryPurple]}
@@ -92,7 +94,6 @@ function PostCreation() {
                         <Text style={{color:"white"}}>Share</Text>
                     </LinearGradient>
                 </TouchableOpacity>
-
             </View>
             <View style={{flexDirection:"column"}}>
                 <TextInput
@@ -102,35 +103,40 @@ function PostCreation() {
                     value={description}
                     multiline={true}
                 />
-                <TextInput
-                    onChangeText={text => setBudget(text)}
-                    placeholder="budget"
-                />
-                <TextInput
-                    onChangeText={text => setDuration(text)}
-                    placeholder="Days"
-                />
-                <TextInput
-                    onChangeText={text => setOrganisation(text)}
-                    placeholder="Organisation"
-                />
+                <View style={{flexDirection:"row"}}>
+                    <AirbnbRating
+                        type='star'
+                        ratingCount={5}
+                        showRating={false}
+                        size= {RFValue(20)}
+                        reviewSize= {RFValue(20)}
+                        selectedColor={theme.SecondaryPurple}
+                        reviewColor={theme.SecondaryPurple}
+                        imageSize={RFValue(2)}
+                        onFinishRating={rate => setRate(rate)}
+                    />
+                    <ImageSharing setPhotos={newPhotos} photos={photos}></ImageSharing>
+                    <TouchableOpacity style={{marginLeft:SCREEN_WIDTH*0.01, marginTop:SCREEN_HEIGHT*0.008}}>
+                        <FontAwesomeIcon icon={faMapMarkerAlt} size={ SCREEN_WIDTH*0.07}  color={theme.SecondaryPurple}></FontAwesomeIcon>
+                    </TouchableOpacity>
+                </View>
+                <TagsList setTags={newTags}></TagsList>
+                <PhotosList setPhotos={setPhotos} photos={photos}></PhotosList>
+                <BudgetInput setBudget={setBudget} setCurrancy={setCurrancy}></BudgetInput>
+                <View style={{flexDirection:"row"}}>
+                    <TextInput
+                        onChangeText={text => setDuration(text)}
+                        placeholder="Number of Days"
+                        keyboardType='numeric'
+                        style={{fontSize:RFValue(16)}}
+                    />
+                    <TextInput
+                        onChangeText={text => setOrganisation(text)}
+                        placeholder="Organisation"
+                        style={{marginLeft:SCREEN_WIDTH*0.3, fontSize:RFValue(16)}}
+                    />
+                </View>
             </View>
-            <AirbnbRating
-                type='star'
-                ratingCount={5}
-                showRating
-                size= {RFValue(20)}
-                reviewSize= {RFValue(20)}
-                selectedColor={theme.SecondaryPurple}
-                reviewColor={theme.SecondaryPurple}
-                imageSize={RFValue(2)}
-                onFinishRating={rate => setRate(rate)}
-            />
-            {/* <Button title="Add Location" onPress={() => {navigation.navigate("Map",{setLatitude, setLongitude})}}></Button> */}
-            <ImageSharing setPhotos={newPhotos} ></ImageSharing>
-
-            <TagsList setTags={newTags}></TagsList>
-            {/* <Map initialParams={{ setLatitude: setLatitude, setLongitude:setLongitude }}></Map> */}
         </SafeAreaView>
     );
 }
@@ -156,10 +162,14 @@ const styles = StyleSheet.create({
         width:SCREEN_WIDTH,
     },
     description: {
-        height: RFValue(SCREEN_HEIGHT*0.05), 
+        height: RFValue(SCREEN_HEIGHT*0.25), 
         width:RFValue(SCREEN_WIDTH*0.8),
         fontSize:RFValue(18),
-        borderBottomWidth: 0.3
-    }
+        borderBottomWidth: 0.3,
+        textAlign:"left",
+        textAlignVertical: 'top'
+    },
+
+
 });
  export default PostCreation;

@@ -7,13 +7,14 @@ import { ThemeContext } from '../Context/ThemeContext';
 import { normalize, width } from '../util/FontNormalization';
 import PostListComponent from '../Components/Shared/PostListComponent';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { TokenContext } from '../Context/TokenContext';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const WINDOW_HEIGHT = Dimensions.get('window').height;
-const BOTTOM_HEIGHT = SCREEN_HEIGHT - WINDOW_HEIGHT;
+
 
 function Feed(props) {
-
+  const token = useContext(TokenContext);
   const url = "http://192.168.1.9:8080/"
   const lorempIpsum = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia," +
     "    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum" +
@@ -74,35 +75,36 @@ function Feed(props) {
     photos: images1
   }]
 
-  // const useFetch = (url) => {
-  //   const [data, setData] = useState([]);
-  //   const [onProgress, setProgress] = useState(true);
-  //   const [error, setError] = useState(null);
 
-  //   const theme = useContext(ThemeContext);
-  //   const [posts, setPosts] = useState(postsX);
-  //   const [onProcessing, setProcessing] = useState(true);
+  const useFetch = (url) => {
+    const [data, setData] = useState([]);
+    const [onProgress, setProgress] = useState(true);
+    const [error, setError] = useState(null);
 
-  //   useEffect(() => {
-  //     // if(data === []){
-  //     fetch(url)
-  //       .then(res => {
-  //         if (!res.ok) {
-  //           throw Error('Could not fetch the data for that resource');
-  //         }
-  //         return res.json();
-  //       })
-  //       .then(data => {
-  //         setPosts(data);
-  //       })
-  //       .catch(err => {
-  //         console.log(err)
-  //       });
-  //     //}
-  //   }, [url])
+    const theme = useContext(ThemeContext);
+    const [posts, setPosts] = useState(postsX);
+    const [onProcessing, setProcessing] = useState(true);
 
-  //   return { data };
-  // }
+    useEffect(() => {
+      // if(data === []){
+      fetch(url)
+        .then(res => {
+          if (!res.ok) {
+            throw Error('Could not fetch the data for that resource');
+          }
+          return res.json();
+        })
+        .then(data => {
+          setPosts(data);
+        })
+        .catch(err => {
+          console.log(err)
+        });
+      //}
+    }, [url])
+
+    return { data };
+  }
 
 
   const userPhoto = 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4'

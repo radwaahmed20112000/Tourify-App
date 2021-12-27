@@ -2,11 +2,13 @@ import React, {useContext} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import { AuthContext } from '../Context/AuthContext';
 import { TokenContext } from '../Context/TokenContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Profile (props) {
   const {signOut} = React.useContext(AuthContext);
   const token = useContext(TokenContext);
   console.log("hello" + token);
+ 
   return (
     <View
       style={{

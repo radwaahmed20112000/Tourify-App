@@ -51,7 +51,7 @@ module.exports= {
    create:(req, res) =>{    
       //const decoded = jwt.decode(req.body.token); 
       //const temp = decoded.split("'");
-      const userId = "sdfg";
+      const userId = "Radwa";
       var postId;
       
          if(req.body.constructor === Object && Object(req.body).length === 0){

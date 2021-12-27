@@ -33,9 +33,8 @@ module.exports = {
          let selectQuery = `SELECT password FROM ${tableName} WHERE userId = "${email}" ;`;
     
          try {
-             let password = await DB(selectQuery)
-             console.log("user : ", password)
-             return cb(null, password);
+             let pass = await DB(selectQuery)
+             return cb(null, pass[0].password);
     
          } catch (e) {
              console.log(e)
@@ -48,7 +47,7 @@ module.exports = {
 
 
     create: async (account, cb) => {
-        let insertQuery = `INSERT INTO ${tableName}  VALUES  ("${account.email}","${account.name}","${account.password}","${account.photo}","${account.googleBool}", "${account.country}" ) ;`;
+        let insertQuery = `INSERT INTO ${tableName}  VALUES  ("${account.email}","${account.name}","${account.password}","${account.photo}",${account.googleBool}, "${account.country}" ) ;`;
         try {
             let user = await DB(insertQuery)
             console.log("inserted account : ", user)
