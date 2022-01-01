@@ -41,13 +41,27 @@ module.exports= {
       })
 
    },
+   parseJwt: (token) => {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+  
+      return JSON.parse(jsonPayload).email;
+   },
 
 
    createPost: async  (req, res) =>{  
-      //token should be handled here  
+      var base64Url = req.body.email.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      const email = JSON.parse(jsonPayload);
       var post_id;
    
-      await Post.createPost(req.body, (err, post) => {
+      await Post.createPost(email.email, req.body, (err, post) => {
          post_id = post.insertId;
       })
       .then(() => {
@@ -64,5 +78,6 @@ module.exports= {
          return res.status(500).json(err);
       });
    
-   }
+   },
+
 }

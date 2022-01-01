@@ -49,7 +49,7 @@ function PostCreation({navigation}) {
             return
         }
         var body = JSON.stringify({
-            email: "radwa", 
+            email: token, 
             body: description,
             tags: tags,
             photos: photos,  //TODO

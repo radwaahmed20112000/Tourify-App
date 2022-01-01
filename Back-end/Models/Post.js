@@ -64,10 +64,10 @@ module.exports = {
         }
     },
 
-    createPost: async  (newPost, cb) => {
+    createPost: async  (email, newPost, cb) => {
         let insertQuery = `INSERT INTO ${tableName} 
             (email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
-            ("${newPost.email}","${newPost.body}","${newPost.duration}","${newPost.organisation}",${newPost.rate}, "${newPost.budget}","${newPost.currency}", 0, 0 ) ;`;
+            ("${email}","${newPost.body}","${newPost.duration}","${newPost.organisation}",${newPost.rate}, "${newPost.budget}","${newPost.currency}", 0, 0 ) ;`;
         try {
             let res = await DB(insertQuery)
             console.log(res)
