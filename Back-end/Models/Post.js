@@ -3,32 +3,6 @@ const { TIMESTAMP } = require("mysql/lib/protocol/constants/types");
 const DB = require("../DB/pool");
 const tableName = 'Post';
 
-var Post = function(user_id,post){
-        this.user_id = user_id;
-        this.body = post.description;
-        this.created_at = TIMESTAMP;
-        this.updated_at = TIMESTAMP;
-        this.duration = post.duration;
-        this.organisation = post.organisation;
-        this.rate = post.rate;
-        this.budget = post.budget;
-}
-
-    Post.createPost = (newPost, result) => {
-
-        DB('INSERT INTO Post SET ?', newPost, (err, res) => {
-            if (err) {
-                console.log("Error while inserting post");
-                result(null, err);
-            }
-            else {
-                console.log("Post created successfuly");
-                result(null, res);
-            }
-        })
-}
-
-
 module.exports = {
 
     tableName: tableName,
@@ -39,7 +13,7 @@ module.exports = {
 
     findAll : async ( query, limit ,offset, cb )=>{
     
-       query =query || '';
+       query = query || '';
      
         let selectQuery = `SELECT
                               post.postId , user.userId, title, body,rating ,name as userName ,photo as userPhoto , photos
@@ -88,8 +62,21 @@ module.exports = {
             return cb(e, null);
 
         }
+    },
 
+    createPost: async  (newPost, cb) => {
+        let insertQuery = `INSERT INTO ${tableName}  VALUES
+          ("${newPost.email}","${newPost.body}","${newPost.duration}","${newPost.organisation}",${newPost.rate}, "${newPost.budget}","${newPost.currency}" ) ;`;
+        try {
+            let res = await DB(insertQuery)
+            console.log(res)
+            return cb(null, res);
 
+        } catch (e) {
+            console.log(e)
+            return cb(e, null);
     }
 }
-module.exports = Post;
+
+    
+}

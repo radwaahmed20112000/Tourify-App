@@ -57,7 +57,7 @@ describe('Posts controller', function () {
           //const token = jwt.sign({ email: "test@gmail.com" }, 'secret', {});
             const body = {
               user: "token",
-              description: "Hello",
+              body: "Hello",
                 tags: ["hicking"],
                 photos: ["photo1", "photo2"],
                 organisation: "Faculty of Engineering",

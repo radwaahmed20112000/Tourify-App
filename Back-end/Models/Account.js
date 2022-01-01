@@ -8,7 +8,7 @@ module.exports = {
 
     findEmail : async ( email, cb )=>{
     
-        email =email || '';
+        email = email || '';
       
          let selectQuery = `SELECT * FROM ${tableName} WHERE userId = "${email}" ;`;
     
@@ -28,7 +28,7 @@ module.exports = {
 
      getPassword : async ( email, cb )=>{
     
-        email =email || '';
+        email = email || '';
       
          let selectQuery = `SELECT password FROM ${tableName} WHERE userId = "${email}" ;`;
     
