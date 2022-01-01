@@ -1,13 +1,15 @@
+/*
+
+const { post } = require('superagent');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../../server');
 let should = chai.should();
 chai.use(chaiHttp);
 const Post = require('../../Models/Post');
-const { post } = require('superagent');
+const jwt = require("jsonwebtoken");
 
 describe('Posts', function () {
-
     describe('find all ', function () {
         const tests = [
             { limit: 10, offset: 0 },
@@ -98,5 +100,5 @@ describe('Posts', function () {
 
 
 
-
 });
+*/
