@@ -3,8 +3,8 @@ const DB = require("../DB/pool");
 const tableName = 'PostPhoto';
 
 var PostPhoto = function(postId,photoId){
-        this.post_id = postId;
-        this.photo_id = photoId;
+    this.post_id = postId;
+    this.photo_id = photoId;
 }
 
 PostPhoto.createPostPhoto = (newPostPhotos, result) =>{

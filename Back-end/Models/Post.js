@@ -4,14 +4,15 @@ const DB = require("../DB/pool");
 const tableName = 'Post';
 
 var Post = function(user_id,post){
-        this.user_id = user_id;
-        this.body = post.description;
-        this.created_at = TIMESTAMP;
-        this.updated_at = TIMESTAMP;
-        this.duration = post.duration;
-        this.organisation = post.organisation;
-        this.rate = post.rate;
-        this.budget = post.budget;
+    this.email = user_id;
+    this.body = post.description;
+    this.duration = post.duration;
+    this.organisation = post.organisation;
+    this.rate = post.rate;
+    this.budget = post.budget;
+    this.currency = post.currency;
+    this.number_of_comments = 0;
+    this.number_of_likes = 0;
 }
 
     Post.createPost = (newPost, result) => {

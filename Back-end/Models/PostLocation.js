@@ -3,9 +3,10 @@ const DB = require("../DB/pool");
 const tableName = 'PostLocation';
 
 var PostLocation = function(postId,post_location){
-        this.post_id = postId;
-        this.latitude = post_location.latitude;
-        this.longitude = post_location.longitude;
+    this.post_id = postId;
+    this.latitude = post_location.latitude;
+    this.longitude = post_location.longitude;
+    this.location = post_location.location;
 }
 
     PostLocation.createPostLocation = (newPostLocation, result) => {

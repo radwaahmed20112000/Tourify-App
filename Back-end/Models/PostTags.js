@@ -2,9 +2,9 @@ const table = 'PostTags';
 const DB = require("../DB/pool");
 const tableName = 'PostTags';
 
-var PostTags = function(postId,tagId){
-        this.post_id = postId;
-        this.tag_id = tagId;
+var PostTags = function(postId,tagName){
+    this.post_id = postId;
+    this.tag_name = tagName;
 }
 
  createPostTags = (newPostTags, result) => {

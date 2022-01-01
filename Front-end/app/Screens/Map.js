@@ -1,18 +1,22 @@
-
-import * as React from "react"
+import React, { useContext } from 'react';
 import { Dimensions, StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import MapView, { Callout, Circle, Marker } from "react-native-maps"
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowLeft, } from '@fortawesome/free-solid-svg-icons';
 import { RFValue } from "react-native-responsive-fontsize";
+import { ThemeContext } from '../Context/ThemeContext';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
+const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 
-function Map({setLatitude, setLongitude}) {
+function Map({navigation, route}) {
+	const theme = useContext(ThemeContext);
 	const [ pin, setPin ] = React.useState({
 		latitude: 37.78825,
 		longitude: -122.4324
 	})
+	use
 
     const [ region, setRegion ] = React.useState({
         latitude: 37.78825,
@@ -20,23 +24,27 @@ function Map({setLatitude, setLongitude}) {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
     })
+	const backToPost = () => {
+		route.params.setLatitude(pin.latitude)
+		route.params.setLongitude(pin.longitude)
+		navigation.navigate('PostCreation')
+	}
 	return (
 		<View style={{ marginTop: 50, flex: 1 }}>
 			<View style={styles.upperSection}>
-				<TouchableOpacity> 
-					<FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) } color={theme.SecondaryPurple}  style={{marginRight :15, marginTop : 8, alignSelf:"flex-end" }}/>
+				<TouchableOpacity onPress={() => navigation.navigate('PostCreation')}> 
+					<FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) } color={theme.SecondaryPurple}   style={{marginRight :SCREEN_WIDTH*0.7, marginTop : 8,  }}/>
 				</TouchableOpacity>
-				<TouchableOpacity onPress= {() => navigation.goBack()}>
+				<TouchableOpacity onPress= {backToPost}>
 					<LinearGradient
-						colors={[theme.SecondaryCyan, theme.SecondaryPurple]}
-						start={{ x: 0, y: 1 }}
-						end={{ x: 1, y: 1 }}
-						style={styles.button}>
-						<Text style={{color:"white"}}>Done</Text>
-					</LinearGradient>
+                        colors={[theme.SecondaryCyan, theme.SecondaryPurple]}
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.button}>
+                        <Text style={{color:"white"}}>Done</Text>
+                    </LinearGradient>
 				</TouchableOpacity>
 			</View>
-
             <MapView
 				style={styles.map}
 				region={region}
@@ -57,8 +65,6 @@ function Map({setLatitude, setLongitude}) {
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421
                         })
-						this.setLatitude(pin.latitude)
-						this.setLongitude(pin.longitude)
 					}}
 				>
 					<Callout>
@@ -82,10 +88,17 @@ const styles = StyleSheet.create({
 		width: Dimensions.get("window").width,
 		height: Dimensions.get("window").height
 	},
+	button: {
+        alignItems: 'center',
+        justifyContent: "center",
+        width:SCREEN_WIDTH*0.15,
+        height:SCREEN_HEIGHT*0.048,
+        borderRadius: SCREEN_WIDTH*0.1,
+    },
 	upperSection : {
         flexDirection : 'row',
-        padding : "5%",
-        paddingBottom: "5%",
+		paddingLeft: SCREEN_WIDTH*0.05,
+		paddingBottom:SCREEN_WIDTH*0.02,
         borderBottomWidth:RFValue(0.5),
         width:SCREEN_WIDTH,
     },

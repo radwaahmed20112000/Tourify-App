@@ -16,7 +16,7 @@ import PhotosList from '../Components/PostCreation/PhotosList';
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function PostCreation() {
+function PostCreation({navigation}) {
     const theme = useContext(ThemeContext);
     const [description, onChangeText] = useState('');
     const [tags, setTags] = useState([]);
@@ -36,36 +36,30 @@ function PostCreation() {
     const newPhotos = (newPhotos) => setPhotos(newPhotos)
  
     
-    // NetworkInfo.getIPAddress(ip => ipAddress = ip);
 
     const createPost = () => {
         if(description === '' || duration === '' || budget === 0 ) {
             Alert.alert(
-                "Please Enter all required fields!",
+                "Be Careful",
+                "You should Enter all required fields!",
                 [
-                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
                 ]
             );
             return
         }
-        var newTags = [];
-        for (const [key, value] of Object.entries(tags)) {
-            console.log(`${key}: ${value}`);
-            if (value){
-                newTags.push(key)
-            }
-        }
         var body = JSON.stringify({
-            user: "radwa", //TODO
-            description: description,
-            tags: newTags,
+            user: token, 
+            body: description,
+            tags: tags,
             photos: photos,  //TODO
             organisation : organisation,
             rate: rate,
             duration: duration,
-            budget: budget + currency,
-            latitude: latitude, //TODO
-            longitude: longitude //TODO
+            budget: budget,
+            currency: currency,
+            latitude: latitude, 
+            longitude: longitude 
         })
         console.log(body)
         fetch(ipAddress+'/posts/TripCreation', {
@@ -78,12 +72,15 @@ function PostCreation() {
         }).then((res)=>console.log(JSON.stringify(res)));
     }
 
+    const goToMaps = () => {
+        navigation.navigate('Map', {setLatitude:newlatitude, setLongitude:newlongitude})
+    }
 
     return (
         <SafeAreaView style={[{backgroundColor: theme.primary}, styles.container]}>
             <View style={[styles.upperSection, {borderColor:theme.SecondaryPurple}]}>
                 <TouchableOpacity >
-                    <FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) }  color={theme.SecondaryPurple}  style={{marginRight :SCREEN_WIDTH*0.7, marginTop : 8,  }}/>
+                    <FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) }  color={theme.SecondaryPurple}  style={{marginRight :SCREEN_WIDTH*0.68, marginTop : SCREEN_WIDTH*0.028,  }}/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => createPost()}>
                     <LinearGradient
@@ -116,7 +113,7 @@ function PostCreation() {
                         onFinishRating={rate => setRate(rate)}
                     />
                     <ImageSharing setPhotos={newPhotos} photos={photos}></ImageSharing>
-                    <TouchableOpacity style={{marginLeft:SCREEN_WIDTH*0.01, marginTop:SCREEN_HEIGHT*0.008}}>
+                    <TouchableOpacity style={{marginLeft:SCREEN_WIDTH*0.01, marginTop:SCREEN_HEIGHT*0.008}} onPress={goToMaps}>
                         <FontAwesomeIcon icon={faMapMarkerAlt} size={ SCREEN_WIDTH*0.07}  color={theme.SecondaryPurple}></FontAwesomeIcon>
                     </TouchableOpacity>
                 </View>
@@ -151,19 +148,21 @@ const styles = StyleSheet.create({
     button: {
         alignItems: 'center',
         justifyContent: "center",
-        width:RFValue(60),
-        height:RFValue(40),
-        borderRadius: RFValue(40),
+        width:SCREEN_WIDTH*0.16,
+        height:SCREEN_HEIGHT*0.048,
+        borderRadius: SCREEN_WIDTH*0.1,
     },
     upperSection : {
         flexDirection : 'row',
-        padding : "5%",
-        paddingBottom: "5%",
+        paddingRight : SCREEN_WIDTH*0.05,
+        paddingLeft : SCREEN_WIDTH*0.06,
+        paddingBottom: SCREEN_HEIGHT*0.03,
+        paddingTop:SCREEN_HEIGHT*0.015,
         width:SCREEN_WIDTH,
     },
     description: {
-        height: RFValue(SCREEN_HEIGHT*0.25), 
-        width:RFValue(SCREEN_WIDTH*0.8),
+        height: SCREEN_HEIGHT*0.3, 
+        width:SCREEN_WIDTH*0.9,
         fontSize:RFValue(18),
         borderBottomWidth: 0.3,
         textAlign:"left",

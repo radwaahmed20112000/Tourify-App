@@ -9,19 +9,23 @@ function TagsList({setTags}) {
     const theme = useContext(ThemeContext);
     const tags = [ "Historical", "Beach", "Fun", "Romantic", "Relaxation",
     "Camping", "Volunteer", "Road", "Custom" ];
-    var choosenTags = {"Historical":false, "Beach":false, "Fun":false, "Romantic":false, "Relaxation":false,
-    "Camping":false, "Volunteer":false, "Road":false, "Custom":false };
+    const [choosenTags, setChoosenTags] = useState([]);
     const [state, setState] = useState({refresh:true})
 
   
     const chooseTag = (tag) => {
-        if(!choosenTags[tag])
-            choosenTags[tag] = true
-        else 
-            choosenTags[tag] = false
+        const index = choosenTags.indexOf(tag)
+        if(index > -1){
+            choosenTags.splice(index, 1);
+            setChoosenTags(choosenTags)
+        }
+        else {
+            choosenTags.push(tag)
+            setChoosenTags(choosenTags)
+        }
         setTags(choosenTags)
-        if(tag == 'Custom') {} //TODO
         setState({ refresh: ! state.refresh })
+        if(tag == 'Custom') {} //TODO
     };
     
     return (
@@ -48,8 +52,7 @@ function TagsList({setTags}) {
                             <TouchableOpacity 
                                 onPress={() => chooseTag(item)}
                                 style={[styles.container, 
-                                    {backgroundColor:choosenTags[item]? "black":"white"}]}                                
-                            >
+                                    {backgroundColor:choosenTags.indexOf(item) > -1? '#d6d4ce':'white'}]}>
                                 <Text style={{fontSize:RFValue(14),}}>{ item}</Text>
                             </TouchableOpacity> 
                         )
