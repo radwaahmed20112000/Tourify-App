@@ -6,17 +6,15 @@ module.exports = {
 
     tableName: tableName,
 
-  createPostLocation: async  (post_id,newPost) => {
+    createPostLocation: async  (post_id, newPost) => {
         let insertQuery = `INSERT INTO ${tableName}  VALUES
-          ("${post_id}","${newPost.latitude}","${newPost.longititude}") ;`;
+            ("${post_id}","${newPost.latitude}","${newPost.longitude}") ;`;
         try {
             let res = await DB(insertQuery)
-            console.log(res)
-            return cb(null, res);
-
-        } catch (e) {
-            console.log(e)
-            return cb(e, null);
+            return res
+        }
+        catch (e) {
+            return e
         }
     }
 }

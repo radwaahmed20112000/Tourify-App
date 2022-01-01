@@ -14,7 +14,7 @@ module.exports= {
       
       if (!req.userId)
          res.status(403)
- 
+
       let query = `USER.userId != ${req.userId}`;
 
       Post.findAll(query, limit, offset, (err, posts) =>{
@@ -47,22 +47,22 @@ module.exports= {
       //token should be handled here  
       var post_id;
    
-      await Post.createPost(req.body,(err,post) => {
-            post_id = post.insertId;
-         })
-
+      await Post.createPost(req.body, (err, post) => {
+         post_id = post.insertId;
+      })
       .then(() => {
-         PostPhoto.createPostPhoto(post_id,req.body.photos)
-         PostLocation.createPostLocation(post_id,req.body)
-         PostTags.createPostTags(post_id,req.tags)
+         PostPhoto.createPostPhoto(post_id, req.body.photos)
+         PostLocation.createPostLocation(post_id, req.body)
+         PostTags.createPostTags(post_id, req.body.tags)
+         console.log(post_id)
          return
       })
 
-      .then(() => res.status(200).json({ post_id : post_id }) )
+      .then(() => res.status(200) )
 
       .catch((err) => {
          return res.status(500).json(err);
       });
-    
+   
    }
 }

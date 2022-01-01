@@ -49,7 +49,7 @@ function PostCreation({navigation}) {
             return
         }
         var body = JSON.stringify({
-            user: token, 
+            email: "radwa", 
             body: description,
             tags: tags,
             photos: photos,  //TODO
@@ -62,14 +62,14 @@ function PostCreation({navigation}) {
             longitude: longitude 
         })
         console.log(body)
-        fetch(ipAddress+'/posts/TripCreation', {
+        fetch(ipAddress + '/posts/TripCreation', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
             body: body
-        }).then((res)=>console.log(JSON.stringify(res)));
+        }).then((res) => console.log(JSON.stringify(res.post_id)));
     }
 
     const goToMaps = () => {

@@ -16,7 +16,7 @@ function Map({navigation, route}) {
 		latitude: 37.78825,
 		longitude: -122.4324
 	})
-	use
+
 
     const [ region, setRegion ] = React.useState({
         latitude: 37.78825,
