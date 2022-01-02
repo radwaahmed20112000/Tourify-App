@@ -26,7 +26,7 @@ module.exports = {
                             name: req.body.name,
                             password: passwordHash,
                             photo: req.body.photo,
-                            googleBool: req.body.bool,
+                            googleBool: req.body.google,
                             country: req.body.country,
 
                         }, (err, user) => {
@@ -51,7 +51,7 @@ module.exports = {
                         name: req.body.name,
                         password: null,
                         photo: req.body.photo,
-                        googleBool: req.body.bool,
+                        googleBool: req.body.google,
                         country: null,
 
                     }, (err, user) => {
@@ -94,8 +94,17 @@ module.exports = {
             }
             else {
                 Account.getPassword(email, (err, password)=>{
-                    // password hash
+
+                    if (err) {
+                        return res.status(500).json(err);
+        
+                    }
+                    if(!password && !req.body.google){
+                        const token = jwt.sign({ email: req.body.email }, 'secret', {});
+                        res.status(200).json({ message: "user logged in", token: token });
+                    }
                     if (password) {
+                         // password hash
                         bcrypt.compare(req.body.password, password, (err, compareRes) => {
                             if (err) { // error while comparing
                                 res.status(502).json({ message: "error while checking user password" });
@@ -107,9 +116,7 @@ module.exports = {
                             };
                         });
                     }
-                    else {
-                            res.status(404).json({ message: "invalid credentials"});
-                        }
+                  
                 })
 
             };
