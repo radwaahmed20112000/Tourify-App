@@ -15,7 +15,7 @@ module.exports= {
       if (!req.userId)
          res.status(403)
 
-      let query = `USER.userId != ${req.userId}`;
+      let query = `USER.userId != ${req.user_id}`;
 
       Post.findAll(query, limit, offset, (err, posts) =>{
          
@@ -23,11 +23,10 @@ module.exports= {
             return res.status(500).json(err);
          
          return res.json(posts);
-
-
       })
 
    },
+
    getFeedPostsCount: (req, res) => {
 
       Post.count(null, (err, count) => {
@@ -41,6 +40,26 @@ module.exports= {
       })
 
    },
+
+   edit: (req, res) => {     
+      var base64Url = req.body.email.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      const email = JSON.parse(jsonPayload);
+      const post_id = req.body.post_id;
+
+      Post.findOne(post_id,email, (err, post) =>{
+         if(err)
+            return res.status(500).json(err);
+         
+         return res.json(post);
+      })
+   
+   },
+
    parseJwt: (token) => {
       var base64Url = token.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -79,5 +98,30 @@ module.exports= {
       });
    
    },
+
+   editPost: async  (req, res) => {  
+      var base64Url = req.body.email.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      const email = JSON.parse(jsonPayload);
+   
+      await Post.editPost(email.email, req.body)
+      .then(() => {
+         PostPhoto.editPostPhoto(post_id, req.body.photos)
+         PostLocation.editPostLocation(post_id, req.body)
+         PostTags.editPostTags(post_id, req.body.tags)
+         console.log(post_id)
+         return
+      })
+
+      .then(() => res.status(200))
+
+      .catch((err) => {
+         return res.status(500).json(err);
+      });
+   
+   }
 
 }
