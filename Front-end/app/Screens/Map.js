@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Dimensions, StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import MapView, { Callout, Circle, Marker } from "react-native-maps"
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
@@ -6,28 +6,47 @@ import { faArrowLeft, } from '@fortawesome/free-solid-svg-icons';
 import { RFValue } from "react-native-responsive-fontsize";
 import { ThemeContext } from '../Context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Location from 'expo-location';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 
-function Map({navigation, route}) {
+function Map({navigation}) {
 	const theme = useContext(ThemeContext);
 	const [ pin, setPin ] = React.useState({
 		latitude: 37.78825,
 		longitude: -122.4324
 	})
-
-
-    const [ region, setRegion ] = React.useState({
+	const [ region, setRegion ] = React.useState({
         latitude: 37.78825,
         longitude: -122.4324,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
     })
+	useEffect(() => {
+		(async () => {
+			let { status } = await Location.requestForegroundPermissionsAsync();
+			if (status !== 'granted') {
+			  setErrorMsg('Permission to access location was denied');
+			  return;
+			}
+			let location = await Location.getCurrentPositionAsync({});
+			console.log(location.coords.latitude)
+			setPin({
+				latitude: location.coords.latitude,
+				longitude: location.coords.longitude
+			})
+			setRegion({
+				latitude:location.coords.latitude,
+				longitude:location.coords.longitude,
+				latitudeDelta: 0.0922,
+				longitudeDelta: 0.0421
+			})
+		  })();
+	}, []);
+		
 	const backToPost = () => {
-		route.params.setLatitude(pin.latitude)
-		route.params.setLongitude(pin.longitude)
-		navigation.navigate('PostCreation')
+		navigation.navigate('PostCreation', {latitude:pin.latitude, longitude:pin.longitude})
 	}
 	return (
 		<View style={{ marginTop: 50, flex: 1 }}>

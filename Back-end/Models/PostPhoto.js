@@ -8,7 +8,7 @@ module.exports = {
 
     createPostPhoto: async  (post_id, photos) => {
         for (const photo of photos) {
-            let insertQuery = `INSERT INTO ${tableName}  VALUES  ("${post_id}","${photo}" ) ;`;
+            let insertQuery = `INSERT INTO ${tableName}  VALUES  ("${post_id}","${photo.name}" ) ;`;
             try {
                 let res = await DB(insertQuery)
                 return res
