@@ -16,6 +16,19 @@ module.exports = {
         catch (e) {
             return e
         }
+    },
+
+    editPostLocation: async  (editedPost) => {
+        let editQuery = `UPDATE ${tableName} 
+            SET latitude = "${editedPost.latitude}" , longitude = "${editedPost.longitude}"
+            WHERE post_id = "${editedPost.post_id}";`;
+        try {
+            let res = await DB(editQuery)
+            return res
+        }
+        catch (e) {
+            return e
+        }
     }
 }
 
