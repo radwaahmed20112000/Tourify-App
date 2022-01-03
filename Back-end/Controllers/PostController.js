@@ -4,7 +4,7 @@ const Post = require('../Models/Post')
 const PostLocation = require('../Models/PostLocation')
 const PostPhoto = require('../Models/PostPhoto')
 const PostTags = require('../Models/PostTags')
-const jwt = require("jsonwebtoken");
+const { uploadPhotosToAzure } = require('../Services/PhotoUpload')
 
 module.exports= {
 
@@ -87,11 +87,12 @@ module.exports= {
          PostPhoto.createPostPhoto(post_id, req.body.photos)
          PostLocation.createPostLocation(post_id, req.body)
          PostTags.createPostTags(post_id, req.body.tags)
+         uploadPhotosToAzure(req.body.photos)
          console.log(post_id)
          return
       })
 
-      .then(() => res.status(200) )
+      .then(() => res.status(200).json({}) )
 
       .catch((err) => {
          return res.status(500).json(err);

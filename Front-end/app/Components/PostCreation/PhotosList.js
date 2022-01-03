@@ -7,6 +7,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
+
 function PhotosList({photos, setPhotos}) {
     const theme = useContext(ThemeContext);
     const [state, setState] = useState({refresh:true})
