@@ -1,7 +1,7 @@
-let API_URL = "http://192.168.1.13:8000/account";
+let API_URL = "http://192.168.1.9:8000/account";
 const signInRequest = async (email, password, googleBool) => {
     let payload = { email: email, password: password, google: googleBool };
-    try{
+    try {
         let response = await fetch(API_URL + "/login", {
             method: 'POST',
             headers: {
@@ -23,13 +23,13 @@ const signInRequest = async (email, password, googleBool) => {
                 message = "An error occurred, check your network..";
             return { successful: false, message: message };
         }
-    }catch(error){
+    } catch (error) {
         return { successful: false, message: "An error occurred, check your network.." };
     };
 }
 const signUpRequest = async (email, name, password, country, photo, googleBool) => {
     let payload = { email: email, name: name, password: password, country: country, photo: photo, google: googleBool };
-    try{
+    try {
         let response = await fetch(API_URL + "/signup", {
             method: 'POST',
             headers: {
@@ -50,7 +50,8 @@ const signUpRequest = async (email, name, password, country, photo, googleBool) 
                 message = "An error occurred, check your network..";
             return { successful: false, message: message };
         }
-    }catch(error){
+    } catch (error) {
+        console.log(error);
         return { successful: false, message: "An error occurred, check your network.." };
     };
 }

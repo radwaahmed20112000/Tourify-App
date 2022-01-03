@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, TouchableHighlight, ImageBackground, SafeAreaView } from 'react-native';
+import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground, SafeAreaView } from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
-
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { ThemeContext } from '../../Context/ThemeContext';
 import ImageViewer from './ImageViewer';
 
@@ -22,35 +24,66 @@ function PostListComponent(props) {
     const { postId, userId, title, body, rating, userName, userPhoto, photos } = props.item;
 
     return (
-        <View style={styles.container}>
-            <TouchableHighlight onPress={() => navigateToProfile(userId)}>
-                <View style={styles.user}>
-                    <ImageBackground style={{ flex: 1 }} source={{ uri: userPhoto }} style={styles.userImage} imageStyle={{
-                        borderRadius: SCREEN_WIDTH * 0.15, borderColor: theme.PrimaryColor,
-                        borderWidth: 0.25
-                    }}></ImageBackground>
-                    <View style={{ paddingLeft: RFValue(10), width: "100%", justifyContent: 'center' }}>
-                        <SafeAreaView style={{ width: "85%" }}>
-                            <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.PrimaryColor }}>{userName}</Text>
-                            {/* TODO add time stamp */}
-                            <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{"2m"}</Text>
 
-                        </SafeAreaView>
+        <View style={styles.container}>
+
+            <View style={styles.user}>
+                <View style={{
+                    flexDirection: 'row', justifyContent: 'center',
+
+                }} >
+                    <TouchableOpacity onPress={() => navigateToProfile(userId)}>
+
+                        <ImageBackground style={{ flex: 1 }} source={{ uri: userPhoto }} style={styles.userImage} imageStyle={{
+                            borderRadius: SCREEN_WIDTH * 0.15, borderColor: theme.PrimaryColor,
+                            borderWidth: 0.25
+                        }}></ImageBackground>
+                    </TouchableOpacity>
+
+                    <View style={{ paddingLeft: RFValue(10), justifyContent: 'center' }}>
+                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.Text }}>{userName}</Text>
+
+                        {/* TODO add time stamp */}
+                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{"2m"}</Text>
                     </View>
                 </View>
-            </TouchableHighlight>
+
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }} >
+
+                    <Menu  >
+                        <MenuTrigger>
+                            <View style={{ paddingHorizontal: RFValue(20), paddingVertical: RFValue(10) }} >
+                                <FontAwesomeIcon icon={faEllipsisV} size={RFValue(15)} color={theme.SubText} ></FontAwesomeIcon>
+
+                            </View>
+
+                        </MenuTrigger>
+                        <MenuOptions optionsContainerStyle={{ marginTop: RFValue(30) }}>
+                            <MenuOption onSelect={() => alert(`Save`)} text='Edit Post' />
+                            <MenuOption onSelect={() => alert(`Delete`)} >
+                                <Text style={{ color: 'red' }}>Delete Post</Text>
+                            </MenuOption>
+                        </MenuOptions>
+                    </Menu>
+
+                </View>
 
 
-            <TouchableHighlight onPress={() => navigateToPost(postId)}>
+            </View>
+
+
+            <TouchableOpacity onPress={() => navigateToPost(postId)}>
                 <SafeAreaView style={styles.postDescription}>
                     <Text style={{ fontSize: RFValue(12), color: theme.PrimaryColor }}>{ }{body}</Text>
                 </SafeAreaView>
-            </TouchableHighlight>
+            </TouchableOpacity>
             <View style={{
                 height: RFValue(300), width: "100%", paddingVertical: RFValue(10)
             }}>
                 <ImageViewer images={photos}  ></ImageViewer>
             </View>
+
+
         </View>
     );
 }
@@ -61,7 +94,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingRight: RFValue(30),
+        paddingRight: RFValue(10),
         paddingLeft: RFValue(10),
     },
     button: {
@@ -81,12 +114,8 @@ const styles = StyleSheet.create({
     },
     user: {
         flexDirection: 'row',
-        width: "90%",
-        marginTop: 15,
-        padding: 4,
-        paddingLeft: RFValue(20),
-        borderRadius: 20,
-
+        marginTop: RFValue(10),
+        marginHorizontal: RFValue(5)
     },
     userImage: {
         width: SCREEN_WIDTH * 0.15,
