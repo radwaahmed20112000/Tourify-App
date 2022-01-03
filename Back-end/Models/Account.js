@@ -50,6 +50,7 @@ module.exports = {
         let insertQuery = `INSERT INTO ${tableName} 
         (email, name, password, photo, country, google) 
         VALUES  ("${account.email}","${account.name}","${account.password}","${account.photo}", "${account.country}", ${account.googleBool}) ;`;
+        console.log(insertQuery);
         try {
             let user = await DB(insertQuery)
             console.log("inserted account : ", user)
