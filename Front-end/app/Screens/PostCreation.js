@@ -31,6 +31,10 @@ function PostCreation({navigation, edit, postId, latitude, longitude}) {
     const [lat, setLatitude] = useState(0);
     const [long, setLongitude] = useState(0);
     const token = useContext(TokenContext);
+<<<<<<< HEAD
+=======
+    const ipAddress = "http://192.168.1.13:8000";
+>>>>>>> 037d42103dd7e79dc5804e3a2b49f60b77b330ca
     const newTags = (newTags) => setTags(newTags)
     const newlatitude = (newLatitude) => setLatitude(newLatitude)
     const newlongitude = (newLongitude) => setLongitude(newLongitude)

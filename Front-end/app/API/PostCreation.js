@@ -17,7 +17,7 @@ const createPost = () => {
         }
     }
     var body = JSON.stringify({
-        user: "radwa", //TODO
+        user: token, //TODO
         description: description,
         tags: newTags,
         photos: photos,  //TODO
