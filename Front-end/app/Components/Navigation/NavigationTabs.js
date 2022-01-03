@@ -82,7 +82,7 @@ function NavigationTabs(props) {
             }
         })}>
         <Tab.Screen name="Feed" component={Feed} />
-        <Tab.Screen name="PostCreation" component={PostCreation} />
+        <Tab.Screen name="PostCreation" component={PostCreation} initialParams={{edit:false}} />
         <Tab.Screen name="Notifications" component={Notifications} />
         <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>)

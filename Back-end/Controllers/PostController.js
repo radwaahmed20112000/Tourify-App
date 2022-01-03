@@ -83,16 +83,17 @@ module.exports = {
 
 
    getPost: (req, res) => {
-      var base64Url = req.body.email.split('.')[1];
+      console.log(req.params) 
+      var base64Url = req.params.token.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
 
       const email = JSON.parse(jsonPayload);
-      const post_id = req.body.post_id;
+      const post_id = req.params.id;
 
-      Post.findOne(post_id, email, (err, post) => {
+      Post.findOne(post_id, email.email, (err, post) => {
          if (err)
             return res.status(500).json(err);
 
@@ -150,17 +151,17 @@ module.exports = {
       const email = JSON.parse(jsonPayload);
 
       await Post.editPost(email.email, req.body)
-         .then(() => {
-            PostPhoto.createPostPhoto(post_id, req.body.photos)
-            PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
-            PostTags.createPostTags(post_id, req.body.tags)
-            PostTags.deletePostTags(post_id, req.body.deletedTags)
-            PostLocation.editPostLocation(post_id, req.body)
-            console.log(post_id)
-            return
-         })
+      .then(() => {
+         PostPhoto.createPostPhoto(post_id, req.body.photos)
+         PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
+         PostTags.createPostTags(post_id, req.body.tags)
+         PostTags.deletePostTags(post_id, req.body.deletedTags)
+         PostLocation.editPostLocation(post_id, req.body)
+         console.log(post_id)
+         return
+      })
 
-         .then(() => res.status(200))
+      .then(() => res.status(200))
 
          .catch((err) => {
             return res.status(500).json(err);
