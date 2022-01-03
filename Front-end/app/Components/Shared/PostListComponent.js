@@ -21,7 +21,8 @@ function PostListComponent(props) {
     console.log("ALO")
 
     const theme = useContext(ThemeContext);
-    const { postId, userId, title, body, rating, userName, userPhoto, photos } = props.item;
+    console.log(props.item)
+    const { post_id, email, body, rating, userName, userPhoto, photos } = props.item;
 
     return (
 
@@ -32,7 +33,7 @@ function PostListComponent(props) {
                     flexDirection: 'row', justifyContent: 'center',
 
                 }} >
-                    <TouchableOpacity onPress={() => navigateToProfile(userId)}>
+                    <TouchableOpacity onPress={() => navigateToProfile(email)}>
 
                         <ImageBackground style={{ flex: 1 }} source={{ uri: userPhoto }} style={styles.userImage} imageStyle={{
                             borderRadius: SCREEN_WIDTH * 0.15, borderColor: theme.PrimaryColor,
@@ -48,7 +49,7 @@ function PostListComponent(props) {
                     </View>
                 </View>
 
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }} >
+                <View style={{ justifyContent: 'center' }} >
 
                     <Menu  >
                         <MenuTrigger>
@@ -72,9 +73,9 @@ function PostListComponent(props) {
             </View>
 
 
-            <TouchableOpacity onPress={() => navigateToPost(postId)}>
+            <TouchableOpacity onPress={() => navigateToPost(post_id)}>
                 <SafeAreaView style={styles.postDescription}>
-                    <Text style={{ fontSize: RFValue(12), color: theme.PrimaryColor }}>{ }{body}</Text>
+                    <Text style={{ textAlign: 'left', fontSize: RFValue(12), color: theme.PrimaryColor }}>{ }{body}</Text>
                 </SafeAreaView>
             </TouchableOpacity>
             <View style={{

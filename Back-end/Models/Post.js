@@ -54,9 +54,9 @@ module.exports = {
         query = query || '';
 
         let selectQuery = `SELECT
-                              post.post_id , user.email,  body,name as userName , photo as userPhoto , photos
+                              Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos
                             FROM
-                                (post join user  on user.email = post.email )
+                                (Post join user  on user.email = Post.email )
                                 LEFT JOIN (
                                     SELECT 
                                         post_id, 
@@ -64,7 +64,7 @@ module.exports = {
                                     FROM PostPhoto 
                                     GROUP BY post_id
                                 ) ph ON Post.post_id = ph.post_id
-                            ${query ? 'WHERE ' + query : ''}    LIMIT ${limit} OFFSET ${offset} `
+                            ${query ? 'WHERE ' + query : ''} LIMIT ${limit} OFFSET ${offset} `
 
         try {
             let posts = await DB(selectQuery)
