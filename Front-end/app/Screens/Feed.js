@@ -9,14 +9,14 @@ import { normalize, width } from '../util/FontNormalization';
 import PostListComponent from '../Components/Shared/PostListComponent';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TokenContext } from '../Context/TokenContext';
-
+import IPAdress from '../API/IPAdress';
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 
 
 function Feed(props) {
   const token = useContext(TokenContext);
-  const url = "http://192.168.1.9:8000/posts/feed"
+  const url = IPAdress + "posts/feed"
   const lorempIpsum = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia," +
     "    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum" +
     "    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium" +
@@ -92,8 +92,8 @@ function Feed(props) {
         method: 'GET',
         headers: {
           // Accept: 'application/json',
-          'Content-Type': 'application/json'
-          // Authorization: token,
+          'Content-Type': 'application/json',
+          Authorization: token,
         }
       })
         .then(res => {
