@@ -4,19 +4,46 @@ const Post = require('../Models/Post')
 const PostLocation = require('../Models/PostLocation')
 const PostPhoto = require('../Models/PostPhoto')
 const PostTags = require('../Models/PostTags')
-const jwt = require("jsonwebtoken");
+const { uploadPhotosToAzure } = require('../Services/PhotoUpload')
 
 module.exports = {
 
    getFeedPosts: (req, res) => {
-
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
 
-      if (!req.userId)
-         res.status(403)
+      var base64Url = req.body.email.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      const email = JSON.parse(jsonPayload).email;
 
-      let query = `user.email != ${req.user_id}`;
+      let query = `USER.email != '${email}'`;
+
+      Post.findAll(query, limit, offset, (err, posts) => {
+
+         if (err)
+            return res.status(500).json(err);
+
+         return res.json(posts);
+      })
+
+   },
+
+   getProfilePosts: (req, res) => {
+      let limit = req.query.limit || 100;
+      let offset = req.query.offset || 0;
+
+      var base64Url = req.body.email.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      const email = JSON.parse(jsonPayload).email;
+
+
+      let query = `USER.email = '${email}'`;
 
       Post.findAll(query, limit, offset, (err, posts) => {
 
@@ -42,7 +69,20 @@ module.exports = {
 
    },
 
-   edit: (req, res) => {
+   deletePost: (req, res) => {
+      Post.delete(req.query.postId, (err) => {
+
+         if (err)
+            return res.status(500).json(err);
+
+         return res.json();
+
+
+      })
+   },
+
+
+   getPost: (req, res) => {
       var base64Url = req.body.email.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
@@ -88,11 +128,12 @@ module.exports = {
             PostPhoto.createPostPhoto(post_id, req.body.photos)
             PostLocation.createPostLocation(post_id, req.body)
             PostTags.createPostTags(post_id, req.body.tags)
+            uploadPhotosToAzure(req.body.photos)
             console.log(post_id)
             return
          })
 
-         .then(() => res.status(200))
+         .then(() => res.status(200).json({}))
 
          .catch((err) => {
             return res.status(500).json(err);
@@ -110,9 +151,11 @@ module.exports = {
 
       await Post.editPost(email.email, req.body)
          .then(() => {
-            PostPhoto.editPostPhoto(post_id, req.body.photos)
+            PostPhoto.createPostPhoto(post_id, req.body.photos)
+            PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
+            PostTags.createPostTags(post_id, req.body.tags)
+            PostTags.deletePostTags(post_id, req.body.deletedTags)
             PostLocation.editPostLocation(post_id, req.body)
-            PostTags.editPostTags(post_id, req.body.tags)
             console.log(post_id)
             return
          })

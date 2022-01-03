@@ -1,14 +1,11 @@
 import React, { useContext } from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native';
+import { SafeAreaView, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faImage, } from '@fortawesome/free-solid-svg-icons';
 import { ThemeContext } from '../../Context/ThemeContext';
-import { LinearGradient } from 'expo-linear-gradient';
 import { RFValue } from "react-native-responsive-fontsize";
 
-
-const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
 function ImageSharing({setPhotos, photos}) {
@@ -22,13 +19,19 @@ function ImageSharing({setPhotos, photos}) {
             return;
         }
     
-        let pickerResult = await ImagePicker.launchImageLibraryAsync();
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({base64:true});
     
         if (pickerResult.cancelled === true) {
             return;
         }
-    
-        setPhotos(photos.concat({ localUri: pickerResult.uri }));
+        var imgName = pickerResult.uri.replace(/^.*[\\\/]/, '');
+
+        setPhotos(photos.concat({ 
+            name: imgName, 
+            type: pickerResult.type, 
+            base64: pickerResult.base64,
+            localUri:pickerResult.uri
+        }));
     };
   
     return (

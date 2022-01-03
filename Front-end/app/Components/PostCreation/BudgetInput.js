@@ -6,7 +6,8 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
-function BudgetInput({setBudget, setCurrancy}) {
+
+function BudgetInput({setBudget, budget, setCurrancy, currency}) {
     const theme = useContext(ThemeContext);
 
     return (
@@ -15,12 +16,13 @@ function BudgetInput({setBudget, setCurrancy}) {
                 onChangeText={text => setBudget(text)}
                 placeholder="budget"
                 keyboardType='numeric'
+                value={budget}
                 style={{fontSize:RFValue(16)}}
             />
             <CurrencyPicker
                 enable={true}
                 darkMode={false} //TODO 
-                currencyCode={"EUR"}
+                currencyCode={currency}
                 showCurrencyName={false}
                 showFlag={false}
                 showCurrencyCode={true}
