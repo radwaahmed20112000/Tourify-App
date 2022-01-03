@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground, SafeAreaView } from 'react-native';
+import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground, SafeAreaView ,Alert} from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { ThemeContext } from '../../Context/ThemeContext';
 import ImageViewer from './ImageViewer';
+import { deletePost} from '../../API/PostDeletion'
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
@@ -22,7 +23,19 @@ function PostListComponent(props) {
 
     const theme = useContext(ThemeContext);
     const { postId, userId, title, body, rating, userName, userPhoto, photos } = props.item;
-
+    const deleteAlert = () =>
+        Alert.alert(
+            "Delete post",
+            "are you sure?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "OK", onPress: () => deletePost(postId) }
+            ]
+        );
     return (
 
         <View style={styles.container}>
@@ -60,7 +73,7 @@ function PostListComponent(props) {
                         </MenuTrigger>
                         <MenuOptions optionsContainerStyle={{ marginTop: RFValue(30) }}>
                             <MenuOption onSelect={() => alert(`Save`)} text='Edit Post' />
-                            <MenuOption onSelect={() => alert(`Delete`)} >
+                            <MenuOption onSelect={() => deleteAlert()} >
                                 <Text style={{ color: 'red' }}>Delete Post</Text>
                             </MenuOption>
                         </MenuOptions>

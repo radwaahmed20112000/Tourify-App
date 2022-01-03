@@ -1,9 +1,9 @@
-import IPAdress from '../API/IPAdress';
+import baseUrl from "./IPAdress" 
 
 export const deletePost = (postId) => {
 
 
-    fetch(IPAdress + `posts/delete?id=${postId}`, {
+    fetch(baseUrl + `posts/delete?id=${postId}`, {
         method: 'DELETE',
         headers: {
             Accept: 'application/json',
