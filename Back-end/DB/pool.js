@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 
 const pool = mysql.createPool({
-
+    insecureAuth: true,
     connectionLimit: process.env.DB_CONNECTION_LIMIT,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,

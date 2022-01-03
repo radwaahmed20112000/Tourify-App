@@ -5,23 +5,52 @@ const PostLocation = require('../Models/PostLocation')
 const PostPhoto = require('../Models/PostPhoto')
 const PostTags = require('../Models/PostTags')
 const jwt = require("jsonwebtoken");
-
+const atob = require('atob')
 module.exports= {
 
    getFeedPosts: (req, res) =>{
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
-      
-      if (!req.userId)
-         res.status(403)
 
-      let query = `USER.userId != ${req.user_id}`;
+      var base64Url = req.body.email.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      const email = JSON.parse(jsonPayload).email;
+      console.log(email)
+
+      let query = `USER.email != '${email}'`;
 
       Post.findAll(query, limit, offset, (err, posts) =>{
          
          if(err)
             return res.status(500).json(err);
          
+         return res.json(posts);
+      })
+
+   },
+
+   getProfilePosts: (req, res) => {
+      let limit = req.query.limit || 100;
+      let offset = req.query.offset || 0;
+
+      var base64Url = req.body.email.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      const email = JSON.parse(jsonPayload).email;
+
+
+      let query = `USER.email = '${email}'`;
+
+      Post.findAll(query, limit, offset, (err, posts) => {
+
+         if (err)
+            return res.status(500).json(err);
+
          return res.json(posts);
       })
 
@@ -40,6 +69,19 @@ module.exports= {
       })
 
    },
+
+   deletePost :(req ,res )=>{
+      Post.delete(req.query.postId, (err) => {
+
+         if (err)
+            return res.status(500).json(err);
+
+         return res.json();
+
+
+      })
+   },
+
 
    edit: (req, res) => {     
       var base64Url = req.body.email.split('.')[1];
