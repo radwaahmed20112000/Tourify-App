@@ -5,25 +5,20 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TouchableOpacity } from 'react-native';
 
-function TagsList({setTags}) {
+function TagsList({setTags, tags}) {
     const theme = useContext(ThemeContext);
-    const tags = [ "Historical", "Beach", "Fun", "Romantic", "Relaxation",
+    const tagsList = [ "Historical", "Beach", "Fun", "Romantic", "Relaxation",
     "Camping", "Volunteer", "Road", "Custom" ];
-    const [choosenTags, setChoosenTags] = useState([]);
     const [state, setState] = useState({refresh:true})
 
-  
+
     const chooseTag = (tag) => {
-        const index = choosenTags.indexOf(tag)
-        if(index > -1){
-            choosenTags.splice(index, 1);
-            setChoosenTags(choosenTags)
-        }
-        else {
-            choosenTags.push(tag)
-            setChoosenTags(choosenTags)
-        }
-        setTags(choosenTags)
+        const index = tags.indexOf(tag)
+        if(index > -1)
+            tags.splice(index, 1);
+        else 
+            tags.push(tag)
+        setTags(tags)
         setState({ refresh: ! state.refresh })
         if(tag == 'Custom') {} //TODO
     };
@@ -39,7 +34,7 @@ function TagsList({setTags}) {
             <CollapseBody>
                 <FlatList
                     extraData={state.refresh}
-                    data={tags}
+                    data={tagsList}
                     showsHorizontalScrollIndicator={false}
                     pagingEnabled={true}
                     numColumns={4}
@@ -52,7 +47,7 @@ function TagsList({setTags}) {
                             <TouchableOpacity 
                                 onPress={() => chooseTag(item)}
                                 style={[styles.container, 
-                                    {backgroundColor:choosenTags.indexOf(item) > -1? '#d6d4ce':'white'}]}>
+                                    {backgroundColor:tags.indexOf(item) > -1? '#d6d4ce':'white'}]}>
                                 <Text style={{fontSize:RFValue(14),}}>{ item}</Text>
                             </TouchableOpacity> 
                         )

@@ -1,4 +1,6 @@
-let API_URL = "http://192.168.1.8:8000/account";
+import IPAdress from '../API/IPAdress';
+
+let API_URL = IPAdress + "account";
 const signInRequest = async (email, password, bool) => {
     let payload = { email: email, password: password, bool: bool };
     let response = await fetch(API_URL + "/login", {

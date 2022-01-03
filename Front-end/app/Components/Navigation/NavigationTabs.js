@@ -67,7 +67,6 @@ function NavigationTabs(props) {
                             end={{ x: 1, y: 1 }}
                             style={styles.button}>
                             <MaterialIcons name={iconName} size={30} color={theme.Primary} />
-
                         </LinearGradient>
                         <GradientText style={{ fontSize: RFValue(15) }}>{text}</GradientText>
                     </View>
@@ -86,7 +85,6 @@ function NavigationTabs(props) {
         <Tab.Screen name="PostCreation" component={PostCreation} />
         <Tab.Screen name="Notifications" component={Notifications} />
         <Tab.Screen name="Profile" component={Profile} />
-        <Tab.Screen name="Map" component={Map} />
     </Tab.Navigator>)
 
 }

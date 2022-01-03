@@ -1,4 +1,4 @@
-/*
+
 
 const { post } = require('superagent');
 let chai = require('chai');
@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 const Post = require('../../Models/Post');
 const jwt = require("jsonwebtoken");
 
-describe('Posts', function () {
+describe('Posts Model', function () {
     describe('find all ', function () {
         const tests = [
             { limit: 10, offset: 0 },
@@ -30,7 +30,7 @@ describe('Posts', function () {
                         p.should.have.property('userName');
                         p.should.have.property('body');
                         p.should.have.property('photos');
-                        p.should.have.property('postId');               
+                        p.should.have.property('post_id');               
                         p.should.have.property('userPhoto');
                     })
 
@@ -45,7 +45,7 @@ describe('Posts', function () {
         tests.forEach(t => {
             it('it should retrun an array of the at most the specified size', (done) => {
                 //   post.postId , user.userId, title, body,rating ,name as userName ,photo as userPhoto , photos
-                let query = 'Post.postId != 4';
+                let query = 'Post.post_id  != 4';
                 Post.findAll(query, t.limit, t.offset, (err, posts) => {
 
                     should.equal(err, null);
@@ -54,7 +54,7 @@ describe('Posts', function () {
                         p.should.have.property('userName');
                         p.should.have.property('body');
                         p.should.have.property('photos');
-                        p.should.have.property('postId');
+                        p.should.have.property('post_id');
                         p.should.have.property('userPhoto');
                     })
 
@@ -77,7 +77,7 @@ describe('Posts', function () {
             });
 
             it('it should retrun an array of the specified size', (done) => {
-                let query = 'Post.postId != 4';
+                let query = 'Post.post_id  != 4';
                 Post.count(query, (err, obj) => {
                     should.equal(err, null);
                     obj.count.should.be.a('number');
@@ -101,4 +101,4 @@ describe('Posts', function () {
 
 
 });
-*/
+
