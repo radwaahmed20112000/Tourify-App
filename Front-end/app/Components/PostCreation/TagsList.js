@@ -5,7 +5,7 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TouchableOpacity } from 'react-native';
 
-function TagsList({setTags, tags}) {
+function TagsList({setTags, tags, setDeletedTags, deletedTags}) {
     const theme = useContext(ThemeContext);
     const tagsList = [ "Historical", "Beach", "Fun", "Romantic", "Relaxation",
     "Camping", "Volunteer", "Road", "Custom" ];
@@ -14,13 +14,18 @@ function TagsList({setTags, tags}) {
 
     const chooseTag = (tag) => {
         const index = tags.indexOf(tag)
-        if(index > -1)
+        if(index > -1) {
             tags.splice(index, 1);
+            if(edit) deletedTags.push(tag)
+        }
         else 
             tags.push(tag)
         setTags(tags)
+        setDeletedTags(deletedTags)
         setState({ refresh: ! state.refresh })
-        if(tag == 'Custom') {} //TODO
+        if(tag == 'Custom') {
+
+        } //TODO
     };
     
     return (

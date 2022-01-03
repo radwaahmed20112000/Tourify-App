@@ -8,13 +8,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function PhotosList({photos, setPhotos}) {
+function PhotosList({photos, setPhotos, deletedPhotos, setDeletedPhotos }) {
     const theme = useContext(ThemeContext);
     const [state, setState] = useState({refresh:true})
 
     const deletePhoto = (index) => {
-        photos.splice(index, 1)
+        const photo = photos.splice(index, 1)
         setPhotos(photos)
+        deletedPhotos.push(photo)
+        setDeletedPhotos(deletedPhotos)
         setState({ refresh: ! state.refresh })
     }
     return (
