@@ -101,7 +101,7 @@ module.exports = {
 
         }
     },
-    delete: async (postId) => {
+    delete: async (postId,cb) => {
 
         let query = `DELETE FROM  ${tableName} WHERE  post_id = ${postId} `;
 
@@ -148,6 +148,25 @@ module.exports = {
         catch (e) {
             return e
         }
+    },
+    getOne: async (postId, cb)=>{
+        if(!postId)
+            return cb (null,null)
+        
+        let query = `SELECT FROM  ${tableName} WHERE  post_id = ${postId} `;
+
+        try {
+
+            let post = await DB(query)
+
+            return cb(null,post );
+
+        } catch (e) {
+            console.log(e)
+            return cb(e,null);
+
+        }
     }
+
 
 }
