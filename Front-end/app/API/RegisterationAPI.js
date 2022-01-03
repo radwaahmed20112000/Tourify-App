@@ -1,6 +1,6 @@
 let API_URL = "http://192.168.1.13:8000/account";
 const signInRequest = async (email, password, googleBool) => {
-    let payload = { email: email, password: password, bool: googleBool };
+    let payload = { email: email, password: password, google: googleBool };
     try{
         let response = await fetch(API_URL + "/login", {
             method: 'POST',
@@ -16,7 +16,7 @@ const signInRequest = async (email, password, googleBool) => {
         else {
             let message = "";
             if (response.status === 404)
-                message = "Wrong Email!";
+                message = "You're not signed up!";
             else if (response.status === 401)
                 message = "Wrong Password!";
             else
@@ -28,7 +28,7 @@ const signInRequest = async (email, password, googleBool) => {
     };
 }
 const signUpRequest = async (email, name, password, country, photo, googleBool) => {
-    let payload = { email: email, name: name, password: password, country: country, photo: photo, bool: googleBool };
+    let payload = { email: email, name: name, password: password, country: country, photo: photo, google: googleBool };
     try{
         let response = await fetch(API_URL + "/signup", {
             method: 'POST',
@@ -45,7 +45,7 @@ const signUpRequest = async (email, name, password, country, photo, googleBool) 
         else {
             let message = "";
             if (response.status === 409)
-                message = "Email already exists!";
+                message = "You're already signed up!";
             else
                 message = "An error occurred, check your network..";
             return { successful: false, message: message };

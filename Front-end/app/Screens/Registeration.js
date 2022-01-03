@@ -25,8 +25,16 @@ function Registeration({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJS8__K2f9ts2zYtS3Wo_O_GI9o263MQoiLXxrV-awEMCNHf7k_IFWDKIWkKGxHQtahfM&usqp=CAU");
 
-  const handleSignIn = async (googleBool) => {
-    if ((email && password) || googleBool) {
+  const handleSignIn = async (googleBool, googleEmail) => {
+    if(googleBool)
+    {
+      setLoading(true);
+      signIn(googleEmail, null, googleBool).then((res) => {
+        setMessage(res);
+        setLoading(false);
+      });
+    }
+    else if (email && password) {
       setLoading(true);
       signIn(email, password, googleBool).then((res) => {
         setMessage(res);
@@ -41,10 +49,18 @@ function Registeration({ navigation, route }) {
     }
 
   }
-  const handleSignUp = async (googleBool) => {
+  const handleSignUp = async (googleBool, googleName, googleEmail, googlePhoto) => {
     let checkPass = checkPassword(password);
     let checkTheEmail = checkEmail(email);
-    if ((checkPass && checkTheEmail) || googleBool) {
+    if(googleBool)
+    {
+      setLoading(true);
+      signUp(googleEmail, googleName, null, null, googlePhoto, googleBool).then((res) => {
+        setMessage(res);
+        setLoading(false);
+      });
+    }
+    else if (checkPass && checkTheEmail) {
       setLoading(true);
       signUp(email, name, password, country, photo, googleBool).then((res) => {
         setMessage(res);
@@ -72,10 +88,7 @@ function Registeration({ navigation, route }) {
       .then((result) => {
         const { type, user } = result;
         if (type == "success") {
-          setName(user.name);
-          setPhoto(user.photoUrl);
-          setEmail(user.email);
-          isSignUp ? handleSignUp(true) : handleSignIn(true);
+          isSignUp ? handleSignUp(true, user.name, user.email, user.photoUrl) : handleSignIn(true, user.email);
         }
         else {
           setMessage("An error occurred");
@@ -103,7 +116,12 @@ function Registeration({ navigation, route }) {
     return bool;
   }
   const checkPassword = (pass) => {
-    if (pass.length < 8) {
+    if(pass.length  == 0)
+    {
+      setPassMessage("");
+      return false;
+    }
+    else if (pass.length < 8 && pass.length > 0) {
       setPassColor("red");
       setPassMessage("Weak password, should be more than 8 letters");
       return false;
