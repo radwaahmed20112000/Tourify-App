@@ -17,8 +17,8 @@ import axios from 'axios';
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function PostCreation({navigation, edit, postId, latitude, longitude}) {
-    const ipAddress = "http://192.168.1.8:8000";
+function PostCreation({ navigation, edit, postId, latitude, longitude }) {
+    const ipAddress = "http://192.168.1.7:19000";
     const theme = useContext(ThemeContext);
     const token = useContext(TokenContext);
     const [description, onChangeText] = useState('');
@@ -37,11 +37,11 @@ function PostCreation({navigation, edit, postId, latitude, longitude}) {
 
 
     useEffect(() => {
-        if(latitude != null && longitude != null){
+        if (latitude != null && longitude != null) {
             setLongitude(params.longitude)
             setLatitude(params.latitude)
         }
-        if(edit){
+        if (edit) {
             axios({
                 method: 'get',
                 url: `${ipAddress}/post/${postId}`,
@@ -63,7 +63,7 @@ function PostCreation({navigation, edit, postId, latitude, longitude}) {
     });
 
     const createPost = () => {
-        if(description === '' || duration === '' || budget === 0 ) {
+        if (description === '' || duration === '' || budget === 0) {
             Alert.alert(
                 "Be Careful",
                 "You should Enter all required fields!",
@@ -76,17 +76,17 @@ function PostCreation({navigation, edit, postId, latitude, longitude}) {
         var url = "";
         setProcessing(true)
         var body = JSON.stringify({
-            email: token, 
+            email: token,
             body: description,
             tags: tags,
-            photos: photos,  
-            organisation : organisation,
+            photos: photos,
+            organisation: organisation,
             rate: rate,
             duration: duration,
             budget: budget,
             currency: currency,
-            latitude: latitude, 
-            longitude: longitude 
+            latitude: latitude,
+            longitude: longitude
         })
         if(edit){
             body['deletedTags'] = deletedTags
@@ -101,7 +101,7 @@ function PostCreation({navigation, edit, postId, latitude, longitude}) {
                 'Content-Type': 'application/json'
             },
             body: body
-        }).then((res) => { 
+        }).then((res) => {
             console.log(JSON.stringify(res.post_id))
             setProcessing(false)
             navigation.navigate("Feed")
@@ -139,48 +139,48 @@ function PostCreation({navigation, edit, postId, latitude, longitude}) {
                     </LinearGradient>
                 </TouchableOpacity>
             </View>
-            <View style={{flexDirection:"column"}}>
+            <View style={{ flexDirection: "column" }}>
                 <TextInput
                     value={description}
-                    style={[{borderColor: theme.SecondaryPurple}, styles.description]}
+                    style={[{ borderColor: theme.SecondaryPurple }, styles.description]}
                     onChangeText={text => onChangeText(text)}
-                    placeholder= "How was your trip?"
+                    placeholder="How was your trip?"
                     multiline={true}
                 />
-                <View style={{flexDirection:"row"}}>
+                <View style={{ flexDirection: "row" }}>
                     <AirbnbRating
                         defaultRating={rate}
                         type='star'
                         ratingCount={5}
                         showRating={false}
-                        size= {RFValue(20)}
-                        reviewSize= {RFValue(20)}
+                        size={RFValue(20)}
+                        reviewSize={RFValue(20)}
                         selectedColor={theme.SecondaryPurple}
                         reviewColor={theme.SecondaryPurple}
                         imageSize={RFValue(2)}
                         onFinishRating={rate => setRate(rate)}
                     />
                     <ImageSharing setPhotos={newPhotos} photos={photos}></ImageSharing>
-                    <TouchableOpacity style={{marginLeft:SCREEN_WIDTH*0.01, marginTop:SCREEN_HEIGHT*0.008}} onPress={goToMaps}>
-                        <FontAwesomeIcon icon={faMapMarkerAlt} size={ SCREEN_WIDTH*0.07}  color={theme.SecondaryPurple}></FontAwesomeIcon>
+                    <TouchableOpacity style={{ marginLeft: SCREEN_WIDTH * 0.01, marginTop: SCREEN_HEIGHT * 0.008 }} onPress={goToMaps}>
+                        <FontAwesomeIcon icon={faMapMarkerAlt} size={SCREEN_WIDTH * 0.07} color={theme.SecondaryPurple}></FontAwesomeIcon>
                     </TouchableOpacity>
                 </View>
                 <TagsList setTags={newTags} tags ={tags} setDeletedTags={setDeletedTags} deletedTags ={deletedTags}></TagsList>
                 <PhotosList setPhotos={setPhotos} photos={photos} setDeletedPhotos={setDeletedPhotos} deletedPhotos={deletedPhotos}></PhotosList>
                 <BudgetInput setBudget={setBudget} budget={budget} setCurrancy={setCurrancy} currency={currency}></BudgetInput>
-                <View style={{flexDirection:"row"}}>
+                <View style={{ flexDirection: "row" }}>
                     <TextInput
                         value={duration}
                         onChangeText={text => setDuration(text)}
                         placeholder="Number of Days"
                         keyboardType='numeric'
-                        style={{fontSize:RFValue(16)}}
+                        style={{ fontSize: RFValue(16) }}
                     />
                     <TextInput
                         value={organisation}
                         onChangeText={text => setOrganisation(text)}
                         placeholder="Organisation"
-                        style={{marginLeft:SCREEN_WIDTH*0.3, fontSize:RFValue(16)}}
+                        style={{ marginLeft: SCREEN_WIDTH * 0.3, fontSize: RFValue(16) }}
                     />
                 </View>
             </View>
@@ -193,30 +193,30 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingTop:SCREEN_WIDTH*0.1
+        paddingTop: SCREEN_WIDTH * 0.1
     },
     button: {
         alignItems: 'center',
         justifyContent: "center",
-        width:SCREEN_WIDTH*0.16,
-        height:SCREEN_HEIGHT*0.048,
-        borderRadius: SCREEN_WIDTH*0.1,
+        width: SCREEN_WIDTH * 0.16,
+        height: SCREEN_HEIGHT * 0.048,
+        borderRadius: SCREEN_WIDTH * 0.1,
     },
-    upperSection : {
-        flexDirection : 'row',
-        paddingRight : SCREEN_WIDTH*0.05,
-        paddingLeft : SCREEN_WIDTH*0.06,
-        paddingBottom: SCREEN_HEIGHT*0.03,
-        paddingTop:SCREEN_HEIGHT*0.015,
-        width:SCREEN_WIDTH,
+    upperSection: {
+        flexDirection: 'row',
+        paddingRight: SCREEN_WIDTH * 0.05,
+        paddingLeft: SCREEN_WIDTH * 0.06,
+        paddingBottom: SCREEN_HEIGHT * 0.03,
+        paddingTop: SCREEN_HEIGHT * 0.015,
+        width: SCREEN_WIDTH,
     },
     description: {
-        height: SCREEN_HEIGHT*0.3, 
-        width:SCREEN_WIDTH*0.9,
-        fontSize:RFValue(18),
+        height: SCREEN_HEIGHT * 0.3,
+        width: SCREEN_WIDTH * 0.9,
+        fontSize: RFValue(18),
         borderBottomWidth: 0.3,
-        textAlign:"left",
+        textAlign: "left",
         textAlignVertical: 'top'
     },
 });
- export default PostCreation;
+export default PostCreation;

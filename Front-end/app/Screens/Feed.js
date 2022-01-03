@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, FlatList, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 // import useFetch from '../api/useFetch';
+import { MenuProvider } from 'react-native-popup-menu';
 
 import { ThemeContext } from '../Context/ThemeContext';
 import { normalize, width } from '../util/FontNormalization';
@@ -15,7 +16,7 @@ const WINDOW_HEIGHT = Dimensions.get('window').height;
 
 function Feed(props) {
   const token = useContext(TokenContext);
-  const url = "http://192.168.1.9:8080/"
+  const url = "http://192.168.1.9:8000/posts/feed"
   const lorempIpsum = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia," +
     "    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum" +
     "    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium" +
@@ -86,8 +87,15 @@ function Feed(props) {
     const [onProcessing, setProcessing] = useState(true);
 
     useEffect(() => {
-      // if(data === []){
-      fetch(url)
+      console.log(url)
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          // Accept: 'application/json',
+          'Content-Type': 'application/json'
+          // Authorization: token,
+        }
+      })
         .then(res => {
           if (!res.ok) {
             throw Error('Could not fetch the data for that resource');
@@ -101,32 +109,34 @@ function Feed(props) {
           console.log(err)
         });
       //}
-    }, [url])
+    }, [])
 
     return { data };
   }
 
-
-  const userPhoto = 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4'
-
-
-  // const { data } = useFetch(url + 'feed/');
-  // console.log("1")
-  // console.log(data)
-  // console.log("2")
+  const { data } = useFetch(url);
+  console.log("1")
+  console.log(data)
+  console.log("2")
 
   // useEffect(() => {
-  //   setProcessing(onProgress);
+  //   // setProcessing(onProgress);
   //   setPosts(data);
   // });
-  // const [search, setSearch] = useState('');
-  // const updateSearch = value => {
-  //   setSearch(value);
-  // }
+  const [search, setSearch] = useState('');
+  const updateSearch = value => {
+    setSearch(value);
+  }
   // const searchFor = async () => {
   //   setProcessing(true);
-  //   await fetch('http://192.168.1.8:3000/Search/Podcast/' + search)
-  //     .then(res => {
+  //     await fetch(url, {
+  //       method: 'GET',
+  //       headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: 'JWT'+ token, 
+
+  //       }
+  //   }).then(res => {
   //       if (!res.ok) {
   //         throw Error('could not fetch the data for that resource');
   //       }
@@ -144,21 +154,24 @@ function Feed(props) {
   // }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={postsX}
-        // removeClippedSubviews={true}
-        // initialNumToRender={27}
-        // windowSize={41}
-        keyExtractor={(item) => item.postId}
-        renderItem={({ item }) => {
-          return (
-            // <Text>nkll</Text>
-            <PostListComponent item={item} />
-          )
-        }} />
+    <MenuProvider>
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          data={postsX}
+          // removeClippedSubviews={true}
+          // initialNumToRender={27}
+          // windowSize={41}
+          keyExtractor={(item) => item.postId}
+          renderItem={({ item }) => {
+            return (
+              // <Text>nkll</Text>
+              <PostListComponent item={item} />
+            )
+          }} />
 
-    </SafeAreaView>
+      </SafeAreaView>
+    </MenuProvider>
+
   );
 }
 

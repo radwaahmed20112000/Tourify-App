@@ -85,7 +85,6 @@ function NavigationTabs(props) {
         <Tab.Screen name="PostCreation" component={PostCreation} />
         <Tab.Screen name="Notifications" component={Notifications} />
         <Tab.Screen name="Profile" component={Profile} />
-        <Tab.Screen name="Map" component={Map} />
     </Tab.Navigator>)
 
 }

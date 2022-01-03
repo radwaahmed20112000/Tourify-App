@@ -1,4 +1,4 @@
-let API_URL = "http://192.168.1.8:8000/account";
+let API_URL = "http://192.168.1.7:19000/account";
 const signInRequest = async (email, password, bool) => {
     let payload = { email: email, password: password, bool: bool };
     let response = await fetch(API_URL + "/login", {

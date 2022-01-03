@@ -5,12 +5,13 @@
   "main": "app.js",
   "scripts": {
     "start": "npx nodemon server.js",
-    "test": "mocha test/models/**/*.test.js  test/controllers/**/*.test.js"
+    "test": "mocha test/index.test.js test/models/**/*.test.js  test/controllers/**/*.test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "azure-storage": "^2.10.6",
+    "async": "^3.2.2",
+    "atob": "^2.1.2",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
