@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const Account = require('../Models/Account.js');
-
+const token_key = process.env.TOKEN_KEY
 module.exports = {
     signup: (req, res, next) => {
         var email = req.body.email;
@@ -34,7 +34,7 @@ module.exports = {
                                 res.status(502).json({ message: "error while creating the user" });
                             else {
                                 //if acc created successfully, send token and success
-                                const token = jwt.sign({ email: req.body.email }, 'secret', {});
+                                const token = jwt.sign({ email: req.body.email }, token_key, {});
                                 res.status(200).json({ message: "user created", token: token });
                             }
 
@@ -60,7 +60,7 @@ module.exports = {
                             res.status(502).json({ message: "error while creating the user" });
                         else {
                             //sent token and return success
-                            const token = jwt.sign({ email: req.body.email }, 'secret', {});
+                            const token = jwt.sign({ email: req.body.email }, token_key, {});
                             res.status(200).json({ message: "user created", token: token });
                         }
 
@@ -73,9 +73,9 @@ module.exports = {
 
 
         })
-        .catch(err => {
-            res.status(502).json({ message: "error while signing up" });
-        });
+            .catch(err => {
+                res.status(502).json({ message: "error while signing up" });
+            });
 
 
     },
@@ -96,39 +96,38 @@ module.exports = {
             if (user.length == 0) {
                 return res.status(404).json({ message: "user not found" });
             }
-            if(req.body.google){
+            if (req.body.google) {
                 console.log("EMAIIIIIIL" + req.body.email);
-                const token = jwt.sign({ email: req.body.email }, 'secret', {});
+                const token = jwt.sign({ email: req.body.email }, token_key, {});
                 res.status(200).json({ message: "user logged in", token: token });
             }
             else {
-                Account.getPassword(email, (err, password)=>{
-
+                Account.getPassword(email, (err, password) => {
                     if (err) {
                         return res.status(500).json(err);
-        
+
                     }
                     if (password) {
-                         // password hash
+                        // password hash
                         bcrypt.compare(req.body.password, password, (err, compareRes) => {
                             if (err) { // error while comparing
                                 res.status(502).json({ message: "error while checking user password" });
                             } else if (compareRes) { // password match
-                                const token = jwt.sign({ email: req.body.email }, 'secret', {});
+                                const token = jwt.sign({ email: req.body.email }, token_key, {});
                                 res.status(200).json({ message: "user logged in", token: token });
                             } else { // password doesnt match
                                 res.status(401).json({ message: "invalid credentials" });
                             };
                         });
                     }
-                  
+
                 })
 
             };
         })
-        .catch(err => {
-            res.status(502).json({ message: "error while logging in" });
-        });
+            .catch(err => {
+                res.status(502).json({ message: "error while logging in" });
+            });
     }
 
 }

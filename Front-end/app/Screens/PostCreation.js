@@ -12,13 +12,14 @@ import ImageSharing from '../Components/PostCreation/ImageSharing';
 import BudgetInput from '../Components/PostCreation/BudgetInput';
 import PhotosList from '../Components/PostCreation/PhotosList';
 import axios from 'axios';
+import baseUrl from "../API/IPAdress" 
 
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function PostCreation({ navigation, route }) {
-    const ipAddress = "http://192.168.1.8:8000";
+function PostCreation({ navigation, edit, postId, latitude, longitude }) {
+    const ipAddress = baseUrl;
     const theme = useContext(ThemeContext);
     const token = useContext(TokenContext);
     const [description, onChangeText] = useState('');

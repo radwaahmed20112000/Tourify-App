@@ -1,4 +1,6 @@
-let API_URL = "http://192.168.1.7:19000/account";
+import IPAdress from '../API/IPAdress';
+
+let API_URL = IPAdress + "account";
 const signInRequest = async (email, password, bool) => {
     let payload = { email: email, password: password, bool: bool };
     let response = await fetch(API_URL + "/login", {
@@ -26,7 +28,7 @@ const signInRequest = async (email, password, bool) => {
     }
 }
 const signUpRequest = async (email, name, password, country, photo, bool) => {
-    let payload = { email: email, name: name, password: password, country: country, photo: photo, bool: bool };
+    let payload = { email: email, name: name, password: password, country: country, photo: photo, google: bool };
     let response = await fetch(API_URL + "/signup", {
         method: 'POST',
         headers: {

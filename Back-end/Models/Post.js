@@ -54,9 +54,9 @@ module.exports = {
         query = query || '';
 
         let selectQuery = `SELECT
-                              post.post_id , user.email,  body,name as userName , photo as userPhoto , photos
+                              Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos
                             FROM
-                                (post join user  on user.email = post.email )
+                                (Post join user  on user.email = Post.email )
                                 LEFT JOIN (
                                     SELECT 
                                         post_id, 
@@ -64,7 +64,7 @@ module.exports = {
                                     FROM PostPhoto 
                                     GROUP BY post_id
                                 ) ph ON Post.post_id = ph.post_id
-                            ${query ? 'WHERE ' + query : ''}    LIMIT ${limit} OFFSET ${offset} `
+                            ${query ? 'WHERE ' + query : ''} LIMIT ${limit} OFFSET ${offset} `
 
         try {
             let posts = await DB(selectQuery)
@@ -101,7 +101,7 @@ module.exports = {
 
         }
     },
-    delete: async (postId) => {
+    delete: async (postId,cb) => {
 
         let query = `DELETE FROM  ${tableName} WHERE  post_id = ${postId} `;
 
@@ -148,6 +148,25 @@ module.exports = {
         catch (e) {
             return e
         }
+    },
+    getOne: async (postId, cb)=>{
+        if(!postId)
+            return cb (null,null)
+        
+        let query = `SELECT FROM  ${tableName} WHERE  post_id = ${postId} `;
+
+        try {
+
+            let post = await DB(query)
+
+            return cb(null,post );
+
+        } catch (e) {
+            console.log(e)
+            return cb(e,null);
+
+        }
     }
+
 
 }

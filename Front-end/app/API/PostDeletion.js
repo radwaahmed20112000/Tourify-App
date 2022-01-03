@@ -1,8 +1,9 @@
-let API_URL = "http://192.168.1.8:8000";
+import baseUrl from "./IPAdress" 
+
 export const deletePost = (postId) => {
 
 
-    fetch(API_URL + `/posts/delete?id=${postId}`, {
+    fetch(baseUrl + `posts/delete?id=${postId}`, {
         method: 'DELETE',
         headers: {
             Accept: 'application/json',
