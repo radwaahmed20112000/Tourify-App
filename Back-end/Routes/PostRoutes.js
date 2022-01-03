@@ -7,5 +7,7 @@ router.post('/edit',PostController.edit);
 router.post('/TripEdition',PostController.editPost);
 router.get('/feed' , PostController.getFeedPosts);
 router.get('/feedCount', PostController.getFeedPostsCount);
+router.delete('/delete', PostController.deletePost);
+router.get('/profilePosts', PostController.getProfilePosts);
 
 module.exports = router ;

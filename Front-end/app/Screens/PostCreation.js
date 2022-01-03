@@ -18,7 +18,7 @@ const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
 function PostCreation({navigation, edit, postId, latitude, longitude}) {
-    const ipAddress = "http://192.168.1.8:8000";
+    const ipAddress = "http://192.168.1.7:19000";
     const theme = useContext(ThemeContext);
     const [description, onChangeText] = useState('');
     const [tags, setTags] = useState([]);
@@ -31,10 +31,6 @@ function PostCreation({navigation, edit, postId, latitude, longitude}) {
     const [lat, setLatitude] = useState(0);
     const [long, setLongitude] = useState(0);
     const token = useContext(TokenContext);
-<<<<<<< HEAD
-=======
-    const ipAddress = "http://192.168.1.13:8000";
->>>>>>> 037d42103dd7e79dc5804e3a2b49f60b77b330ca
     const newTags = (newTags) => setTags(newTags)
     const newlatitude = (newLatitude) => setLatitude(newLatitude)
     const newlongitude = (newLongitude) => setLongitude(newLongitude)

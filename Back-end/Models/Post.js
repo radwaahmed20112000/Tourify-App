@@ -54,19 +54,20 @@ module.exports = {
        query = query || '';
      
         let selectQuery = `SELECT
-                              post.post_id , user.user_id, title, body,rate ,name as userName ,photo as userPhoto , photos
+                              post.post_id , user.email,  body,name as userName , photo as userPhoto , photos
                             FROM
-                                (post join user)
+                                (post join user  on user.email = post.email )
                                 LEFT JOIN (
                                     SELECT 
                                         post_id, 
-                                        JSON_ARRAYAGG(JSON_OBJECT('id', photo_id, 'photo', photo)) photos 
+                                        JSON_ARRAYAGG(JSON_OBJECT('photo', photo)) photos 
                                     FROM PostPhoto 
                                     GROUP BY post_id
                                 ) ph ON POST.post_id = ph.post_id
                             ${query ? 'WHERE ' + query : ''}    LIMIT ${limit} OFFSET ${offset} `
 
         try {
+            console.log(selectQuery)
             let posts = await DB(selectQuery)
             posts.forEach(p => {
                 if (p.photos)
@@ -101,8 +102,25 @@ module.exports = {
 
         }
     },
+    delete : async (postId)=>{
 
-    createPost: async  (email, newPost) => {
+        let query = `DELETE FROM  ${tableName} WHERE  post_id = ${postId} `;
+
+        try {
+           
+              await DB(query)
+
+            return cb(null);
+
+        } catch (e) {
+            console.log(e)
+            return cb(e);
+
+        } 
+
+    },
+
+    createPost: async  (email, newPost, cb) => {
         let insertQuery = `INSERT INTO ${tableName} 
             (email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
             ("${email}","${newPost.body}","${newPost.duration}","${newPost.organisation}",${newPost.rate}, "${newPost.budget}","${newPost.currency}", 0, 0 ) ;`;
