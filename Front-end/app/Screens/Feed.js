@@ -15,7 +15,7 @@ const WINDOW_HEIGHT = Dimensions.get('window').height;
 
 function Feed(props) {
   const token = useContext(TokenContext);
-  const url = "http://192.168.1.9:8080/"
+  const url = "http://192.168.1.7:19000/"
   const lorempIpsum = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia," +
     "    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum" +
     "    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium" +

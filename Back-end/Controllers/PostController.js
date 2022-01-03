@@ -83,7 +83,7 @@ module.exports= {
    },
 
 
-   edit: (req, res) => {     
+   getPost: (req, res) => {     
       var base64Url = req.body.email.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -152,9 +152,11 @@ module.exports= {
    
       await Post.editPost(email.email, req.body)
       .then(() => {
-         PostPhoto.editPostPhoto(post_id, req.body.photos)
+         PostPhoto.createPostPhoto(post_id, req.body.photos)
+         PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
+         PostTags.createPostTags(post_id, req.body.tags)
+         PostTags.deletePostTags(post_id, req.body.deletedTags)
          PostLocation.editPostLocation(post_id, req.body)
-         PostTags.editPostTags(post_id, req.body.tags)
          console.log(post_id)
          return
       })

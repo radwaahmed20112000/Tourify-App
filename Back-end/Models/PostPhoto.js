@@ -19,11 +19,11 @@ module.exports = {
         }   
     },
 
-    editPostPhoto: async  (post_id,photos) => {
+    deletePostPhoto: async  (post_id,photos) => {
         for (const photo of photos) {
-            let editQuery = `UPDATE ${tableName}  SET photo = "${photo}" WHERE post_id =  "${post_id}" AND photo = "${photo}" ;`;
+            let deleteQuery = `DELETE FROM ${tableName}  WHERE post_id =  "${post_id}" AND photo = "${photo.name}" ;`;
             try {
-                let res = await DB(editQuery)
+                let res = await DB(deleteQuery)
                 return res
             }
             catch (e) {
