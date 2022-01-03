@@ -18,7 +18,6 @@ module.exports= {
          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
       const email = JSON.parse(jsonPayload).email;
-      console.log(email)
 
       let query = `USER.email != '${email}'`;
 

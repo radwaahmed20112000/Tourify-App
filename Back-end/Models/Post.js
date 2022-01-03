@@ -67,7 +67,6 @@ module.exports = {
                             ${query ? 'WHERE ' + query : ''}    LIMIT ${limit} OFFSET ${offset} `
 
         try {
-            console.log(selectQuery)
             let posts = await DB(selectQuery)
             posts.forEach(p => {
                 if (p.photos)

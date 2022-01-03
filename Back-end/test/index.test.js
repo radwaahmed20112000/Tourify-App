@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const DB = require("../DB/pool");
 
 before( function (done) {
+    console.log("dd")
     this.timeout(200000);
     let query = `insert  ignore into  user(email, name, password) values('testuser@gmail.com', 'testuser', '$2b$12$DeUOYwsPrHEikbInuJ8LheMIUkj6Wz.qosH8Y9W7w1HeHy0Byfp8W');`
     DB(query).then(()=>{
@@ -24,6 +25,7 @@ before( function (done) {
                 done(err)
           console.log("token: ",res.body.token)
           process.env.TEST_TOKEN = res.body.token
+            process.env.TEST_EMAIL ='testuser@gmail.com'
           done();
         });
 
