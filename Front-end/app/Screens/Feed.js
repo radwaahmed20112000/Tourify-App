@@ -12,7 +12,7 @@ const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 
 
-function Feed(props) {
+function Feed({navigation}) {
   const token = useContext(TokenContext);
   const url = IPAdress + "posts/feed"
   const theme = useContext(ThemeContext);
@@ -51,7 +51,7 @@ function Feed(props) {
 
   return (
       <SafeAreaView style={styles.container}>
-       {posts? <ListOfPosts posts={posts} isProfile ={false}></ListOfPosts> : null}
+       {posts? <ListOfPosts posts={posts} navigation={navigation} isProfile ={false}></ListOfPosts> : null}
       </SafeAreaView>
  
   );
