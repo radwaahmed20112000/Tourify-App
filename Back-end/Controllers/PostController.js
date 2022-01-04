@@ -172,10 +172,12 @@ module.exports = {
          PostTags.deletePostTags(post_id, req.body.deletedTags)
          PostLocation.editPostLocation(post_id, req.body)
          console.log(post_id)
-         return
+         return 
       })
 
-      .then(() => res.status(200))
+      .then(() => res.status(200).json({
+         
+      }))
 
          .catch((err) => {
             return res.status(500).json(err);
