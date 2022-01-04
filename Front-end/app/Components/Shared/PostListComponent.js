@@ -8,7 +8,7 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import ImageViewer from './ImageViewer';
 import { deletePost } from '../../API/PostDeletion'
 import { TokenContext } from '../../Context/TokenContext';
-import baseUrl from "../../API/IPAdress" 
+import baseUrl from "../../API/IPAdress"
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
@@ -35,27 +35,29 @@ function PostListComponent(props) {
             [
                 {
                     text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed",token),
+                    onPress: () => console.log("Cancel Pressed", token),
                     style: "cancel"
                 },
-                { text: "OK", onPress: () =>{ 
-                    fetch(baseUrl + `posts/delete?id=${post_id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                            authorization: token,
+                {
+                    text: "OK", onPress: () => {
+                        fetch(baseUrl + `posts/delete?id=${post_id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                                authorization: token,
 
-                        },
-                    }).then((res) => {
-                        deletePostFromState(post_id)
-                    })
-                    .catch(e=>{
-                        console.log(e)
-                        alert('error ocuured',e)
-                    })
-                
-                } }
+                            },
+                        }).then((res) => {
+                            deletePostFromState(post_id)
+                        })
+                            .catch(e => {
+                                console.log(e)
+                                alert('error ocuured', e)
+                            })
+
+                    }
+                }
             ]
         );
     return (
@@ -112,9 +114,9 @@ function PostListComponent(props) {
                     <Text style={{ textAlign: 'left', fontSize: RFValue(12), color: theme.PrimaryColor }}>{ }{body}</Text>
                 </SafeAreaView>
             </TouchableOpacity>
-            <View style={photos && photos.length ? { height: RFValue(300), width: "100%", paddingVertical: RFValue(10) } : { height: RFValue(100), width: "100%", paddingVertical: RFValue(10)}}>
-                {photos && photos.length?
-                <ImageViewer images={photos}  ></ImageViewer>
+            <View style={photos && photos.length ? { height: RFValue(300), width: "100%", paddingVertical: RFValue(10), paddingRight: RFValue(30) } : { height: RFValue(100), width: "100%", paddingVertical: RFValue(10) }}>
+                {photos && photos.length ?
+                    <ImageViewer images={photos}  ></ImageViewer>
                     :
                     null}
             </View>
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
     },
     user: {
         flexDirection: 'row',
-        justifyContent:'space-between',
+        justifyContent: 'space-between',
         marginTop: RFValue(10),
         marginHorizontal: RFValue(5),
         width: SCREEN_WIDTH,
@@ -163,14 +165,14 @@ const styles = StyleSheet.create({
         height: SCREEN_WIDTH * 0.15,
     },
     postDescription: {
-        justifyContent:'flex-start',
+        justifyContent: 'flex-start',
         flexDirection: 'row',
         paddingTop: RFValue(8),
         paddingRight: RFValue(8),
         //paddingLeft: RFValue(13),
         width: SCREEN_WIDTH,
-        textAlign:'left',
-        justifyContent:'flex-start'
+        textAlign: 'left',
+        justifyContent: 'flex-start'
     }
 });
 export default PostListComponent;
