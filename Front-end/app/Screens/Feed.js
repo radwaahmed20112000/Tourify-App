@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, FlatList, SafeAreaView } from 'react-native';
 // import useFetch from '../api/useFetch';
 import { MenuProvider } from 'react-native-popup-menu';
 
@@ -60,7 +60,7 @@ function Feed(props) {
     body: 'hey',
     rating: 5,
     userName: "John Smith",
-    photos: null
+    photos: images
   }, {
     post_id: 10,
     email: 10,
@@ -68,13 +68,12 @@ function Feed(props) {
     body: "Hey there!",
     rating: 5,
     userName: "Sarah",
-    photos: null
+    photos: images1
   }]
 
   const [posts, setPosts] = useState([]);
 
   const useFetch = (url) => {
-    const [data, setData] = useState([]);
     const [onProgress, setProgress] = useState(true);
     const [error, setError] = useState(null);
 
@@ -103,9 +102,9 @@ function Feed(props) {
       //}
     }, [])
   }
-  const deletePostFromState=(postID)=>{  // should be transfered to  profile 
+  const deletePostFromState = (postID) => {  // should be transfered to  profile 
     let newData = [...posts];
-    newData = newData.filter(function (el) { return el.post_id != postID; }); 
+    newData = newData.filter(function (el) { return el.post_id != postID; });
     setPosts(newData);
 
   }
@@ -113,14 +112,10 @@ function Feed(props) {
   useFetch(url);
 
 
-  // useEffect(() => {
+  // useEffect(() => { 
   //   // setProcessing(onProgress);
   //   setPosts(data);
   // });
-  const [search, setSearch] = useState('');
-  const updateSearch = value => {
-    setSearch(value);
-  }
 
   return (
     <MenuProvider>
@@ -153,16 +148,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: RFValue(50)
-  },
-  button: {
-    width: 100,
-    height: 100,
-    alignItems: 'center',
-    justifyContent: "center",
-    marginBottom: "3%",
-    top: "7%",
-    borderRadius: 50
-
   },
   text: {
     color: "white",
