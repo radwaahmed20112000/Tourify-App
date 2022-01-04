@@ -13,13 +13,17 @@ import { TokenContext } from '../../Context/TokenContext';
 import PostCreation from '../../Screens/PostCreation';
 import PostListComponent from '../Shared/PostListComponent';
 import Feed from '../../Screens/Feed';
+import { MenuProvider } from 'react-native-popup-menu';
+
 const Tab = createBottomTabNavigator();
 
 function NavigationTabs(props) {
     const theme = useContext(ThemeContext);
     const token = useContext(TokenContext);
     console.log(token);
-    return (<Tab.Navigator
+    return (
+    <MenuProvider>
+    <Tab.Navigator
         screenOptions={({ route }) => ({
             tabBarShowLabel: false,
             headerShown: false,
@@ -87,7 +91,9 @@ function NavigationTabs(props) {
         <Tab.Screen name="PostCreation" component={PostCreation} initialParams={{edit:false}} />
         <Tab.Screen name="Notifications" component={Notifications} />
         <Tab.Screen name="Profile" component={Profile} />
-    </Tab.Navigator>)
+    </Tab.Navigator>
+    </MenuProvider>
+    )
 
 }
 

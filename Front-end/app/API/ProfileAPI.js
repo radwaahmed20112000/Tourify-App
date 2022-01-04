@@ -1,7 +1,6 @@
 import IPAdress from '../API/IPAdress';
-const URL = IPAdress+ "profile/";
 const getUserProfile = async (token)=>{
-    const urls = [URL + "userProfile", URL + "profilePosts"]
+    const urls = [IPAdress + "account/userProfile", IPAdress + "posts/profilePosts"]
     const data = await Promise.all(urls.map(async url => {
             const resp = await fetch(url,
             {
@@ -18,19 +17,19 @@ const getUserProfile = async (token)=>{
     )).catch((err)=>{
         return{successful: false, message:"Error ocurred, check your network.."}
     });
-    if(data[0] == false || data[1] == false)
-        return{successful: false, message:"Error ocurred, check your network.."}
-    else return {successful: true, userInfo:data[0], userPosts:data[1]};
+    if(data[0] && data[1])
+        return {successful: true, userInfo:data[0], userPosts:data[1]};
+    else return{successful: false, message:"Error ocurred, check your network.."};
 }
 const updateCountry = async(token, country)=>{
     try{
-        let response = await fetch(URL + "/updateCountry", {
+        let response = await fetch(IPAdress + "account/updateCountry", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization':token
             },
-            body: JSON.stringify(country)
+            body: JSON.stringify({country: country})
         })
         if (response.status === 200) {
             return true;
@@ -44,13 +43,13 @@ const updateCountry = async(token, country)=>{
 }
 const updateBio = async(token, bio)=>{
     try{
-        let response = await fetch(URL + "/updateBio", {
+        let response = await fetch(IPAdress + "account/updateBio", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization':token
             },
-            body: JSON.stringify(bio)
+            body: JSON.stringify({bio: bio})
         })
         if (response.status === 200) {
             return true;

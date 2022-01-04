@@ -22,16 +22,17 @@ module.exports = {
     },
 
     deletePostPhoto: async  (post_id,photos) => {
-        for (const photo of photos) {
-            let deleteQuery = `DELETE FROM ${tableName}  WHERE post_id = ${post_id} AND photo = "${photo}" ;`;
-            try {
-                let res = await DB(deleteQuery)
-                return res
-            }
-            catch (e) {
-                return e
-            }
+        try {
+            await photos.forEach(ph = (photo) => {
+                let deleteQuery = `DELETE FROM ${tableName}  WHERE post_id = ${post_id} AND photo = "${photo}" ;`;
+                DB(deleteQuery)
+            });
+            return
         }
-    }
+        catch (e) {
+            return e
+        }
+     }
 }
+
 

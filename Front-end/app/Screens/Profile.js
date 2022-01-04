@@ -10,7 +10,7 @@ const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 const greyColor = "#8c8c89";  
 import { normalize } from '../util/FontNormalization';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faMapMarkerAlt, faEdit, faEllipsisH} from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faEdit, faEllipsisH, faCamera} from '@fortawesome/free-solid-svg-icons';
 import { MenuProvider } from 'react-native-popup-menu';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 import {getUserProfile, updateBio, updateCountry} from '../API/ProfileAPI';
@@ -48,23 +48,24 @@ function Profile (props) {
   }
 
   useEffect(async ()=>{
-    // const data = await getUserProfile(token);
-    // console.log("DATAAAA" + data.successful);
-    // if(data.successful)
-    // {
-    //   //set profile info:
-    //   setUsername(data.userInfo.name);
-    //   setCountry(data.userInfo.country);
-    //   setPhoto(data.userInfo.photo);
-    //   setBio(data.userInfo.bio);
-          // oldBio = data.userInfo.bio;
-    //   //set user posts
-    //   setUserPosts(data.userPosts);
-    //   setLoading(false);
-    // }
-    // else{
-    //   setMessage(data.message);
-    // }
+    const data = await getUserProfile(token);
+    console.log("DATAAAA" + data.successful);
+    if(data.successful)
+    {
+      //set profile info:
+      setUsername(data.userInfo.name);
+      setCountry(data.userInfo.country);
+      setPhoto(data.userInfo.photo);
+      setBio(data.userInfo.bio);
+      oldBio = data.userInfo.bio;
+      //set user posts
+      setUserPosts(data.userPosts);
+      console.log( "USSSSSSSSSERRRRR POSTS" + userPosts);
+      setLoading(false);
+    }
+    else{
+      setMessage(data.message);
+    }
   }, [])
 
   if(loading)
@@ -85,14 +86,20 @@ function Profile (props) {
           </ImageBackground>
         </View>
         <View style={styles.content}>
-          <Image style={styles.profilePic} source={{uri: "https://i.ibb.co/0fmzsjt/ren-qingtao-mrg1-Znso-T4-Q-unsplash.jpg"}} ></Image>
+          {/* <TouchableOpacity style={styles.cameraIcon}>
+            <FontAwesomeIcon icon={faCamera} color={Theme.SecondaryCyan} size={15}></FontAwesomeIcon>
+          </TouchableOpacity> */}
+          <Image style={styles.profilePic} source={{uri: photo}} ></Image>
           <View style={styles.userInfo}>
             <Menu style={{marginLeft:"80%"}}>
               <MenuTrigger>
                 <FontAwesomeIcon icon={faEllipsisH} color={greyColor} size={25} style={{marginTop:"20%"}}></FontAwesomeIcon>
               </MenuTrigger>
               <MenuOptions style={{padding:"5%"}}>
-                <MenuOption onSelect={() => alert(`Save`)} style={{padding:"5%", borderBottomColor:"#ebebeb", borderBottomWidth:2}}>
+                <MenuOption onSelect={() => {}} style={{padding:"5%", borderBottomColor:"#ebebeb", borderBottomWidth:2}}>
+                    <Text style={{color: 'black', fontSize:normalize(16)}}>Select Profile Photo</Text>
+                </MenuOption>
+                <MenuOption style={{padding:"5%", borderBottomColor:"#ebebeb", borderBottomWidth:2}}>
                   <CountryPicker {...{ onSelect, withCloseButton: true, withFilter: true }} visible={false} style={{ fontSize: 50 }} />
                   {/* <Text style={{color: 'black', fontWeight:"bold", fontSize:normalize(15)}}>Set Country</Text> */}
                 </MenuOption>
@@ -101,7 +108,7 @@ function Profile (props) {
                 </MenuOption>
               </MenuOptions>
             </Menu>
-            <Text style={styles.username}>Bella Gomez</Text>
+            <Text style={styles.username}>{username}</Text>
             <View style={styles.location}>
               <FontAwesomeIcon icon={faMapMarkerAlt} color={greyColor} size={15} style={{marginRight:3, marginTop:3}}></FontAwesomeIcon>
               <Text style={{fontSize:normalize(15), color:greyColor, fontWeight:"bold"}} >{country}</Text>
@@ -145,22 +152,32 @@ const styles = StyleSheet.create({
   },
   background:{
     width:"100%",
-    height: SCREEN_HEIGHT*0.23
+    height: SCREEN_HEIGHT*0.23,
   },
   cover:{
     flex:1,
     backgroundColor:"black"
   },
   content:{
-    alignItems:"center"
+    alignItems:"center",
+  },
+  cameraIcon:{
+    position:"absolute",
+    top: SCREEN_HEIGHT*-0.1,
+    right: SCREEN_WIDTH*0.2,
+    backgroundColor:"grey",
+    borderRadius:150/2,
+    height: 100,
+    width: 100,
+    borderRadius:100/2
   },
   profilePic:{
     position:"absolute",
-    zIndex:1,
     height: 0.35 * SCREEN_WIDTH,
     width:0.35 *SCREEN_WIDTH,
     borderRadius:150/2,
-    top: SCREEN_HEIGHT*-0.17
+    top: SCREEN_HEIGHT*-0.17,
+    zIndex:1
   },
   userInfo:{
     borderWidth:10,
@@ -173,7 +190,7 @@ const styles = StyleSheet.create({
     height:"100%",
     marginTop: -1 *SCREEN_HEIGHT*0.08,
     borderBottomColor:"#aeb5b0",
-    borderBottomWidth:1
+    borderBottomWidth:1,
   },
   username:{
     fontSize: normalize(20),

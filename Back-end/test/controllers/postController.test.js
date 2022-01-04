@@ -213,51 +213,76 @@ describe('Posts controller', function () {
         });   
 
         describe('GET/posts/:id/:token', function () {
-            beforeAll((done) => {
-                let insertQuery1 = `INSERT INTO ${tableName} 
+            it('it should retrun a specific post its id and user token are passed through parameters', (done) => {
+
+                let query1 = `INSERT INTO Post
                 (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
                 (2,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
-                let insertQuery2 = `INSERT INTO ${tableName} 
-                (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
-                (3,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
-                
-                DB(insertQuery1)
-                DB(insertQuery2)            
-            });
-          
-            const tests = [
-                { id: 2, token: process.env.TEST_TOKEN },
-                { id: 3, token: process.env.TEST_TOKEN },
-            ];
+                DB(query1).then(() => {
+                    let test = {
+                        photo: "htttp://test.com",
+                        tag: "Hicking",
+                        latitude: 30,
+                        longitude: 50,
+                    } 
+                    let query2 = `insert into PostPhoto(post_id ,photo) values('${2}','${test.photo}');`
+                    let query3 = `insert into PostTags(post_id ,tag_name) values('${2}','${test.tag}');`
+                    let query4 = `insert into PostLocation(post_id ,tag_name) values('${2}',${test.latitude},${test.longitude});`
 
-            tests.forEach(t => {
-                it('it should retrun a specific post its id and user token are passed through parameters', (done) => {
-                    chai.request(server)
-                        .get(`/posts/${id}/${token}`)
-                        .send({ email: process.env.TEST_TOKEN })
-                        .end((err, res) => {
-                            res.should.have.status(200);
-                            res.body.should.be.a('array');
-                            let post = res.body;
-                                post.should.have.property('body');
-                                post.should.have.property('duration');
-                                post.should.have.property('organisation');
-                                post.should.have.property('rate');
-                                post.should.have.property('budget');
-                                post.should.have.property('currency');
-                                post.should.have.property('latitude');
-                                post.should.have.property('longititude');
-                                post.should.have.property('photos');
-                                post.should.have.property('tags');
-                                post.email.should.be.equal(process.env.TEST_EMAIL)
-                                post.email.should.be.equal(id)
-                            done();
+                    DB(query2)
+                    DB(query3)
+                    console.log("query 3 ended")
+                    DB(query4).then(()=>{
+
+                            chai.request(server)
+                                .get(`/posts/${2}/${process.env.TEST_TOKEN}`)
+                                .set('authorization', process.env.TEST_TOKEN)
+                                .send({ email: process.env.TEST_TOKEN })
+                                .end((err, res) => {
+                                    console.log(err)
+                                    console.log("in end")
+                                    res.should.have.status(200);
+                                    let query5 = `SELECT
+                                    body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
+                                    FROM
+                                        (Post NATURAL LEFT JOIN PostLocation)
+                                        LEFT JOIN (
+                                            SELECT 
+                                                post_id, 
+                                                JSON_ARRAYAGG(photo) photos 
+                                            FROM PostPhoto 
+                                            GROUP BY post_id
+                                        ) ph ON Post.post_id = ph.post_id
+                                        LEFT JOIN (
+                                            SELECT 
+                                            post_id, 
+                                            JSON_ARRAYAGG(tag_name) tags 
+                                            FROM PostTags 
+                                            GROUP BY post_id
+                                        ) t ON Post.post_id = t.post_id
+                                    WHERE Post.post_id = ${2} AND email = "${process.env.TEST_EMAIL}" `
+
+                                    DB(query5).then((post)=>{
+                                        post.body.should.be.equal("postDescriotion")
+                                        post.duration.should.be.equal(7)
+                                        post.organisation.should.be.equal("Travel institution")
+                                        post.rate.should.be.equal(3)
+                                        post.budget.should.be.equal(2000)
+                                        post.currency.should.be.equal("$")
+                                        post.latitude.should.be.equal(30)
+                                        post.longitude.should.be.equal(50)
+                                        post.photos.length.should.be.equal(1)
+                                        post.tags.length.should.be.equal(1)
+                                    })
+                                });
                         });
-                });
+                }).catch(e=>{
+                    console.log(e)
+                })
 
+            
             })
-        })
-
+        });
 });
             
 

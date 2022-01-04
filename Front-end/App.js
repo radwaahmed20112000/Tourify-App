@@ -11,7 +11,6 @@ import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
-import { MenuProvider } from 'react-native-popup-menu';
 import Map from './app/Screens/Map';
 
 export default function App() {
@@ -89,7 +88,6 @@ export default function App() {
   else {
     return (
       <ThemeContext.Provider value={Theme}>
-        <MenuProvider>
           <AuthContext.Provider value={authContext}>
             <TokenContext.Provider value={loginState.userToken}>
               <NavigationContainer>
@@ -111,7 +109,6 @@ export default function App() {
               </NavigationContainer>
             </TokenContext.Provider>
           </AuthContext.Provider>
-        </MenuProvider>
       </ThemeContext.Provider>
     );
   }
