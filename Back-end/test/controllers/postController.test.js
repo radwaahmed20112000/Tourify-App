@@ -4,7 +4,7 @@ let server = require('../../server');
 let should = chai.should();
 chai.use(chaiHttp);
 const jwt = require("jsonwebtoken");
-const DB = require('../../DB/pool')
+const DB = require("../../DB/pool");
 
 describe('Posts controller', function () {
 
@@ -186,20 +186,21 @@ describe('Posts controller', function () {
 
         });
 
-        describe('POST /posts/TripCreation', function () {
-          //const token = jwt.sign({ email: "test@gmail.com" }, 'secret', {});
+        describe('POST/posts/TripCreation', function () {
             const body = {
-              user: "token",
-              body: "Hello",
+                email: process.env.TEST_TOKEN,
+                body: "Hello",
                 tags: ["hicking"],
                 photos: ["photo1", "photo2"],
-                organisation: "Faculty of Engineering",
+                organisation: "Trip Travel",
                 rate: 5,
-                budget: "2000$",
-                latitude: "Alex",
-                longitude: "Egypt"
+                budget: 2000,
+                currency: "$",
+                duration: 5,
+                latitude: 32.5,
+                longitude: 51
             };
-            it('it should retrun no error', () => {
+            it('it should retrun Ok response', () => {
                 chai.request(server)
                     .post(`/posts/TripCreation`)
                     .send(body)
@@ -211,6 +212,51 @@ describe('Posts controller', function () {
 
         });   
 
+        describe('GET/posts/:id/:token', function () {
+            beforeAll((done) => {
+                let insertQuery1 = `INSERT INTO ${tableName} 
+                (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
+                (2,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
+                let insertQuery2 = `INSERT INTO ${tableName} 
+                (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
+                (3,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
+                
+                DB(insertQuery1)
+                DB(insertQuery2)            
+            });
+          
+            const tests = [
+                { id: 2, token: process.env.TEST_TOKEN },
+                { id: 3, token: process.env.TEST_TOKEN },
+            ];
+
+            tests.forEach(t => {
+                it('it should retrun a specific post its id and user token are passed through parameters', (done) => {
+                    chai.request(server)
+                        .get(`/posts/${id}/${token}`)
+                        .send({ email: process.env.TEST_TOKEN })
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.be.a('array');
+                            let post = res.body;
+                                post.should.have.property('body');
+                                post.should.have.property('duration');
+                                post.should.have.property('organisation');
+                                post.should.have.property('rate');
+                                post.should.have.property('budget');
+                                post.should.have.property('currency');
+                                post.should.have.property('latitude');
+                                post.should.have.property('longititude');
+                                post.should.have.property('photos');
+                                post.should.have.property('tags');
+                                post.email.should.be.equal(process.env.TEST_EMAIL)
+                                post.email.should.be.equal(id)
+                            done();
+                        });
+                });
+
+            })
+        })
 
 });
             
