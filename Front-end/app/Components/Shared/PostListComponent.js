@@ -20,7 +20,7 @@ function navigateToPost(postId) {
 
 }
 
-function PostListComponent(props) {
+function PostListComponent(props, navigation) {
 
     const theme = useContext(ThemeContext);
     const { created_at ,post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState } = props.item;
@@ -97,7 +97,7 @@ function PostListComponent(props) {
 
                         </MenuTrigger>
                         <MenuOptions optionsContainerStyle={{ marginTop: RFValue(30) }}>
-                            <MenuOption onSelect={() => alert(`Save`)} text='Edit Post' />
+                            <MenuOption onSelect={() => navigation.navigate("PostCreation", { edit:true, postId:post_id})} text='Edit Post' />
                             <MenuOption onSelect={() => deleteAlert(post_id)} >
                                 <Text style={{ color: 'red' }}>Delete Post</Text>
                             </MenuOption>

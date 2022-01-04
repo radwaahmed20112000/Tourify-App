@@ -11,7 +11,7 @@ const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 
 
-function Feed(props) {
+function Feed({navigation}) {
   const token = useContext(TokenContext);
   const url = IPAdress + "posts/feed"
   const theme = useContext(ThemeContext);
@@ -78,7 +78,7 @@ function Feed(props) {
           renderItem={({ item }) => {
             item.deletePostFromState = deletePostFromState;
             return (
-              <PostListComponent item={item} />
+              <PostListComponent item={item} navigation={navigation} />
             )
           }} />
 

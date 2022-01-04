@@ -134,17 +134,13 @@ module.exports = {
       
       const email = JSON.parse(jsonPayload);
       var post_id;
-      let photos = await uploadPhotosToAzure(req.body.photos)
       console.log("hi from photos")
-      console.log(photos)
-      console.log("hi")
       await Post.createPost(email.email, req.body, (err, post) => {
          post_id = post.insertId;
       })
       .then(() => {
-         console.log("hi")
-         console.log(photos)
-         PostPhoto.createPostPhoto(post_id, photos)
+         uploadPhotosToAzure(req.body.photos)
+         PostPhoto.createPostPhoto(post_id, req.body.photos)
          PostLocation.createPostLocation(post_id, req.body)
          PostTags.createPostTags(post_id, req.body.tags)
          console.log(post)

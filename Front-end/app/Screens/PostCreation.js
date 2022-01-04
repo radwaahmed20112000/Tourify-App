@@ -135,17 +135,14 @@ function PostCreation({ navigation, route }) {
         navigation.navigate('Map')
     }
     const goBack = () => {
-        // Alert.alert(
-        //     "Warning",
-        //     "Are you sure you want to discard your changes?",
-        //     [
-        //         { text: "Yes", onPress: () => navigation.navigate("Feed") },
-        //         { text: "Continue", onPress: () => console.log("Continue") }
-        //     ]
-        // );
-        return(
-            navigation.navigate("PostCreation", { edit:true, postId:28 })
-        )
+        Alert.alert(
+            "Warning",
+            "Are you sure you want to discard your changes?",
+            [
+                { text: "Yes", onPress: () => navigation.navigate("Feed") },
+                { text: "Continue", onPress: () => console.log("Continue") }
+            ]
+        );
     }
 
     return (

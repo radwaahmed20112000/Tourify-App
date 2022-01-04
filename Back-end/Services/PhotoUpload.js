@@ -23,7 +23,7 @@ module.exports = {
                     reject(error);
                 const imgUrl = `https://tourifyphotos.blob.core.windows.net/${containerName}/${name}`;
     
-                // resolve(imgUrl)
+                resolve(imgUrl)
             })
         }));
     }
