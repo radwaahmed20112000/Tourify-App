@@ -9,7 +9,7 @@ module.exports = {
 
     createPostTags: async  (post_id, tags) => {
         try {
-            await tags.forEach(ph = (tag) => {
+            await tags.forEach(t = (tag) => {
             let insertQuery = `INSERT INTO ${tableName}  VALUES  (${post_id},"${tag}" ) ;`;
              DB(insertQuery)
             });
@@ -21,15 +21,14 @@ module.exports = {
     },
 
     deletePostTags: async  (post_id,tags) => {
-        for (const tag of tags) {
-            let deleteQuery = `DELETE FROM ${tableName} WHERE post_id = ${post_id} AND tag = "${tag}" ;`;
-            try {
-                let res = await DB(deleteQuery)
-                return res
-            }
-            catch (e) {
-                return e
-            }
+        try {
+            await tags.forEach(t = (tag) => {
+                let deleteQuery = `DELETE FROM ${tableName} WHERE post_id = ${post_id} AND tag = "${tag}" ;`;
+                DB(deleteQuery)
+            });
         }
-    }
+        catch (e) {
+            return e
+        }
+     }
 }

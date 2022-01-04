@@ -9,7 +9,7 @@ module.exports = {
 
     findOne: async (post_id, email, cb) => {
         let selectQuery = `SELECT
-                                body, duration, organisation, rate, budget, currency, latitude, longititude, photos, tags
+                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
                                 FROM
                                     (Post NATURAL LEFT JOIN PostLocation)
                                     LEFT JOIN (
@@ -126,10 +126,10 @@ module.exports = {
         }
     },
 
-    editPost: async (email, editedPost) => {
+    editPost: async (email,editedPost) => {
         let editQuery = `UPDATE ${tableName} 
             SET body = "${editedPost.body}" , duration = ${editedPost.duration},
-                organisation = ,"${editedPost.organisation}", rate = ${editedPost.rate},
+                organisation = "${editedPost.organisation}", rate = ${editedPost.rate},
                 budget = ${editedPost.budget}, currency = "${editedPost.currency}"  
             WHERE
                 email = "${email}" AND post_id = ${editedPost.post_id};`
@@ -142,6 +142,7 @@ module.exports = {
             return e
         }
     },
+    
     getOne: async (postId, cb) => {
         if (!postId)
             return cb(null, null)
