@@ -79,7 +79,6 @@ function Profile (props) {
   }
   else{
     return (
-      <MenuProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.background}>
           <ImageBackground source={{uri:"https://i.pinimg.com/564x/92/34/ad/9234adf0b9c111cae5549d047fd6180f.jpg"}} style={styles.cover}>
@@ -135,7 +134,6 @@ function Profile (props) {
           <Text style={styles.btnTxt}>Sign out</Text>
         </TouchableOpacity> */}
       </SafeAreaView>
-      </MenuProvider>
     )
   }
 }

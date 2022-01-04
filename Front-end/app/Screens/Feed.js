@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { RefreshControl, StyleSheet, Dimensions, FlatList, SafeAreaView, View } from 'react-native';
 // import useFetch from '../api/useFetch';
-import { MenuProvider } from 'react-native-popup-menu';
 
 import { ThemeContext } from '../Context/ThemeContext';
 import PostListComponent from '../Components/Shared/PostListComponent';
@@ -66,7 +65,6 @@ function Feed(props) {
   // });
 
   return (
-    <MenuProvider>
       <SafeAreaView style={styles.container}>
         <FlatList
           data={posts}
@@ -85,7 +83,6 @@ function Feed(props) {
           }} />
 
       </SafeAreaView>
-    </MenuProvider>
 
   );
 }

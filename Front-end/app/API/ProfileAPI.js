@@ -1,4 +1,5 @@
-const URL = "http://192.168.1.13:8000/profile/";
+import IPAdress from '../API/IPAdress';
+const URL = IPAdress+ "profile/";
 const getUserProfile = async (token)=>{
     const urls = [URL + "userProfile", URL + "profilePosts"]
     const data = await Promise.all(urls.map(async url => {
