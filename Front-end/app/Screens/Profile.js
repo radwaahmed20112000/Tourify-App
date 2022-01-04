@@ -11,7 +11,6 @@ const greyColor = "#8c8c89";
 import { normalize } from '../util/FontNormalization';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faMapMarkerAlt, faEdit, faEllipsisH, faCamera} from '@fortawesome/free-solid-svg-icons';
-import { MenuProvider } from 'react-native-popup-menu';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 import {getUserProfile, updateBio, updateCountry} from '../API/ProfileAPI';
 import ListOfPosts from '../Components/Shared/ListOfPosts';
@@ -26,7 +25,7 @@ function Profile (props) {
   const [username, setUsername] = useState("")
   const [bio, setBio] = useState("");
   const [photo, setPhoto] = useState("");
-  const [country, setCountry] = useState("England")
+  const [country, setCountry] = useState("")
   const [userPosts, setUserPosts] = useState([])
   var oldBio = "";
   const onSelect = async (country) => {
@@ -50,7 +49,6 @@ function Profile (props) {
 
   useEffect(async ()=>{
     const data = await getUserProfile(token);
-    console.log("DATAAAA" + data.successful);
     if(data.successful)
     {
       //set profile info:
@@ -61,7 +59,6 @@ function Profile (props) {
       oldBio = data.userInfo.bio;
       //set user posts
       setUserPosts(data.userPosts);
-      console.log( "USSSSSSSSSERRRRR POSTS" + userPosts);
       setLoading(false);
     }
     else{

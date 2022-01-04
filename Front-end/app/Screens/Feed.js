@@ -1,60 +1,48 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { RefreshControl, StyleSheet, Dimensions, FlatList, SafeAreaView, View } from 'react-native';
-// import useFetch from '../api/useFetch';
-
+import {StyleSheet, Dimensions, FlatList, SafeAreaView, View, ActivityIndicator, Text } from 'react-native';
 import { ThemeContext } from '../Context/ThemeContext';
-import PostListComponent from '../Components/Shared/PostListComponent';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TokenContext } from '../Context/TokenContext';
 import IPAdress from '../API/IPAdress';
 import ListOfPosts from '../Components/Shared/ListOfPosts';
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const WINDOW_HEIGHT = Dimensions.get('window').height;
-
+import {getFeedPosts} from '../API/PostListAPI';
+import { normalize } from '../util/FontNormalization';
 
 function Feed(props) {
   const token = useContext(TokenContext);
-  const url = IPAdress + "posts/feed"
-  const theme = useContext(ThemeContext);
   const [posts, setPosts] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState(null);
 
-  useEffect(() => {
-    useFetch();
+  useEffect(async () => {
+    const data = await getFeedPosts(token);
+    if(data !== false)
+    {
+      setPosts(data);
+      setLoading(false);
+    }
+    else
+      setMessage("An error occurred, check your network..");
   }, []);
 
-  const useFetch = () => {
-    console.log(url)
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        authorization: token,
+  if(loading)
+  {
+    return(
+      <View style={{justifyContent:"center", alignItems:"center", flex:1}}>
+      {message? <Text style={{color:"#999999", fontSize:normalize(17)}}>{message}</Text>
+      :<ActivityIndicator size={50} color="#999999" animating={true} />
       }
-    }).then(response => response.json())
-      .then(json => {
-        setPosts(json)
-        console.log("ALOO" + json);
-      })
-      .catch(err => {
-        console.log(err)
-      });
+      </View>
+    )
+  }else{
+    return (
+        <SafeAreaView style={styles.container}>
+        {posts? <ListOfPosts posts={posts} isProfile ={false}></ListOfPosts> : null}
+        </SafeAreaView>
+    );
   }
-
-  // useFetch(url);
-
-
-  // useEffect(() => { 
-  //   // setProcessing(onProgress);
-  //   setPosts(data);
-  // });
-
-  return (
-      <SafeAreaView style={styles.container}>
-       {posts? <ListOfPosts posts={posts} isProfile ={false}></ListOfPosts> : null}
-      </SafeAreaView>
- 
-  );
 }
 
 const styles = StyleSheet.create({
