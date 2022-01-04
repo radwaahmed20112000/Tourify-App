@@ -47,12 +47,15 @@ function PostListComponent(props) {
                                 authorization: token,
 
                             },
-                        }).then((res) => {
+                        }).then(r=>r.json()).then((data) => {
+                            if(data.error)
+                                alert('error ocuured', data.msg )
+                               
                             deletePostFromState(post_id)
                         })
                             .catch(e => {
                                 console.log(e)
-                                alert('error ocuured', e)
+                                
                             })
 
                     }
@@ -80,7 +83,7 @@ function PostListComponent(props) {
                         <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.Text }}>{userName}</Text>
 
                         {/* TODO add time stamp */}
-                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{"2m"}</Text>
+                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{created_at}</Text>
                     </View>
                 </View>
                 {isProfile?

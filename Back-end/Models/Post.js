@@ -9,17 +9,17 @@ module.exports = {
 
     findOne: async (post_id, email, cb) => {
         let selectQuery = `SELECT
-                                body, duration, organisation, rate, budget, currency, latitude, longititude, photos, tags
+                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
                                 FROM
-                                    (Post NATURAL JOIN PostLocation)
-                                    JOIN (
+                                    (Post NATURAL LEFT JOIN PostLocation)
+                                    LEFT JOIN (
                                         SELECT 
                                             post_id, 
                                             JSON_ARRAYAGG(photo) photos 
                                         FROM PostPhoto 
                                         GROUP BY post_id
                                     ) ph ON Post.post_id = ph.post_id
-                                    JOIN (
+                                    LEFT JOIN (
                                         SELECT 
                                         post_id, 
                                         JSON_ARRAYAGG(tag_name) tags 
@@ -45,7 +45,7 @@ module.exports = {
         query = query || '';
 
         let selectQuery = `SELECT
-                              Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos
+                              Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos ,Post.created_at
                             FROM
                                 (Post join user  on user.email = Post.email )
                                 LEFT JOIN (
@@ -55,7 +55,8 @@ module.exports = {
                                     FROM PostPhoto 
                                     GROUP BY post_id
                                 ) ph ON Post.post_id = ph.post_id
-                            ${query ? 'WHERE ' + query : ''}    LIMIT ${limit} OFFSET ${offset} `
+                                
+                            ${query ? 'WHERE ' + query : ''}  ORDER BY Post.created_at  DESC  LIMIT ${limit} OFFSET ${offset} ; `
 
         try {
             let posts = await DB(selectQuery)
@@ -92,7 +93,7 @@ module.exports = {
 
         }
     },
-    delete: async (postId) => {
+    delete: async (postId,cb) => {
 
         let query = `DELETE FROM  ${tableName} WHERE  post_id = ${postId} `;
 
@@ -125,10 +126,10 @@ module.exports = {
         }
     },
 
-    editPost: async (email, editedPost) => {
+    editPost: async (email,editedPost) => {
         let editQuery = `UPDATE ${tableName} 
             SET body = "${editedPost.body}" , duration = ${editedPost.duration},
-                organisation = ,"${editedPost.organisation}", rate = ${editedPost.rate},
+                organisation = "${editedPost.organisation}", rate = ${editedPost.rate},
                 budget = ${editedPost.budget}, currency = "${editedPost.currency}"  
             WHERE
                 email = "${email}" AND post_id = ${editedPost.post_id};`
@@ -139,6 +140,25 @@ module.exports = {
         }
         catch (e) {
             return e
+        }
+    },
+    
+    getOne: async (postId, cb) => {
+        if (!postId)
+            return cb(null, null)
+
+        let query = `SELECT * FROM  ${tableName} WHERE  post_id = ${postId} `;
+
+        try {
+
+            let post = await DB(query)
+
+            return cb(null, post);
+
+        } catch (e) {
+            console.log(e)
+            return cb(e, null);
+
         }
     }
 

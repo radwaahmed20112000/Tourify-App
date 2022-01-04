@@ -47,7 +47,7 @@ function PostCreation({ navigation, route }) {
             console.log('hi')
             console.log(token)
             // axios({
-            //     method: 'get',
+            //     method: 'GET',
             //     url: `${ipAddress}/posts/${route.params.postId} + '/' + ${token}`,
             // }).then((response) => {
             //     console.log(response.data);
@@ -154,7 +154,7 @@ function PostCreation({ navigation, route }) {
         //     ]
         // );
         return(
-            navigation.navigate("PostCreation", { edit:true, postId:3 })
+            navigation.navigate("PostCreation", { edit:true, postId:8 })
         )
     }
 
