@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, FlatList, SafeAreaView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 // import useFetch from '../api/useFetch';
 import { MenuProvider } from 'react-native-popup-menu';
 
@@ -55,27 +54,24 @@ function Feed(props) {
   ]
 
   const postsX = [{
-    postId: 100,
-    userId: 10,
-    userPhoto: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
-    title: "",
-    body: lorempIpsum,
+    post_id: 100,
+    email: 10,
+    userPhoto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJS8__K2f9ts2zYtS3Wo_O_GI9o263MQoiLXxrV-awEMCNHf7k_IFWDKIWkKGxHQtahfM&usqp=CAU",
+    body: 'hey',
     rating: 5,
     userName: "John Smith",
-    photos: images
+    photos: null
   }, {
-    postId: 10,
-    userId: 10,
-    userPhoto: "https://d3i4lqsaxjar6n.cloudfront.net/post_images/61958e4b490a7c0003244ab4/large.jpg",
-    title: "",
-    body: "Quaerat provident commodi consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo " +
-      "fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore " +
-      "suscipit quas? Nulla, placeat.",
+    post_id: 10,
+    email: 10,
+    userPhoto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJS8__K2f9ts2zYtS3Wo_O_GI9o263MQoiLXxrV-awEMCNHf7k_IFWDKIWkKGxHQtahfM&usqp=CAU",
+    body: "Hey there!",
     rating: 5,
-    userName: "Sarah Osama",
-    photos: images1
+    userName: "Sarah",
+    photos: null
   }]
 
+  const [posts, setPosts] = useState([]);
 
   const useFetch = (url) => {
     const [data, setData] = useState([]);
@@ -83,7 +79,6 @@ function Feed(props) {
     const [error, setError] = useState(null);
 
     const theme = useContext(ThemeContext);
-    const [posts, setPosts] = useState(postsX);
     const [onProcessing, setProcessing] = useState(true);
 
     useEffect(() => {
@@ -91,33 +86,26 @@ function Feed(props) {
       fetch(url, {
         method: 'GET',
         headers: {
-          // Accept: 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
-          Authorization: token,
+          authorization: token,
         }
-      })
-        .then(res => {
-          if (!res.ok) {
-            throw Error('Could not fetch the data for that resource');
-          }
-          return res.json();
-        })
-        .then(data => {
-          setPosts(data);
+      }).then(response => response.json())
+        .then(json => {
+          console.log('parsed json', json) // access json.body here
+          setPosts(json)
+          console.log("ALOO")
+          console.log(posts)
         })
         .catch(err => {
           console.log(err)
         });
       //}
     }, [])
-
-    return { data };
   }
 
-  const { data } = useFetch(url);
-  console.log("1")
-  console.log(data)
-  console.log("2")
+  useFetch(url);
+
 
   // useEffect(() => {
   //   // setProcessing(onProgress);
@@ -127,41 +115,16 @@ function Feed(props) {
   const updateSearch = value => {
     setSearch(value);
   }
-  // const searchFor = async () => {
-  //   setProcessing(true);
-  //     await fetch(url, {
-  //       method: 'GET',
-  //       headers: {
-  //           'Content-Type': 'application/json',
-  //           Authorization: 'JWT'+ token, 
-
-  //       }
-  //   }).then(res => {
-  //       if (!res.ok) {
-  //         throw Error('could not fetch the data for that resource');
-  //       }
-  //       return res.json();
-  //     })
-  //     .then(data => {
-  //       setProcessing(false);
-  //       setPosts(data);
-
-  //     })
-  //     .catch(err => {
-  //       setProcessing(false);
-  //       error = err.message;
-  //     });
-  // }
 
   return (
     <MenuProvider>
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={postsX}
+          data={posts}
           // removeClippedSubviews={true}
           // initialNumToRender={27}
           // windowSize={41}
-          keyExtractor={(item) => item.postId}
+          keyExtractor={(item) => item.post_id}
           renderItem={({ item }) => {
             return (
               // <Text>nkll</Text>

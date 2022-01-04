@@ -28,7 +28,7 @@ const signInRequest = async (email, password, bool) => {
     }
 }
 const signUpRequest = async (email, name, password, country, photo, bool) => {
-    let payload = { email: email, name: name, password: password, country: country, photo: photo, bool: bool };
+    let payload = { email: email, name: name, password: password, country: country, photo: photo, google: bool };
     let response = await fetch(API_URL + "/signup", {
         method: 'POST',
         headers: {
