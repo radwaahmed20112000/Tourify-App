@@ -20,7 +20,7 @@ function Feed(props) {
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    useFetch(url)
+    useFetch()
     setRefreshing(false)
 
   }, [refreshing]);
@@ -42,7 +42,7 @@ function Feed(props) {
     }).then(response => response.json())
       .then(json => {
         setPosts(json)
-        console.log("ALOO")
+        console.log("ALOO" + json);
       })
       .catch(err => {
         console.log(err)
