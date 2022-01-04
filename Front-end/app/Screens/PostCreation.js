@@ -156,7 +156,7 @@ function PostCreation({ navigation, route }) {
         //     ]
         // );
         return(
-            navigation.navigate("PostCreation", { edit:true, postId:2 })
+            navigation.navigate("PostCreation", { edit:true, postId:3 })
         )
     }
 
