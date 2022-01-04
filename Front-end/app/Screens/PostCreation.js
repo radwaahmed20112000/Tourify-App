@@ -31,7 +31,7 @@ function PostCreation({ navigation, route }) {
     const [rate, setRate] = useState(3);
     const [duration, setDuration] = useState();
     const [budget, setBudget] = useState();
-    const [currency, setCurrancy] = useState('');
+    const [currency, setCurrancy] = useState('USD');
     const [onProcessing, setProcessing] = useState(false);
     const [latitude, setLatitude] = useState(null)
     const [longitude, setLongitude] = useState(null)
@@ -55,19 +55,22 @@ function PostCreation({ navigation, route }) {
                 } 
                 return res.json();
             })
-            .then(data => {
+            .then(res => {
                 console.log("hiiii")
-                console.log(data.photos)
-                onChangeText(data.description)
-                setTags(data.tags)
-                setPhotos(data.photos)
+                console.log(res[0].body)
+                const data = res[0];
+                onChangeText(data.body)
+                if(data.tags !== null)
+                    setTags(data.tags)
+                if(data.photos !== null)
+                    setPhotos(data.photos)
                 setOrganisation(data.organisation)
                 setRate(data.rate)
-                setDuration(data.duration)
-                setBudget(data.budget)
+                setDuration(data.duration + '')
+                setBudget(data.budget + '')
                 setCurrancy(data.currency)
                 setLatitude(data.latitude)
-                setLongitude(data.longitude)
+                setLongitude(data.longitude)                
             })
             .catch(function(error) {
                 console.log('There has been a problem with your fetch operation: ' + error.message);
@@ -75,9 +78,10 @@ function PostCreation({ navigation, route }) {
                 throw error;
             });
         }
-    });
+    }, []);
 
     const createPost = () => {
+        console.log("aloo")
         if (description === '' || duration === '' || budget === 0) {
             Alert.alert(
                 "Be Careful",
@@ -91,7 +95,7 @@ function PostCreation({ navigation, route }) {
         var url = "";
         console.log("hi")
         setProcessing(true)
-        var body = JSON.stringify({
+        var body = {
             email: token,
             body: description,
             tags: tags,
@@ -102,14 +106,16 @@ function PostCreation({ navigation, route }) {
             budget: budget,
             currency: currency,
             latitude: latitude,
-            longitude: longitude
-        })
-        console.log(body)
+            longitude: longitude,
+        }
         if(route.params.edit){
             body['deletedTags'] = deletedTags
             body['deletedPhotos'] = deletedPhotos
+            body['postId'] = route.params.postId
+            body = JSON.stringify(body)
             url = 'Edit'
         } else {
+            body = JSON.stringify(body)
             url = 'TripCreation'
         }
         console.log(url)
@@ -140,7 +146,7 @@ function PostCreation({ navigation, route }) {
         //     ]
         // );
         return(
-            navigation.navigate("PostCreation", { edit:true, postId:8 })
+            navigation.navigate("PostCreation", { edit:true, postId:28 })
         )
     }
 

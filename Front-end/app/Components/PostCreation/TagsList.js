@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { View, StyleSheet, Alert, FlatList, SafeAreaView, Dimensions, Text } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, StyleSheet, FlatList, SafeAreaView, Dimensions, Text } from 'react-native';
 import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -14,6 +14,14 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit}) {
 
     const [state, setState] = useState({refresh:true})
 
+    useEffect(() => {
+        if(edit){
+            tagsList = tagsList.filter(function(val) {
+                return tags.indexOf(val) == -1;
+            });
+            setTagsList(tagsList)
+        }
+    },[])
 
     const chooseTag = (tag) => {
         if(tag == 'Custom') {

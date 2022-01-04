@@ -129,10 +129,11 @@ module.exports = {
     editPost: async (email, editedPost) => {
         let editQuery = `UPDATE ${tableName} 
             SET body = "${editedPost.body}" , duration = ${editedPost.duration},
-                organisation = ,"${editedPost.organisation}", rate = ${editedPost.rate},
+                organisation = "${editedPost.organisation}", rate = ${editedPost.rate},
                 budget = ${editedPost.budget}, currency = "${editedPost.currency}"  
             WHERE
-                email = "${email}" AND post_id = ${editedPost.post_id};`
+                email = "${email}" AND post_id = ${editedPost.postId};`
+            console.log(editQuery)
         try {
             let res = await DB(editQuery)
             console.log(res)
