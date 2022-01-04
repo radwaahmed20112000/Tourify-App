@@ -4,16 +4,16 @@ import { AuthContext } from '../Context/AuthContext';
 import { TokenContext } from '../Context/TokenContext';
 import { ThemeContext } from '../Context/ThemeContext';
 import CountryPicker from 'react-native-country-picker-modal';
-import * as ImagePicker from 'expo-image-picker';
+import PickImage from '../Service/PickImage';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 const greyColor = "#8c8c89";
 import { normalize } from '../util/FontNormalization';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faMapMarkerAlt, faEdit, faEllipsisH, faCamera} from '@fortawesome/free-solid-svg-icons';
-import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
-import {getUserProfile, updateBio, updateCountry} from '../API/ProfileAPI';
+import { faMapMarkerAlt, faEdit, faEllipsisH, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
+import { getUserProfile, updateBio, updateCountry } from '../API/ProfileAPI';
 import ListOfPosts from '../Components/Shared/ListOfPosts';
 function Profile({ navigation }) {
   const { signOut } = React.useContext(AuthContext);
@@ -47,12 +47,21 @@ function Profile({ navigation }) {
     }
     setEditBio(!editBio)
   }
-
+  const handlePhotoUpdate = async () => {
+    const photo = await PickImage()
+    res = await updatePhoto(token, photo)
+    if (!res) {
+      alert("An error occurred Can't update photo");
+    } else {
+      console.log("PPPPPPPPP")
+      console.log("https://tourifyphotos.blob.core.windows.net/images/" + photo.name)
+      setPhoto(photo.localUri)
+    }
+  }
 
   useEffect(async () => {
     const data = await getUserProfile(token);
-    if(data.successful)
-    {
+    if (data.successful) {
       //set profile info:
       setUsername(data.userInfo.name);
       setCountry(data.userInfo.country);
@@ -95,7 +104,7 @@ function Profile({ navigation }) {
                 <FontAwesomeIcon icon={faEllipsisH} color={greyColor} size={25} style={{ marginTop: "20%" }}></FontAwesomeIcon>
               </MenuTrigger>
               <MenuOptions style={{ padding: "5%" }}>
-                <MenuOption onSelect={() => updatePhoto()} style={{ padding: "5%", borderBottomColor: "#ebebeb", borderBottomWidth: 2 }}>
+                <MenuOption onSelect={() => handlePhotoUpdate()} style={{ padding: "5%", borderBottomColor: "#ebebeb", borderBottomWidth: 2 }}>
                   <Text style={{ color: 'black', fontSize: normalize(16) }}>Select Profile Photo</Text>
                 </MenuOption>
                 <MenuOption style={{ padding: "5%", borderBottomColor: "#ebebeb", borderBottomWidth: 2 }}>

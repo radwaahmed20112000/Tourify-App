@@ -21,5 +21,6 @@ export default openImagePickerAsync = async () => {
         base64: pickerResult.base64,
         localUri: pickerResult.uri
     };
+    console.log(photo)
     return photo
 }

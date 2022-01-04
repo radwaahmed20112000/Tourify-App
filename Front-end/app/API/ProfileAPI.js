@@ -1,9 +1,8 @@
 import { faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import IPAdress from '../API/IPAdress';
-import PickImage from '../Service/PickImage';
 
-const updatePhoto = async (token) => {
-    const photo = PickImage()
+const updatePhoto = async (token, photo) => {
+    console.log("ALOO")
     try {
         let response = await fetch(IPAdress + "account/updatePhoto", {
             method: "PUT",
