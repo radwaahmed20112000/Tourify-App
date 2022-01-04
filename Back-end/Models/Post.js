@@ -92,7 +92,7 @@ module.exports = {
 
         }
     },
-    delete: async (postId) => {
+    delete: async (postId,cb) => {
 
         let query = `DELETE FROM  ${tableName} WHERE  post_id = ${postId} `;
 
