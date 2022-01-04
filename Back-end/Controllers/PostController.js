@@ -173,6 +173,8 @@ module.exports = {
       }).join(''));
       const email = JSON.parse(jsonPayload);
       const post_id = req.body.postId;
+      console.log(req.body.tags)
+      console.log(req.body.deletedTags)
       await Post.editPost(email.email, req.body)
       .then(() => {
          PostPhoto.createPostPhoto(post_id, req.body.photos)

@@ -6,7 +6,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { TouchableOpacity } from 'react-native';
 import DialogInput from 'react-native-dialog-input';
 
-function TagsList({setTags, tags, setDeletedTags, deletedTags, edit}) {
+function TagsList({setTags, tags, setDeletedTags, deletedTags, edit, addedTags, setaddedTags}) {
     const theme = useContext(ThemeContext);
     const [isDialogVisible, setVisible] = useState(false);
     const [tagsList, setTagsList] = useState([ "Historical", "Beach", "Fun", "Romantic", "Relaxation",
@@ -16,7 +16,7 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit}) {
 
     useEffect(() => {
         if(edit){
-            tagsList = tagsList.filter(function(val) {
+            tagsList.filter(function(val) {
                 return tags.indexOf(val) == -1;
             });
             setTagsList(tagsList)
@@ -31,10 +31,14 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit}) {
         const index = tags.indexOf(tag)
         if(index > -1) {
             tags.splice(index, 1);
+            addedTags.splice(index, 1)
             if(edit) deletedTags.push(tag)
         }
-        else 
+        else {
             tags.push(tag)
+            addedTags.push(tag)
+        }
+        setaddedTags(addedTags)
         setTags(tags)
         setDeletedTags(deletedTags)
         setState({ refresh: ! state.refresh }) 

@@ -24,8 +24,10 @@ function PostCreation({ navigation, route }) {
     const [description, onChangeText] = useState('');
     const [tags, setTags] = useState([]);
     const [deletedTags, setDeletedTags] = useState([]);
+    const [addedTags, setaddedTags] = useState([]);
     const [photos, setPhotos] = useState([]);
     const [deletedPhotos, setDeletedPhotos] = useState([]);
+    const [addedPhotos, setaddedPhotos] = useState([]);    
     const [organisation, setOrganisation] = useState('');
     const [rate, setRate] = useState(3);
     const [duration, setDuration] = useState();
@@ -55,13 +57,17 @@ function PostCreation({ navigation, route }) {
             })
             .then(res => {
                 console.log("hiiii")
-                console.log(res[0].body)
                 const data = res[0];
                 onChangeText(data.body)
-                if(data.tags !== null)
+                if(data.tags !== null){
+                    data.tags = JSON.parse(data.tags);
                     setTags(data.tags)
-                if(data.photos !== null)
+                }
+                if(data.photos !== null){
+                    data.photos = JSON.parse(data.photos);
+                    console.log(data.photos)
                     setPhotos(data.photos)
+                }
                 setOrganisation(data.organisation)
                 setRate(data.rate)
                 setDuration(data.duration + '')
@@ -91,7 +97,6 @@ function PostCreation({ navigation, route }) {
             return
         }
         var url = "";
-        console.log("hi")
         setProcessing(true)
         var body = {
             email: token,
@@ -110,6 +115,8 @@ function PostCreation({ navigation, route }) {
             body['deletedTags'] = deletedTags
             body['deletedPhotos'] = deletedPhotos
             body['postId'] = route.params.postId
+            body['tags'] = addedTags
+            body['photos'] = addedPhotos
             body = JSON.stringify(body)
             url = 'Edit'
         } else {
@@ -127,6 +134,10 @@ function PostCreation({ navigation, route }) {
         }).then((res) => {
             console.log(JSON.stringify(res))
             setProcessing(false)
+            // const resetAction = StackActions.reset({
+            //     index: 0,
+            //     actions: [NavigationActions.navigate({ routeName: 'Feed' })],
+            // });
             navigation.navigate("Feed")
         });
     }
@@ -183,13 +194,13 @@ function PostCreation({ navigation, route }) {
                         imageSize={RFValue(2)}
                         onFinishRating={rate => setRate(rate)}
                     />
-                    <ImageSharing setPhotos={newPhotos} photos={photos}></ImageSharing>
+                    <ImageSharing setPhotos={setPhotos} photos={photos}  setaddedPhotos={setaddedPhotos} addedPhotos ={addedPhotos} ></ImageSharing>
                     <TouchableOpacity style={{ marginLeft: SCREEN_WIDTH * 0.01, marginTop: SCREEN_HEIGHT * 0.008 }} onPress={goToMaps}>
                         <FontAwesomeIcon icon={faMapMarkerAlt} size={SCREEN_WIDTH * 0.07} color={theme.SecondaryPurple}></FontAwesomeIcon>
                     </TouchableOpacity>
                 </View>
-                <TagsList setTags={newTags} tags ={tags} setDeletedTags={setDeletedTags} deletedTags ={deletedTags}></TagsList>
-                <PhotosList setPhotos={setPhotos} photos={photos} setDeletedPhotos={setDeletedPhotos} deletedPhotos={deletedPhotos}></PhotosList>
+                <TagsList edit={route.params.edit} setTags={newTags} tags ={tags} setDeletedTags={setDeletedTags} deletedTags ={deletedTags} setaddedTags={setaddedTags} addedTags ={addedTags}></TagsList>
+                <PhotosList setPhotos={setPhotos} photos={photos} setDeletedPhotos={setDeletedPhotos} deletedPhotos={deletedPhotos} edit={route.params.edit}></PhotosList>
                 <BudgetInput setBudget={setBudget} budget={budget} setCurrancy={setCurrancy} currency={currency}></BudgetInput>
                 <View style={{ flexDirection: "row" }}>
                     <TextInput
