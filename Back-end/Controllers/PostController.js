@@ -140,6 +140,7 @@ module.exports = {
    },
 
    editPost: async (req, res) => {
+      console.log("received");
       var base64Url = req.body.email.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
