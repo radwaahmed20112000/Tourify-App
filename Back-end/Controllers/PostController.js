@@ -5,14 +5,14 @@ const PostLocation = require('../Models/PostLocation')
 const PostPhoto = require('../Models/PostPhoto')
 const PostTags = require('../Models/PostTags')
 const { uploadPhotosToAzure } = require('../Services/PhotoUpload')
-
+const atob = require('atob')
 module.exports = {
 
    getFeedPosts: (req, res) => {
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
 
-      if (!req.userId)
+      if (!req.user_id)
          res.status(403)
 
       let query = `user.email != '${req.user_id}'`;
@@ -31,15 +31,15 @@ module.exports = {
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
 
-      var base64Url = req.body.email.split('.')[1];
-      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      const email = JSON.parse(jsonPayload).email;
+      // var base64Url = req.body.email.split('.')[1];
+      // var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      // var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+      //    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      // }).join(''));
+      // const email = JSON.parse(jsonPayload).email;
 
 
-      let query = `user.email = '${email}'`;
+      let query = `user.email = '${req.user_id}'`;
 
       Post.findAll(query, limit, offset, (err, posts) => {
 
@@ -66,6 +66,7 @@ module.exports = {
    },
 
    deletePost: (req, res) => {
+      console.log(req.query)
       Post.delete(req.query.id, (err) => {
 
          if (err)
@@ -79,16 +80,17 @@ module.exports = {
 
 
    getPost: (req, res) => {
-      var base64Url = req.body.email.split('.')[1];
+      console.log(req.params) 
+      var base64Url = req.params.token.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
 
       const email = JSON.parse(jsonPayload);
-      const post_id = req.body.post_id;
+      const post_id = req.params.id;
 
-      Post.findOne(post_id, email, (err, post) => {
+      Post.findOne(post_id, email.email, (err, post) => {
          if (err)
             return res.status(500).json(err);
 
@@ -116,11 +118,12 @@ module.exports = {
       }).join(''));
       const email = JSON.parse(jsonPayload);
       var post_id;
-
+      console.log("hi")
       await Post.createPost(email.email, req.body, (err, post) => {
          post_id = post.insertId;
       })
          .then(() => {
+            console.log("hi")
             PostPhoto.createPostPhoto(post_id, req.body.photos)
             PostLocation.createPostLocation(post_id, req.body)
             PostTags.createPostTags(post_id, req.body.tags)
@@ -146,17 +149,17 @@ module.exports = {
       const email = JSON.parse(jsonPayload);
 
       await Post.editPost(email.email, req.body)
-         .then(() => {
-            PostPhoto.createPostPhoto(post_id, req.body.photos)
-            PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
-            PostTags.createPostTags(post_id, req.body.tags)
-            PostTags.deletePostTags(post_id, req.body.deletedTags)
-            PostLocation.editPostLocation(post_id, req.body)
-            console.log(post_id)
-            return
-         })
+      .then(() => {
+         PostPhoto.createPostPhoto(post_id, req.body.photos)
+         PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
+         PostTags.createPostTags(post_id, req.body.tags)
+         PostTags.deletePostTags(post_id, req.body.deletedTags)
+         PostLocation.editPostLocation(post_id, req.body)
+         console.log(post_id)
+         return
+      })
 
-         .then(() => res.status(200))
+      .then(() => res.status(200))
 
          .catch((err) => {
             return res.status(500).json(err);

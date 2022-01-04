@@ -7,6 +7,8 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 import { ThemeContext } from '../../Context/ThemeContext';
 import ImageViewer from './ImageViewer';
 import { deletePost } from '../../API/PostDeletion'
+import { TokenContext } from '../../Context/TokenContext';
+import baseUrl from "../../API/IPAdress"
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
@@ -19,23 +21,41 @@ function navigateToPost(postId) {
 }
 
 function PostListComponent(props) {
-    console.log("ALO")
 
     const theme = useContext(ThemeContext);
-    console.log(props.item)
-    const { post_id, email, body, rating, userName, userPhoto, photos } = props.item;
+    const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState } = props.item;
+    const token = useContext(TokenContext);
 
-    const deleteAlert = () =>
+    const deleteAlert = (post_id) =>
         Alert.alert(
             "Delete post",
             "are you sure?",
             [
                 {
                     text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
+                    onPress: () => console.log("Cancel Pressed", token),
                     style: "cancel"
                 },
-                { text: "OK", onPress: () => deletePost(postId) }
+                {
+                    text: "OK", onPress: () => {
+                        fetch(baseUrl + `posts/delete?id=${post_id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                                authorization: token,
+
+                            },
+                        }).then((res) => {
+                            deletePostFromState(post_id)
+                        })
+                            .catch(e => {
+                                console.log(e)
+                                alert('error ocuured', e)
+                            })
+
+                    }
+                }
             ]
         );
     return (
@@ -44,7 +64,7 @@ function PostListComponent(props) {
 
             <View style={styles.user}>
                 <View style={{
-                    flexDirection: 'row', justifyContent: 'center',
+                    flexDirection: 'row', justifyContent: 'center'
 
                 }} >
                     <TouchableOpacity onPress={() => navigateToProfile(email)}>
@@ -75,7 +95,7 @@ function PostListComponent(props) {
                         </MenuTrigger>
                         <MenuOptions optionsContainerStyle={{ marginTop: RFValue(30) }}>
                             <MenuOption onSelect={() => alert(`Save`)} text='Edit Post' />
-                            <MenuOption onSelect={() => deleteAlert()} >
+                            <MenuOption onSelect={() => deleteAlert(post_id)} >
                                 <Text style={{ color: 'red' }}>Delete Post</Text>
                             </MenuOption>
                         </MenuOptions>
@@ -92,10 +112,11 @@ function PostListComponent(props) {
                     <Text style={{ textAlign: 'left', fontSize: RFValue(12), color: theme.PrimaryColor }}>{ }{body}</Text>
                 </SafeAreaView>
             </TouchableOpacity>
-            <View style={{
-                height: RFValue(300), width: "100%", paddingVertical: RFValue(10)
-            }}>
-                <ImageViewer images={photos}  ></ImageViewer>
+            <View style={photos && photos.length ? { height: RFValue(300), width: "100%", paddingVertical: RFValue(10) } : { height: RFValue(100), width: "100%", paddingVertical: RFValue(10) }}>
+                {photos && photos.length ?
+                    <ImageViewer images={photos}  ></ImageViewer>
+                    :
+                    null}
             </View>
 
 
@@ -111,26 +132,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingRight: RFValue(10),
         paddingLeft: RFValue(10),
+        elevation: 5
     },
-    button: {
-        width: 100,
-        height: 100,
-        alignItems: 'center',
-        justifyContent: "center",
-        marginBottom: "3%",
-        top: "7%",
-        borderRadius: 50
 
-    },
-    text: {
-        color: "white",
-        fontSize: RFValue(18),
-        fontWeight: "900"
-    },
     user: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         marginTop: RFValue(10),
-        marginHorizontal: RFValue(5)
+        width: SCREEN_WIDTH,
+        paddingHorizontal: RFValue(10)
     },
     userImage: {
         width: SCREEN_WIDTH * 0.15,
@@ -139,7 +149,8 @@ const styles = StyleSheet.create({
     postDescription: {
         flexDirection: 'row',
         paddingTop: RFValue(8),
-
+        width: SCREEN_WIDTH * 0.98,
+        paddingLeft: RFValue(10)
     }
 });
 export default PostListComponent;

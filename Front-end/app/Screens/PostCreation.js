@@ -18,39 +18,62 @@ import baseUrl from "../API/IPAdress"
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function PostCreation({ navigation, edit, postId, latitude, longitude }) {
+function PostCreation({ navigation, route }) {
     const ipAddress = baseUrl;
     const theme = useContext(ThemeContext);
+    const token = useContext(TokenContext);
     const [description, onChangeText] = useState('');
     const [tags, setTags] = useState([]);
+    const [deletedTags, setDeletedTags] = useState([]);
     const [photos, setPhotos] = useState([]);
+    const [deletedPhotos, setDeletedPhotos] = useState([]);
     const [organisation, setOrganisation] = useState('');
     const [rate, setRate] = useState(3);
     const [duration, setDuration] = useState();
     const [budget, setBudget] = useState();
     const [currency, setCurrancy] = useState('');
-    const [lat, setLatitude] = useState(0);
-    const [long, setLongitude] = useState(0);
-    const token = useContext(TokenContext);
-    const newTags = (newTags) => setTags(newTags)
-    const newlatitude = (newLatitude) => setLatitude(newLatitude)
-    const newlongitude = (newLongitude) => setLongitude(newLongitude)
-    const newPhotos = (newPhotos) => setPhotos(newPhotos)
     const [onProcessing, setProcessing] = useState(false);
+    const [latitude, setLatitude] = useState(null)
+    const [longitude, setLongitude] = useState(null)
+    const newTags = (newTags) => setTags(newTags)
+    const newPhotos = (newPhotos) => setPhotos(newPhotos)     
 
 
     useEffect(() => {
-        if (latitude != null && longitude != null) {
-            setLongitude(params.longitude)
-            setLatitude(params.latitude)
+        console.log(route.params.postId)
+        if (route.params.longitude != undefined && route.params.latitude != undefined) {
+            setLongitude(route.params.longitude)
+            setLatitude(route.params.latitude)
         }
-        if (edit) {
-            axios({
-                method: 'get',
-                url: `${ipAddress}/post/${postId}`,
-            }).then((response) => {
-                console.log(response.data);
-                const data = response.data
+        if (route.params.edit) {
+            console.log('hi')
+            console.log(token)
+            // axios({
+            //     method: 'get',
+            //     url: `${ipAddress}/posts/${route.params.postId} + '/' + ${token}`,
+            // }).then((response) => {
+            //     console.log(response.data);
+            //     const data = response.data
+            //     onChangeText(data.description)
+            //     setTags(data.tags)
+            //     setPhotos(data.photos)
+            //     setOrganisation(data.organisation)
+            //     setRate(data.rate)
+            //     setDuration(data.duration)
+            //     setBudget(data.budget)
+            //     setCurrancy(data.currency)
+            //     setLatitude(data.latitude)
+            //     setLongitude(data.longitude)
+            // });
+            fetch(`${ipAddress}/posts/${route.params.postId}/${token}`)
+            .then(res => {
+                if (!res.ok) { 
+                    throw Error('Could not fetch the data for that resource');
+                } 
+                return res.json();
+            })
+            .then(data => {
+                console.log(data)
                 onChangeText(data.description)
                 setTags(data.tags)
                 setPhotos(data.photos)
@@ -61,6 +84,11 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
                 setCurrancy(data.currency)
                 setLatitude(data.latitude)
                 setLongitude(data.longitude)
+            })
+            .catch(function(error) {
+                console.log('There has been a problem with your fetch operation: ' + error.message);
+                 // ADD THIS THROW error
+                throw error;
             });
         }
     });
@@ -76,6 +104,8 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
             );
             return
         }
+        var url = "";
+        console.log("hi")
         setProcessing(true)
         var body = JSON.stringify({
             email: token,
@@ -90,7 +120,16 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
             latitude: latitude,
             longitude: longitude
         })
-        fetch(ipAddress + '/posts/TripCreation', {
+        console.log(body)
+        if(route.params.edit){
+            body['deletedTags'] = deletedTags
+            body['deletedPhotos'] = deletedPhotos
+            url = 'Edit'
+        } else {
+            url = 'TripCreation'
+        }
+        console.log(url)
+        fetch(ipAddress + 'posts/' + url, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -98,7 +137,7 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
             },
             body: body
         }).then((res) => {
-            console.log(JSON.stringify(res.post_id))
+            console.log(JSON.stringify(res))
             setProcessing(false)
             navigation.navigate("Feed")
         });
@@ -107,12 +146,25 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
     const goToMaps = () => {
         navigation.navigate('Map')
     }
+    const goBack = () => {
+        // Alert.alert(
+        //     "Warning",
+        //     "Are you sure you want to discard your changes?",
+        //     [
+        //         { text: "Yes", onPress: () => navigation.navigate("Feed") },
+        //         { text: "Continue", onPress: () => console.log("Continue") }
+        //     ]
+        // );
+        return(
+            navigation.navigate("PostCreation", { edit:true, postId:3 })
+        )
+    }
 
     return (
-        <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.container]}>
-            <View style={[styles.upperSection, { borderColor: theme.SecondaryPurple }]}>
-                <TouchableOpacity >
-                    <FontAwesomeIcon icon={faArrowLeft} size={RFValue(18)} color={theme.SecondaryPurple} style={{ marginRight: SCREEN_WIDTH * 0.68, marginTop: SCREEN_WIDTH * 0.028 }} />
+        <SafeAreaView style={[{backgroundColor: theme.primary}, styles.container]}>
+            <View style={[styles.upperSection, {borderColor:theme.SecondaryPurple}]}>
+                <TouchableOpacity onPress={() => goBack()} >
+                    <FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) }  color={theme.SecondaryPurple}  style={{marginRight :SCREEN_WIDTH*0.68, marginTop : SCREEN_WIDTH*0.028 }}/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => createPost()}>
                     <LinearGradient
@@ -120,7 +172,7 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
                         start={{ x: 0, y: 1 }}
                         end={{ x: 1, y: 1 }}
                         style={styles.button}>
-                        {!onProcessing && <Text style={{ color: "white" }}>Share</Text>}
+                        {!onProcessing && <Text style={{color:"white"}}> {route.params.edit?"Edit":"Share"}</Text>}
                         {onProcessing && <ActivityIndicator size="small" color="white" />}
                     </LinearGradient>
                 </TouchableOpacity>
@@ -151,8 +203,8 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
                         <FontAwesomeIcon icon={faMapMarkerAlt} size={SCREEN_WIDTH * 0.07} color={theme.SecondaryPurple}></FontAwesomeIcon>
                     </TouchableOpacity>
                 </View>
-                <TagsList setTags={newTags} tags={tags}></TagsList>
-                <PhotosList setPhotos={setPhotos} photos={photos}></PhotosList>
+                <TagsList setTags={newTags} tags ={tags} setDeletedTags={setDeletedTags} deletedTags ={deletedTags}></TagsList>
+                <PhotosList setPhotos={setPhotos} photos={photos} setDeletedPhotos={setDeletedPhotos} deletedPhotos={deletedPhotos}></PhotosList>
                 <BudgetInput setBudget={setBudget} budget={budget} setCurrancy={setCurrancy} currency={currency}></BudgetInput>
                 <View style={{ flexDirection: "row" }}>
                     <TextInput
