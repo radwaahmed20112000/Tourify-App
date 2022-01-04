@@ -11,7 +11,6 @@ import TagsList from '../Components/PostCreation/TagsList';
 import ImageSharing from '../Components/PostCreation/ImageSharing';
 import BudgetInput from '../Components/PostCreation/BudgetInput';
 import PhotosList from '../Components/PostCreation/PhotosList';
-import axios from 'axios';
 import baseUrl from "../API/IPAdress" 
 
 
@@ -40,7 +39,6 @@ function PostCreation({ navigation, route }) {
 
 
     useEffect(() => {
-        console.log(route.params.postId)
         if (route.params.longitude != undefined && route.params.latitude != undefined) {
             setLongitude(route.params.longitude)
             setLatitude(route.params.latitude)

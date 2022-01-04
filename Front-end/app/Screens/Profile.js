@@ -48,23 +48,24 @@ function Profile (props) {
   }
 
   useEffect(async ()=>{
-    // const data = await getUserProfile(token);
-    // console.log("DATAAAA" + data.successful);
-    // if(data.successful)
-    // {
-    //   //set profile info:
-    //   setUsername(data.userInfo.name);
-    //   setCountry(data.userInfo.country);
-    //   setPhoto(data.userInfo.photo);
-    //   setBio(data.userInfo.bio);
-          // oldBio = data.userInfo.bio;
-    //   //set user posts
-    //   setUserPosts(data.userPosts);
-    //   setLoading(false);
-    // }
-    // else{
-    //   setMessage(data.message);
-    // }
+    const data = await getUserProfile(token);
+    console.log("DATAAAA" + data.successful);
+    if(data.successful)
+    {
+      //set profile info:
+      setUsername(data.userInfo.name);
+      setCountry(data.userInfo.country);
+      setPhoto(data.userInfo.photo);
+      setBio(data.userInfo.bio);
+      oldBio = data.userInfo.bio;
+      //set user posts
+      setUserPosts(data.userPosts);
+      console.log( "USSSSSSSSSERRRRR POSTS" + userPosts);
+      setLoading(false);
+    }
+    else{
+      setMessage(data.message);
+    }
   }, [])
 
   if(loading)
@@ -85,7 +86,7 @@ function Profile (props) {
           </ImageBackground>
         </View>
         <View style={styles.content}>
-          <Image style={styles.profilePic} source={{uri: "https://i.ibb.co/0fmzsjt/ren-qingtao-mrg1-Znso-T4-Q-unsplash.jpg"}} ></Image>
+          <Image style={styles.profilePic} source={{uri: photo}} ></Image>
           <View style={styles.userInfo}>
             <Menu style={{marginLeft:"80%"}}>
               <MenuTrigger>
@@ -101,7 +102,7 @@ function Profile (props) {
                 </MenuOption>
               </MenuOptions>
             </Menu>
-            <Text style={styles.username}>Bella Gomez</Text>
+            <Text style={styles.username}>{username}</Text>
             <View style={styles.location}>
               <FontAwesomeIcon icon={faMapMarkerAlt} color={greyColor} size={15} style={{marginRight:3, marginTop:3}}></FontAwesomeIcon>
               <Text style={{fontSize:normalize(15), color:greyColor, fontWeight:"bold"}} >{country}</Text>

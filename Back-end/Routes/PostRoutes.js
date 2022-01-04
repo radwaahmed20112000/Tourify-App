@@ -9,6 +9,6 @@ router.get('/:id/:token', PostController.getPost);
 router.get('/feed', auth, PostController.getFeedPosts);
 router.get('/feedCount', PostController.getFeedPostsCount);
 router.delete('/delete', PostController.deletePost);
-router.get('/profilePosts', PostController.getProfilePosts);
+router.get('/profilePosts', auth, PostController.getProfilePosts);
 
 module.exports = router;
