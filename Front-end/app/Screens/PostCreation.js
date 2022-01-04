@@ -18,7 +18,7 @@ import baseUrl from "../API/IPAdress"
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function PostCreation({ navigation, edit, postId, latitude, longitude }) {
+function PostCreation({ navigation, route }) {
     const ipAddress = baseUrl;
     const theme = useContext(ThemeContext);
     const token = useContext(TokenContext);
