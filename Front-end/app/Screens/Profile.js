@@ -4,8 +4,7 @@ import { AuthContext } from '../Context/AuthContext';
 import { TokenContext } from '../Context/TokenContext';
 import { ThemeContext } from '../Context/ThemeContext';
 import CountryPicker from 'react-native-country-picker-modal';
-import Feed from './Feed';
-import * as ImagePicker from 'expo-image-picker';
+import PickImage from '../Service/PickImage';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
@@ -49,7 +48,17 @@ function Profile({ navigation }) {
     }
     setEditBio(!editBio)
   }
-
+  const handlePhotoUpdate = async () => {
+    const photo = await PickImage()
+    res = await updatePhoto(token, photo)
+    if (!res) {
+      alert("An error occurred Can't update photo");
+    } else {
+      console.log("PPPPPPPPP")
+      console.log("https://tourifyphotos.blob.core.windows.net/images/" + photo.name)
+      setPhoto(photo.localUri)
+    }
+  }
 
   useEffect(async () => {
     const data = await getUserProfile(token);
@@ -98,7 +107,7 @@ function Profile({ navigation }) {
                 <FontAwesomeIcon icon={faEllipsisH} color={greyColor} size={25} style={{ marginTop: "20%" }}></FontAwesomeIcon>
               </MenuTrigger>
               <MenuOptions style={{ padding: "5%" }}>
-                <MenuOption onSelect={() => updatePhoto()} style={{ padding: "5%", borderBottomColor: "#ebebeb", borderBottomWidth: 2 }}>
+                <MenuOption onSelect={() => handlePhotoUpdate()} style={{ padding: "5%", borderBottomColor: "#ebebeb", borderBottomWidth: 2 }}>
                   <Text style={{ color: 'black', fontSize: normalize(16) }}>Select Profile Photo</Text>
                 </MenuOption>
                 <MenuOption style={{ padding: "5%", borderBottomColor: "#ebebeb", borderBottomWidth: 2 }}>
