@@ -15,7 +15,7 @@ module.exports = {
                                     LEFT JOIN (
                                         SELECT 
                                             post_id, 
-                                            JSON_ARRAYAGG(photo) photos 
+                                            JSON_ARRAYAGG(JSON_OBJECT('photo', photo)) photos 
                                         FROM PostPhoto 
                                         GROUP BY post_id
                                     ) ph ON Post.post_id = ph.post_id
@@ -29,11 +29,14 @@ module.exports = {
                                 WHERE Post.post_id = ${post_id} AND email = "${email}" `
         try {
             let post = await DB(selectQuery)
-            console.log(post)
+            if (post.photos)
+                post.photos = JSON.parse(post.photos)
+            
+            if (post.tags)
+                post.tags = JSON.parse(post.tags)
+            
             return cb(null, post);
-
         }
-
         catch (e) {
             console.log(e)
             return cb(e, null);
@@ -132,7 +135,8 @@ module.exports = {
                 organisation = "${editedPost.organisation}", rate = ${editedPost.rate},
                 budget = ${editedPost.budget}, currency = "${editedPost.currency}"  
             WHERE
-                email = "${email}" AND post_id = ${editedPost.post_id};`
+                email = "${email}" AND post_id = ${editedPost.postId};`
+            console.log(editQuery)
         try {
             let res = await DB(editQuery)
             console.log(res)

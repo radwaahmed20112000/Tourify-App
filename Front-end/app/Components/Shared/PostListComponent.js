@@ -98,7 +98,7 @@ function PostListComponent(props) {
 
                         </MenuTrigger>
                         <MenuOptions optionsContainerStyle={{ marginTop: RFValue(30) }}>
-                            <MenuOption onSelect={() => alert(`Save`)} text='Edit Post' />
+                            <MenuOption onSelect={() => props.navigation.navigate("PostCreation", { edit:true, postId:post_id})} text='Edit Post' />
                             <MenuOption onSelect={() => deleteAlert(post_id)} >
                                 <Text style={{ color: 'red' }}>Delete Post</Text>
                             </MenuOption>

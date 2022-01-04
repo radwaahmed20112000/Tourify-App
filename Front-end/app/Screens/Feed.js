@@ -10,7 +10,7 @@ const WINDOW_HEIGHT = Dimensions.get('window').height;
 import {getFeedPosts} from '../API/PostListAPI';
 import { normalize } from '../util/FontNormalization';
 
-function Feed(props) {
+function Feed({navigation}) {
   const token = useContext(TokenContext);
   const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(true);

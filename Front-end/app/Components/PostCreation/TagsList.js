@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react';
-import { View, StyleSheet, Alert, FlatList, SafeAreaView, Dimensions, Text } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, StyleSheet, FlatList, SafeAreaView, Dimensions, Text } from 'react-native';
 import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TouchableOpacity } from 'react-native';
 import DialogInput from 'react-native-dialog-input';
 
-function TagsList({setTags, tags, setDeletedTags, deletedTags, edit}) {
+function TagsList({setTags, tags, setDeletedTags, deletedTags, edit, addedTags, setaddedTags}) {
     const theme = useContext(ThemeContext);
     const [isDialogVisible, setVisible] = useState(false);
     const [tagsList, setTagsList] = useState([ "Historical", "Beach", "Fun", "Romantic", "Relaxation",
@@ -14,6 +14,14 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit}) {
 
     const [state, setState] = useState({refresh:true})
 
+    useEffect(() => {
+        if(edit){
+            tagsList.filter(function(val) {
+                return tags.indexOf(val) == -1;
+            });
+            setTagsList(tagsList)
+        }
+    },[])
 
     const chooseTag = (tag) => {
         if(tag == 'Custom') {
@@ -23,10 +31,14 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit}) {
         const index = tags.indexOf(tag)
         if(index > -1) {
             tags.splice(index, 1);
+            addedTags.splice(index, 1)
             if(edit) deletedTags.push(tag)
         }
-        else 
+        else {
             tags.push(tag)
+            addedTags.push(tag)
+        }
+        setaddedTags(addedTags)
         setTags(tags)
         setDeletedTags(deletedTags)
         setState({ refresh: ! state.refresh }) 
