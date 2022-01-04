@@ -6,6 +6,7 @@ const PostPhoto = require('../Models/PostPhoto')
 const PostTags = require('../Models/PostTags')
 const { uploadPhotosToAzure } = require('../Services/PhotoUpload')
 const atob = require('atob')
+const moment = require('moment') 
 module.exports = {
 
    getFeedPosts: (req, res) => {
@@ -20,6 +21,7 @@ module.exports = {
       Post.findAll(query, limit, offset, (err, posts) => {
          if (err)
             return res.status(500).json(err);
+         posts = formatPostsDate(posts)
          console.log("MAMA")
          console.log(posts)
          return res.send(posts);
@@ -45,7 +47,7 @@ module.exports = {
 
          if (err)
             return res.status(500).json(err);
-
+         posts = formatPostsDate(posts)
          return res.status(200).json(posts);
       })
 
@@ -178,4 +180,29 @@ module.exports = {
    }
    
 
+}
+
+function formatPostsDate(posts){
+   let asOfDate = moment(new Date())
+
+
+   posts.forEach(p=>{
+   let pDate = moment(p.created_at)
+   var diff = asOfDate.diff(pDate);
+   if(diff < 24 * 60 * 60 * 1000) {// less than 24 diff
+      if (diff < 60 * 60 * 1000){
+         p.created_at='less than 1h'
+         p.created_at = moment(diff).format("mm") + "m" 
+         p.created_at = p.created_at.charAt(0) == '0' ? p.created_at.substring(1) : p.created_at
+      }
+      else{
+         p.created_at = moment(diff).format("hh") + "h" 
+         p.created_at = p.created_at.charAt(0) == '0' ? p.created_at.substring(1): p.created_at
+      }
+   }else{
+      p.created_at = moment(p.created_at).format("MMM Do")
+   }
+
+   })
+   return posts;
 }
