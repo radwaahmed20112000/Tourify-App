@@ -10,10 +10,12 @@ module.exports = {
         
         try {
             await photos.forEach(ph = (photo) => {
-            let insertQuery = `INSERT INTO ${tableName}  VALUES  (${post_id},"${photo}" ) ;`;
-            DB(insertQuery)
-            });
-            return
+                console.log(photo.name)
+                const imgUrl = `https://tourifyphotos.blob.core.windows.net/images/${photo.name}`;
+                let insertQuery = `INSERT INTO ${tableName}  VALUES  (${post_id},"${imgUrl}" ) ;`;
+                DB(insertQuery)
+                });
+                return
         }
         catch (e) {
              return e

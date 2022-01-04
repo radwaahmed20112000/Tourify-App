@@ -15,7 +15,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 import {getUserProfile, updateBio, updateCountry} from '../API/ProfileAPI';
 import ListOfPosts from '../Components/Shared/ListOfPosts';
-function Profile (props) {
+function Profile ({navigation}) {
   const {signOut} = React.useContext(AuthContext);
   const token = useContext(TokenContext);
   const Theme = React.useContext(ThemeContext);
@@ -135,7 +135,7 @@ function Profile (props) {
                 </Text>
               }
             </View>
-            <ListOfPosts posts={userPosts} isProfile ={true}/>
+            <ListOfPosts posts={userPosts} navigation={navigation} isProfile ={true}/>
           </View>
         </View>
         {/* <TouchableOpacity style={[styles.signInBtn, {backgroundColor: "red"}]} onPress={()=> signOut()}>
