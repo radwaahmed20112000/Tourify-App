@@ -10,7 +10,8 @@ module.exports = {
     findOne: async (post_id, email, cb) => {
         let selectQuery = `SELECT
                                 body, duration, organisation, rate, budget, currency, latitude, longititude, photos, tags
-                                FROM (Post JOIN PostLocation)
+                                FROM
+                                    (Post NATURAL JOIN PostLocation)
                                     JOIN (
                                         SELECT 
                                             post_id, 
@@ -25,24 +26,15 @@ module.exports = {
                                         FROM PostTags 
                                         GROUP BY post_id
                                     ) t ON Post.post_id = t.post_id
-                                WHERE Post.post_id = ${post_id} AND email = ${email}`
+                                WHERE Post.post_id = ${post_id} AND email = "${email}" `
         try {
             let post = await DB(selectQuery)
-                .then(
-                    post.forEach(p => {
-                        if (p.photos)
-                            p.photos = JSON.parse(p.photos)
-                    }),
-
-                    post.forEach(t => {
-                        if (t.tags)
-                            t.tags = JSON.parse(t.tags)
-                    })
-                )
-
+            console.log(post)
             return cb(null, post);
 
-        } catch (e) {
+        }
+
+        catch (e) {
             console.log(e)
             return cb(e, null);
         }
@@ -53,9 +45,9 @@ module.exports = {
         query = query || '';
 
         let selectQuery = `SELECT
-                              Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos
+                              post.post_id , user.email,  body,name as userName , photo as userPhoto , photos
                             FROM
-                                (Post join user  on user.email = Post.email )
+                                (post join user  on user.email = post.email )
                                 LEFT JOIN (
                                     SELECT 
                                         post_id, 
@@ -63,7 +55,7 @@ module.exports = {
                                     FROM PostPhoto 
                                     GROUP BY post_id
                                 ) ph ON Post.post_id = ph.post_id
-                            ${query ? 'WHERE ' + query : ''} LIMIT ${limit} OFFSET ${offset} `
+                            ${query ? 'WHERE ' + query : ''}    LIMIT ${limit} OFFSET ${offset} `
 
         try {
             let posts = await DB(selectQuery)
@@ -100,7 +92,7 @@ module.exports = {
 
         }
     },
-    delete: async (postId,cb) => {
+    delete: async (postId) => {
 
         let query = `DELETE FROM  ${tableName} WHERE  post_id = ${postId} `;
 
@@ -121,7 +113,7 @@ module.exports = {
     createPost: async (email, newPost, cb) => {
         let insertQuery = `INSERT INTO ${tableName} 
             (email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
-            ("${email}","${newPost.body}","${newPost.duration}","${newPost.organisation}",${newPost.rate}, "${newPost.budget}","${newPost.currency}", 0, 0 ) ;`;
+            ("${email}","${newPost.body}",${newPost.duration},"${newPost.organisation}",${newPost.rate}, ${newPost.budget},"${newPost.currency}", 0, 0 ) ;`;
         try {
             let res = await DB(insertQuery)
             console.log(res)
@@ -135,37 +127,19 @@ module.exports = {
 
     editPost: async (email, editedPost) => {
         let editQuery = `UPDATE ${tableName} 
-            SET body = "${editedPost.body}" , duration = "${editedPost.duration}",
+            SET body = "${editedPost.body}" , duration = ${editedPost.duration},
                 organisation = ,"${editedPost.organisation}", rate = ${editedPost.rate},
-                budget = "${editedPost.budget}", currency = "${editedPost.currency}"  
+                budget = ${editedPost.budget}, currency = "${editedPost.currency}"  
             WHERE
-                email = "${email}" AND post_id = "${editedPost.post_id}";`;
+                email = "${email}" AND post_id = ${editedPost.post_id};`
         try {
             let res = await DB(editQuery)
+            console.log(res)
             return res
         }
         catch (e) {
             return e
         }
-    },
-    getOne: async (postId, cb)=>{
-        if(!postId)
-            return cb (null,null)
-        
-        let query = `SELECT FROM  ${tableName} WHERE  post_id = ${postId} `;
-
-        try {
-
-            let post = await DB(query)
-
-            return cb(null,post );
-
-        } catch (e) {
-            console.log(e)
-            return cb(e,null);
-
-        }
     }
-
 
 }

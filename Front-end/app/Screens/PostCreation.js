@@ -65,7 +65,7 @@ function PostCreation({ navigation, route }) {
             //     setLatitude(data.latitude)
             //     setLongitude(data.longitude)
             // });
-            fetch(`${ipAddress}posts/${route.params.postId}/${token}`)
+            fetch(`${ipAddress}/posts/${route.params.postId}/${token}`)
             .then(res => {
                 if (!res.ok) { 
                     throw Error('Could not fetch the data for that resource');
