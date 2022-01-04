@@ -13,7 +13,7 @@ import { normalize } from '../util/FontNormalization';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faMapMarkerAlt, faEdit, faEllipsisH, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
-import { getUserProfile, updateBio, updateCountry } from '../API/ProfileAPI';
+import { getUserProfile, updateBio, updateCountry, updatePhoto } from '../API/ProfileAPI';
 import ListOfPosts from '../Components/Shared/ListOfPosts';
 function Profile({ navigation }) {
   const { signOut } = React.useContext(AuthContext);
