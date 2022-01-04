@@ -9,7 +9,7 @@ const DB = require("../DB/pool");
 
 before( function (done) {
     console.log("dd")
-    this.timeout(200000);
+    this.timeout(2000000);
     let query = `insert  ignore into  user(email, name, password) values('testuser@gmail.com', 'testuser', '$2b$12$DeUOYwsPrHEikbInuJ8LheMIUkj6Wz.qosH8Y9W7w1HeHy0Byfp8W');`
     DB(query).then(()=>{
     let body = {
@@ -43,7 +43,7 @@ before( function (done) {
 after(function (done) {
 
     this.timeout(300000);
-
+      done()
     // Remove records created in the DB during the tests 
 
   
