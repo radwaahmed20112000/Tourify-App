@@ -11,15 +11,15 @@ module.exports = {
         let selectQuery = `SELECT
                                 body, duration, organisation, rate, budget, currency, latitude, longititude, photos, tags
                                 FROM
-                                    (Post NATURAL JOIN PostLocation)
-                                    JOIN (
+                                    (Post NATURAL LEFT JOIN PostLocation)
+                                    LEFT JOIN (
                                         SELECT 
                                             post_id, 
                                             JSON_ARRAYAGG(photo) photos 
                                         FROM PostPhoto 
                                         GROUP BY post_id
                                     ) ph ON Post.post_id = ph.post_id
-                                    JOIN (
+                                    LEFT JOIN (
                                         SELECT 
                                         post_id, 
                                         JSON_ARRAYAGG(tag_name) tags 
