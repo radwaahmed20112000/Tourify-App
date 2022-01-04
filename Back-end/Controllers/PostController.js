@@ -52,7 +52,7 @@ module.exports = {
    },
 
    getFeedPostsCount: (req, res) => {
-
+      let query = `user.email != '${req.user_id}'`;
       Post.count(null, (err, count) => {
 
          if (err)
@@ -66,16 +66,26 @@ module.exports = {
    },
 
    deletePost: (req, res) => {
-      console.log(req.query)
-      Post.delete(req.query.id, (err) => {
+      Post.getOne(req.query.id,(error, post)=>{
 
-         if (err)
+         if(error)
             return res.status(500).json(err);
+         
+         if (!post|| !post.length || post[0].email != req.user_id){
 
-         return res.json();
+            return res.status(401).json({ error:true ,msg: "post doen't exist or that post doesn't belong to the loged user" });
+
+         }
+         Post.delete(req.query.id, (err) => {
+
+            if (err)
+               return res.status(500).json(err);
+            return res.json();
 
 
+         })
       })
+
    },
 
 
@@ -166,5 +176,6 @@ module.exports = {
          });
 
    }
+   
 
 }

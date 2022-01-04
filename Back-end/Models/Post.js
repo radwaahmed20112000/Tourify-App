@@ -55,7 +55,8 @@ module.exports = {
                                     FROM PostPhoto 
                                     GROUP BY post_id
                                 ) ph ON Post.post_id = ph.post_id
-                            ${query ? 'WHERE ' + query : ''}    LIMIT ${limit} OFFSET ${offset} `
+                                
+                            ${query ? 'WHERE ' + query : ''}  ORDER BY Post.created_at  DESC  LIMIT ${limit} OFFSET ${offset} ; `
 
         try {
             let posts = await DB(selectQuery)
@@ -139,6 +140,24 @@ module.exports = {
         }
         catch (e) {
             return e
+        }
+    },
+    getOne: async (postId, cb) => {
+        if (!postId)
+            return cb(null, null)
+
+        let query = `SELECT * FROM  ${tableName} WHERE  post_id = ${postId} `;
+
+        try {
+
+            let post = await DB(query)
+
+            return cb(null, post);
+
+        } catch (e) {
+            console.log(e)
+            return cb(e, null);
+
         }
     }
 

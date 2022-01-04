@@ -88,15 +88,15 @@ describe('Posts controller', function () {
             this.timeout(20000);
             let testPost ={
                 post_id:999999999,
-                email: process.env.TEST_TOKEN ,
+                email: process.env.TEST_EMAIL ,
                 body : "test t t t t t t t"
             } 
-            console.log(process.env.TEST_TOKEN )
 
             it('it should delete post with its componennts', (done) => {
 
-                let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_TOKEN }','${testPost.body}');`
+                let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL }','${testPost.body}');`
                 DB(query).then(() => {
+                    //done()
                     let testPhoto = {
                         photo: "htttp://test.com"
                     } 
@@ -133,6 +133,40 @@ describe('Posts controller', function () {
             
             })
             console.log("ddd")
+
+
+        });
+        
+        describe('Delete /posts/delete', function () {
+            this.timeout(20000);
+            let testPost = {
+                post_id: 999999999,
+                email: process.env.TEST_EMAIL,
+                body: "test t t t t t t t"
+            }
+
+            it('it shouldn not  delete post of another user (return 401)', (done) => {
+
+                let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL}','${testPost.body}');`
+                DB(query).then(() => {
+    
+                        chai.request(server)
+                            .delete(`/posts/delete?id=${999999998}`)
+                            .set('authorization', process.env.TEST_TOKEN)
+                            .send({ email: process.env.TEST_TOKEN })
+                            .end((err, res) => {
+                                console.log(err)
+                                res.should.have.status(401);
+                                done();
+                            });
+                    
+
+                }).catch(e => {
+                    console.log(e)
+                })
+
+
+            })
 
 
         });
