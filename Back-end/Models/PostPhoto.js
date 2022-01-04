@@ -10,7 +10,7 @@ module.exports = {
         
         try {
             await photos.forEach(ph = (photo) => {
-            let insertQuery = `INSERT INTO ${tableName}  VALUES  (${post_id},"${photo.name}" ) ;`;
+            let insertQuery = `INSERT INTO ${tableName}  VALUES  (${post_id},"${photo}" ) ;`;
             DB(insertQuery)
             });
             return
@@ -22,7 +22,7 @@ module.exports = {
 
     deletePostPhoto: async  (post_id,photos) => {
         for (const photo of photos) {
-            let deleteQuery = `DELETE FROM ${tableName}  WHERE post_id = ${post_id} AND photo = "${photo.name}" ;`;
+            let deleteQuery = `DELETE FROM ${tableName}  WHERE post_id = ${post_id} AND photo = "${photo}" ;`;
             try {
                 let res = await DB(deleteQuery)
                 return res
