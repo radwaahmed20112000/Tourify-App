@@ -103,6 +103,12 @@ function Feed(props) {
       //}
     }, [])
   }
+  const deletePostFromState=(postID)=>{  // should be transfered to  profile 
+    let newData = [...posts];
+    newData = newData.filter(function (el) { return el.post_id != postID; }); 
+    setPosts(newData);
+
+  }
 
   useFetch(url);
 
@@ -126,6 +132,8 @@ function Feed(props) {
           // windowSize={41}
           keyExtractor={(item) => item.post_id}
           renderItem={({ item }) => {
+            item.deletePostFromState = deletePostFromState;
+
             return (
               // <Text>nkll</Text>
               <PostListComponent item={item} />

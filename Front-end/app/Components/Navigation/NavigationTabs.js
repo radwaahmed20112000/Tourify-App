@@ -32,7 +32,9 @@ function NavigationTabs(props) {
                 height: RFValue(60),
                 backgroundColor: theme.Primary,
                 elevation: 1,
-                shadowOpacity: 1
+                shadowOpacity: 1,
+                whiteSpace: 'nowrap',
+                numberOfLines:1
             },
             tabBarIcon: ({ focused, color, size }) => {
                 let iconName;
@@ -68,7 +70,7 @@ function NavigationTabs(props) {
                             style={styles.button}>
                             <MaterialIcons name={iconName} size={30} color={theme.Primary} />
                         </LinearGradient>
-                        <GradientText style={{ fontSize: RFValue(15) }}>{text}</GradientText>
+                        <GradientText numberOfLines={1} style={{ fontSize: RFValue(15) }}>{text}</GradientText>
                     </View>
 
                 else
