@@ -4,8 +4,8 @@ const auth = require("../Middleware/authentication")
 let PostController = require('../Controllers/PostController');
 
 router.post('/TripCreation', PostController.createPost);
-router.post('/', PostController.getPost);
-router.post('/edit', PostController.editPost);
+router.post('/Edit', PostController.editPost);
+router.get('/:id/:token', PostController.getPost);
 router.get('/feed', auth, PostController.getFeedPosts);
 router.get('/feedCount', PostController.getFeedPostsCount);
 router.delete('/delete', PostController.deletePost);

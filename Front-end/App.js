@@ -11,6 +11,7 @@ import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
+import Map from './app/Screens/Map';
 
 export default function App() {
   //navigation:
@@ -101,6 +102,9 @@ export default function App() {
                     initialParams={{ isSignUp: false }}
                   />
                 }
+                <Stack.Screen 
+                  name="Map"
+                  component={Map} />
               </Stack.Navigator>
             </NavigationContainer>
           </TokenContext.Provider>

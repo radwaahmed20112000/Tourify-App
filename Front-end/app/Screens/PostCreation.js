@@ -18,7 +18,7 @@ import baseUrl from "../API/IPAdress"
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function PostCreation({ navigation, edit, postId, latitude, longitude }) {
+function PostCreation({ navigation, route }) {
     const ipAddress = baseUrl;
     const theme = useContext(ThemeContext);
     const token = useContext(TokenContext);
@@ -32,23 +32,48 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
     const [duration, setDuration] = useState();
     const [budget, setBudget] = useState();
     const [currency, setCurrancy] = useState('');
+    const [onProcessing, setProcessing] = useState(false);
+    const [latitude, setLatitude] = useState(null)
+    const [longitude, setLongitude] = useState(null)
     const newTags = (newTags) => setTags(newTags)
     const newPhotos = (newPhotos) => setPhotos(newPhotos)     
-    const [onProcessing, setProcessing] = useState(false);
 
 
     useEffect(() => {
-        if (latitude != null && longitude != null) {
-            setLongitude(params.longitude)
-            setLatitude(params.latitude)
+        console.log(route.params.postId)
+        if (route.params.longitude != undefined && route.params.latitude != undefined) {
+            setLongitude(route.params.longitude)
+            setLatitude(route.params.latitude)
         }
-        if (edit) {
-            axios({
-                method: 'get',
-                url: `${ipAddress}/post/${postId}`,
-            }).then((response) => {
-                console.log(response.data);
-                const data = response.data
+        if (route.params.edit) {
+            console.log('hi')
+            console.log(token)
+            // axios({
+            //     method: 'get',
+            //     url: `${ipAddress}/posts/${route.params.postId} + '/' + ${token}`,
+            // }).then((response) => {
+            //     console.log(response.data);
+            //     const data = response.data
+            //     onChangeText(data.description)
+            //     setTags(data.tags)
+            //     setPhotos(data.photos)
+            //     setOrganisation(data.organisation)
+            //     setRate(data.rate)
+            //     setDuration(data.duration)
+            //     setBudget(data.budget)
+            //     setCurrancy(data.currency)
+            //     setLatitude(data.latitude)
+            //     setLongitude(data.longitude)
+            // });
+            fetch(`${ipAddress}/posts/${route.params.postId}/${token}`)
+            .then(res => {
+                if (!res.ok) { 
+                    throw Error('Could not fetch the data for that resource');
+                } 
+                return res.json();
+            })
+            .then(data => {
+                console.log(data)
                 onChangeText(data.description)
                 setTags(data.tags)
                 setPhotos(data.photos)
@@ -59,6 +84,11 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
                 setCurrancy(data.currency)
                 setLatitude(data.latitude)
                 setLongitude(data.longitude)
+            })
+            .catch(function(error) {
+                console.log('There has been a problem with your fetch operation: ' + error.message);
+                 // ADD THIS THROW error
+                throw error;
             });
         }
     });
@@ -75,6 +105,7 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
             return
         }
         var url = "";
+        console.log("hi")
         setProcessing(true)
         var body = JSON.stringify({
             email: token,
@@ -89,13 +120,16 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
             latitude: latitude,
             longitude: longitude
         })
-        if(edit){
+        console.log(body)
+        if(route.params.edit){
             body['deletedTags'] = deletedTags
             body['deletedPhotos'] = deletedPhotos
             url = 'Edit'
-        } else 
+        } else {
             url = 'TripCreation'
-        fetch(ipAddress + '/posts/' + url, {
+        }
+        console.log(url)
+        fetch(ipAddress + 'posts/' + url, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -103,7 +137,7 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
             },
             body: body
         }).then((res) => {
-            console.log(JSON.stringify(res.post_id))
+            console.log(JSON.stringify(res))
             setProcessing(false)
             navigation.navigate("Feed")
         });
@@ -113,14 +147,17 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
         navigation.navigate('Map')
     }
     const goBack = () => {
-        Alert.alert(
-            "Warning",
-            "Are you sure you want to discart your changes?",
-            [
-                { text: "Yes", onPress: () => navigation.navigate("Feed") },
-                { text: "Continue", onPress: () => console.log("Continue") }
-            ]
-        );
+        // Alert.alert(
+        //     "Warning",
+        //     "Are you sure you want to discard your changes?",
+        //     [
+        //         { text: "Yes", onPress: () => navigation.navigate("Feed") },
+        //         { text: "Continue", onPress: () => console.log("Continue") }
+        //     ]
+        // );
+        return(
+            navigation.navigate("PostCreation", { edit:true, postId:3 })
+        )
     }
 
     return (
@@ -135,7 +172,7 @@ function PostCreation({ navigation, edit, postId, latitude, longitude }) {
                         start={{ x: 0, y: 1 }}
                         end={{ x: 1, y: 1 }}
                         style={styles.button}>
-                        {!onProcessing && <Text style={{color:"white"}}> {edit?"Edit":"Share"}</Text>}
+                        {!onProcessing && <Text style={{color:"white"}}> {route.params.edit?"Edit":"Share"}</Text>}
                         {onProcessing && <ActivityIndicator size="small" color="white" />}
                     </LinearGradient>
                 </TouchableOpacity>
