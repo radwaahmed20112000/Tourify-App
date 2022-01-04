@@ -26,7 +26,7 @@ function BudgetInput({setBudget, budget, setCurrancy, currency}) {
                 showCurrencyName={false}
                 showFlag={false}
                 showCurrencyCode={true}
-                onSelectCurrency={(data) => { setCurrancy(data) }}
+                onSelectCurrency={(data) => { setCurrancy(data.code) }}
                 showNativeSymbol={true}
                 showSymbol={false}
                 containerStyle={{

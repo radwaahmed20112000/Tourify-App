@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, FlatList } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
 import {Collapse,CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
@@ -19,6 +19,9 @@ function PhotosList({photos, setPhotos, deletedPhotos, setDeletedPhotos }) {
         setDeletedPhotos(deletedPhotos)
         setState({ refresh: ! state.refresh })
     }
+    useEffect(() => {
+        console.log(photos)
+    })
     return (
         <View>
         {photos.length > 0 && 

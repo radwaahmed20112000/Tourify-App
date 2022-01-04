@@ -48,24 +48,7 @@ function PostCreation({ navigation, route }) {
         if (route.params.edit) {
             console.log('hi')
             console.log(token)
-            // axios({
-            //     method: 'get',
-            //     url: `${ipAddress}/posts/${route.params.postId} + '/' + ${token}`,
-            // }).then((response) => {
-            //     console.log(response.data);
-            //     const data = response.data
-            //     onChangeText(data.description)
-            //     setTags(data.tags)
-            //     setPhotos(data.photos)
-            //     setOrganisation(data.organisation)
-            //     setRate(data.rate)
-            //     setDuration(data.duration)
-            //     setBudget(data.budget)
-            //     setCurrancy(data.currency)
-            //     setLatitude(data.latitude)
-            //     setLongitude(data.longitude)
-            // });
-            fetch(`${ipAddress}/posts/${route.params.postId}/${token}`)
+            fetch(`${ipAddress}posts/${route.params.postId}/${token}`)
             .then(res => {
                 if (!res.ok) { 
                     throw Error('Could not fetch the data for that resource');
@@ -73,7 +56,8 @@ function PostCreation({ navigation, route }) {
                 return res.json();
             })
             .then(data => {
-                console.log(data)
+                console.log("hiiii")
+                console.log(data.photos)
                 onChangeText(data.description)
                 setTags(data.tags)
                 setPhotos(data.photos)
