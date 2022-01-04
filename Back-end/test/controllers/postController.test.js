@@ -4,6 +4,7 @@ let server = require('../../server');
 let should = chai.should();
 chai.use(chaiHttp);
 const jwt = require("jsonwebtoken");
+const DB = require("../../DB/pool");
 
 describe('Posts controller', function () {
 
@@ -21,6 +22,7 @@ describe('Posts controller', function () {
                 it('it should retrun an array of the at most the specified size', (done) => {
                     chai.request(server)
                         .get(`/posts/feed?limit=${t.limit}&offset=${t.offset}`)
+                        .set('authorization', process.env.TEST_TOKEN)
                         .send({ email: process.env.TEST_TOKEN })
                         .end((err, res) => {
                             res.should.have.status(200);
@@ -57,6 +59,7 @@ describe('Posts controller', function () {
                 it('it should retrun an array of the at most the specified size with the test user email', (done) => {
                     chai.request(server)
                         .get(`/posts/profilePosts?limit=${t.limit}&offset=${t.offset}`)
+                        .set('authorization', process.env.TEST_TOKEN)
                         .send({ email: process.env.TEST_TOKEN })
                         .end((err, res) => {
                             res.should.have.status(200);
@@ -81,6 +84,93 @@ describe('Posts controller', function () {
             })
         })
 
+        describe('Delete /posts/delete', function () {
+            this.timeout(20000);
+            let testPost ={
+                post_id:999999999,
+                email: process.env.TEST_EMAIL ,
+                body : "test t t t t t t t"
+            } 
+
+            it('it should delete post with its componennts', (done) => {
+
+                let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL }','${testPost.body}');`
+                DB(query).then(() => {
+                    //done()
+                    let testPhoto = {
+                        photo: "htttp://test.com"
+                    } 
+                    console.log("inside  t")
+                    let query2 = `insert  ignore into  postphoto(post_id ,photo) values('${999999999}','${testPhoto.photo}');`
+                    DB(query2).then(()=>{
+
+                            chai.request(server)
+                                .delete(`/posts/delete?id=${999999999}`)
+                                .set('authorization', process.env.TEST_TOKEN)
+                                .send({ email: process.env.TEST_TOKEN })
+                                .end((err, res) => {
+                                    console.log(err)
+                                    res.should.have.status(200);
+                                    let query3 = `SELECT * FROM tourify.postphoto where post_id=${999999999};`
+                            
+
+                                    DB(query3).then((photos)=>{
+                                        photos.length.should.be.equal(0)
+                                        let query4 = `SELECT * FROM tourify.post where post_id=${999999999};`
+                                        DB(query4).then((posts) => {
+                                            posts.length.should.be.equal(0)
+                                            done();
+                                        })
+                                   
+                                    })
+                                });
+                        });
+                        
+                }).catch(e=>{
+                    console.log(e)
+                })
+
+            
+            })
+            console.log("ddd")
+
+
+        });
+        
+        describe('Delete /posts/delete', function () {
+            this.timeout(20000);
+            let testPost = {
+                post_id: 999999999,
+                email: process.env.TEST_EMAIL,
+                body: "test t t t t t t t"
+            }
+
+            it('it shouldn not  delete post of another user (return 401)', (done) => {
+
+                let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL}','${testPost.body}');`
+                DB(query).then(() => {
+    
+                        chai.request(server)
+                            .delete(`/posts/delete?id=${999999998}`)
+                            .set('authorization', process.env.TEST_TOKEN)
+                            .send({ email: process.env.TEST_TOKEN })
+                            .end((err, res) => {
+                                console.log(err)
+                                res.should.have.status(401);
+                                done();
+                            });
+                    
+
+                }).catch(e => {
+                    console.log(e)
+                })
+
+
+            })
+
+
+        });
+
         describe('GET /posts/feedCount', function () {
    
             it('it should retrun an array of the specified size', (done) => {
@@ -96,20 +186,21 @@ describe('Posts controller', function () {
 
         });
 
-        describe('POST /posts/TripCreation', function () {
-          //const token = jwt.sign({ email: "test@gmail.com" }, 'secret', {});
+        describe('POST/posts/TripCreation', function () {
             const body = {
-              user: "token",
-              body: "Hello",
+                email: process.env.TEST_TOKEN,
+                body: "Hello",
                 tags: ["hicking"],
                 photos: ["photo1", "photo2"],
-                organisation: "Faculty of Engineering",
+                organisation: "Trip Travel",
                 rate: 5,
-                budget: "2000$",
-                latitude: "Alex",
-                longitude: "Egypt"
+                budget: 2000,
+                currency: "$",
+                duration: 5,
+                latitude: 32.5,
+                longitude: 51
             };
-            it('it should retrun no error', () => {
+            it('it should retrun Ok response', () => {
                 chai.request(server)
                     .post(`/posts/TripCreation`)
                     .send(body)
@@ -121,6 +212,51 @@ describe('Posts controller', function () {
 
         });   
 
+        describe('GET/posts/:id/:token', function () {
+            beforeAll((done) => {
+                let insertQuery1 = `INSERT INTO ${tableName} 
+                (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
+                (2,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
+                let insertQuery2 = `INSERT INTO ${tableName} 
+                (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
+                (3,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
+                
+                DB(insertQuery1)
+                DB(insertQuery2)            
+            });
+          
+            const tests = [
+                { id: 2, token: process.env.TEST_TOKEN },
+                { id: 3, token: process.env.TEST_TOKEN },
+            ];
+
+            tests.forEach(t => {
+                it('it should retrun a specific post its id and user token are passed through parameters', (done) => {
+                    chai.request(server)
+                        .get(`/posts/${id}/${token}`)
+                        .send({ email: process.env.TEST_TOKEN })
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.be.a('array');
+                            let post = res.body;
+                                post.should.have.property('body');
+                                post.should.have.property('duration');
+                                post.should.have.property('organisation');
+                                post.should.have.property('rate');
+                                post.should.have.property('budget');
+                                post.should.have.property('currency');
+                                post.should.have.property('latitude');
+                                post.should.have.property('longititude');
+                                post.should.have.property('photos');
+                                post.should.have.property('tags');
+                                post.email.should.be.equal(process.env.TEST_EMAIL)
+                                post.email.should.be.equal(id)
+                            done();
+                        });
+                });
+
+            })
+        })
 
 });
             
