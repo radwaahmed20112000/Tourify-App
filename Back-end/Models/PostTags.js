@@ -8,15 +8,15 @@ module.exports = {
     tableName: tableName,
 
     createPostTags: async  (post_id, tags) => {
-        for (const tag of tags) {
+        try {
+            await tags.forEach(ph = (tag) => {
             let insertQuery = `INSERT INTO ${tableName}  VALUES  (${post_id},"${tag}" ) ;`;
-            try {
-                let res = await DB(insertQuery)
-                return res
-            }
-            catch (e) {
-                return e
-            }
+             DB(insertQuery)
+            });
+            return
+        }
+        catch (e) {
+             return e
         }
     },
 

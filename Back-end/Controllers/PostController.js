@@ -46,7 +46,7 @@ module.exports = {
          if (err)
             return res.status(500).json(err);
 
-         return res.status(200).json(posts);
+         return res.send(posts);
       })
 
    },
@@ -80,6 +80,7 @@ module.exports = {
 
 
    getPost: (req, res) => {
+      console.log("recieved") 
       console.log(req.params) 
       var base64Url = req.params.token.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -91,10 +92,12 @@ module.exports = {
       const post_id = req.params.id;
 
       Post.findOne(post_id, email.email, (err, post) => {
-         if (err)
+         if (err){
+            console.log(err);
             return res.status(500).json(err);
-
-         return res.json(post);
+         }
+         console.log(post);
+         return res.send(post);
       })
 
    },
@@ -128,7 +131,7 @@ module.exports = {
             PostLocation.createPostLocation(post_id, req.body)
             PostTags.createPostTags(post_id, req.body.tags)
             uploadPhotosToAzure(req.body.photos)
-            console.log(post_id)
+            console.log(post)
             return
          })
 
