@@ -23,7 +23,7 @@ module.exports = {
     deletePostTags: async  (post_id,tags) => {
         try {
             await tags.forEach(t = (tag) => {
-                let deleteQuery = `DELETE FROM ${tableName} WHERE post_id = ${post_id} AND tag = "${tag}" ;`;
+                let deleteQuery = `DELETE FROM ${tableName} WHERE post_id = ${post_id} AND tag_name = "${tag}" ;`;
                 DB(deleteQuery)
             });
         }

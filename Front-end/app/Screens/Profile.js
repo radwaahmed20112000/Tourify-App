@@ -16,12 +16,13 @@ import { faMapMarkerAlt, faEdit, faEllipsisH, faCamera } from '@fortawesome/free
 import { MenuProvider } from 'react-native-popup-menu';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { getUserProfile, updateBio, updateCountry, updatePhoto } from '../API/ProfileAPI';
-function Profile(props) {
+import ListOfPosts from '../Components/Shared/ListOfPosts';
+function Profile({ navigation }) {
   const { signOut } = React.useContext(AuthContext);
   const token = useContext(TokenContext);
   const Theme = React.useContext(ThemeContext);
   const [editBio, setEditBio] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState("");
   const [photos, setPhotos] = useState([]);
 
@@ -111,7 +112,7 @@ function Profile(props) {
             </Menu>
             <Text style={styles.username}>{username}</Text>
             <View style={styles.location}>
-              <FontAwesomeIcon icon={faMapMarkerAlt} color={greyColor} size={15} style={{ marginRight: 3, marginTop: 3 }}></FontAwesomeIcon>
+              {country ? <FontAwesomeIcon icon={faMapMarkerAlt} color={greyColor} size={15} style={{ marginRight: 3, marginTop: 3 }}></FontAwesomeIcon> : null}
               <Text style={{ fontSize: normalize(15), color: greyColor, fontWeight: "bold" }} >{country}</Text>
             </View>
             <View style={styles.userBio}>
@@ -131,11 +132,11 @@ function Profile(props) {
                 onChangeText={(txt) => { setBio(txt) }}
                 value={bio} /> :
                 <Text numberOfLines={5} style={styles.bio}>
-                  {bio}
+                  {bio == "null" ? "" : bio}
                 </Text>
               }
             </View>
-            <Feed></Feed>
+            <ListOfPosts posts={userPosts} navigation={navigation} isProfile={true} />
           </View>
         </View>
         {/* <TouchableOpacity style={[styles.signInBtn, {backgroundColor: "red"}]} onPress={()=> signOut()}>

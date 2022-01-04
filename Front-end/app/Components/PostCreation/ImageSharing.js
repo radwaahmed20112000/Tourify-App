@@ -8,7 +8,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function ImageSharing({setPhotos, photos}) {
+function ImageSharing({setPhotos, photos, addedPhotos, setaddedPhotos}) {
     const theme = useContext(ThemeContext);
 
     let openImagePickerAsync = async () => {
@@ -26,12 +26,14 @@ function ImageSharing({setPhotos, photos}) {
         }
         var imgName = pickerResult.uri.replace(/^.*[\\\/]/, '');
 
-        setPhotos(photos.concat({ 
+        var photo = { 
             name: imgName, 
             type: pickerResult.type, 
             base64: pickerResult.base64,
-            localUri:pickerResult.uri
-        }));
+            photo:pickerResult.uri
+        }
+        setPhotos(photos.concat(photo));
+        setaddedPhotos(addedPhotos.concat(photo))
     };
   
     return (

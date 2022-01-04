@@ -23,7 +23,8 @@ function navigateToPost(postId) {
 function PostListComponent(props) {
 
     const theme = useContext(ThemeContext);
-    const { created_at ,post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState } = props.item;
+    const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState, created_at } = props.item;
+    const isProfile = props.isProfile;
     const token = useContext(TokenContext);
 
     const deleteAlert = (post_id) =>
@@ -85,10 +86,10 @@ function PostListComponent(props) {
                         <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{created_at}</Text>
                     </View>
                 </View>
-
+                {isProfile?
                 <View style={{ justifyContent: 'center' }} >
 
-                    <Menu  >
+                    <Menu>
                         <MenuTrigger>
                             <View style={{ paddingHorizontal: RFValue(20), paddingVertical: RFValue(10) }} >
                                 <FontAwesomeIcon icon={faEllipsisV} size={RFValue(15)} color={theme.SubText} ></FontAwesomeIcon>
@@ -97,7 +98,7 @@ function PostListComponent(props) {
 
                         </MenuTrigger>
                         <MenuOptions optionsContainerStyle={{ marginTop: RFValue(30) }}>
-                            <MenuOption onSelect={() => alert(`Save`)} text='Edit Post' />
+                            <MenuOption onSelect={() => props.navigation.navigate("PostCreation", { edit:true, postId:post_id})} text='Edit Post' />
                             <MenuOption onSelect={() => deleteAlert(post_id)} >
                                 <Text style={{ color: 'red' }}>Delete Post</Text>
                             </MenuOption>
@@ -105,6 +106,7 @@ function PostListComponent(props) {
                     </Menu>
 
                 </View>
+                : null}
 
 
             </View>

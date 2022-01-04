@@ -7,24 +7,16 @@ import PostListComponent from '../Components/Shared/PostListComponent';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TokenContext } from '../Context/TokenContext';
 import IPAdress from '../API/IPAdress';
+import ListOfPosts from '../Components/Shared/ListOfPosts';
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 
 
-function Feed(props) {
+function Feed({navigation}) {
   const token = useContext(TokenContext);
   const url = IPAdress + "posts/feed"
   const theme = useContext(ThemeContext);
-  const [posts, setPosts] = useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
-    useFetch()
-    setRefreshing(false)
-
-  }, [refreshing]);
-
+  const [posts, setPosts] = useState(null);
 
   useEffect(() => {
     useFetch();
@@ -49,13 +41,6 @@ function Feed(props) {
       });
   }
 
-  const deletePostFromState = (postID) => {  // should be transfered to  profile 
-    let newData = [...posts];
-    newData = newData.filter(function (el) { return el.post_id != postID; });
-    setPosts(newData);
-
-  }
-
   // useFetch(url);
 
 
@@ -66,24 +51,9 @@ function Feed(props) {
 
   return (
       <SafeAreaView style={styles.container}>
-        <FlatList
-          data={posts}
-          // removeClippedSubviews={true}
-          // initialNumToRender={27}
-          // windowSize={41}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          keyExtractor={(item) => item.post_id}
-          renderItem={({ item }) => {
-            item.deletePostFromState = deletePostFromState;
-            return (
-              <PostListComponent item={item} />
-            )
-          }} />
-
+       {posts? <ListOfPosts posts={posts} navigation={navigation} isProfile ={false}></ListOfPosts> : null}
       </SafeAreaView>
-
+ 
   );
 }
 

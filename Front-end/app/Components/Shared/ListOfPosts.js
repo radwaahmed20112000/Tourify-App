@@ -1,26 +1,26 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { RefreshControl, StyleSheet, Dimensions, FlatList, SafeAreaView, View } from 'react-native';
-// import useFetch from '../api/useFetch';
+import PostListComponent from './PostListComponent';
 
-import { ThemeContext } from '../Context/ThemeContext';
-import PostListComponent from '../Components/Shared/PostListComponent';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { TokenContext } from '../Context/TokenContext';
-import IPAdress from '../API/IPAdress';
-const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
-const WINDOW_HEIGHT = Dimensions.get('window').height;
-
-
-function ListPfPosts(props) {
-    const [posts, setPosts] = useState([]);
+  function ListOfPosts(props) {
+    const [posts, setPosts] = useState(props.posts);
+    const isProfile = props.isProfile;
+    console.log("MYYYY POSTS : " + props.posts)
+    const [refreshing, setRefreshing] = React.useState(false);
     const deletePostFromState = (postID) => {  // should be transfered to  profile 
         let newData = [...posts];
         newData = newData.filter(function (el) { return el.post_id != postID; });
         setPosts(newData);
-    }
+  }
 
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    //get here
+    setRefreshing(false)
 
+  }, [refreshing]);
   return (
+      <SafeAreaView style={{flex:1}}>
         <FlatList
           data={posts}
           refreshControl={
@@ -31,10 +31,11 @@ function ListPfPosts(props) {
           renderItem={({ item }) => {
             item.deletePostFromState = deletePostFromState;
             return (
-              <PostListComponent item={item} />
+              <PostListComponent item={item} navigation={props.navigation} isProfile={isProfile}/>
             )
           }} />
+      </SafeAreaView>
   );
 }
 
-export default ListPfPosts;
+export default ListOfPosts;

@@ -24,13 +24,15 @@ function PostCreation({ navigation, route }) {
     const [description, onChangeText] = useState('');
     const [tags, setTags] = useState([]);
     const [deletedTags, setDeletedTags] = useState([]);
+    const [addedTags, setaddedTags] = useState([]);
     const [photos, setPhotos] = useState([]);
     const [deletedPhotos, setDeletedPhotos] = useState([]);
+    const [addedPhotos, setaddedPhotos] = useState([]);    
     const [organisation, setOrganisation] = useState('');
     const [rate, setRate] = useState(3);
     const [duration, setDuration] = useState();
     const [budget, setBudget] = useState();
-    const [currency, setCurrancy] = useState('');
+    const [currency, setCurrancy] = useState('USD');
     const [onProcessing, setProcessing] = useState(false);
     const [latitude, setLatitude] = useState(null)
     const [longitude, setLongitude] = useState(null)
@@ -46,42 +48,33 @@ function PostCreation({ navigation, route }) {
         if (route.params.edit) {
             console.log('hi')
             console.log(token)
-            // axios({
-            //     method: 'GET',
-            //     url: `${ipAddress}/posts/${route.params.postId} + '/' + ${token}`,
-            // }).then((response) => {
-            //     console.log(response.data);
-            //     const data = response.data
-            //     onChangeText(data.description)
-            //     setTags(data.tags)
-            //     setPhotos(data.photos)
-            //     setOrganisation(data.organisation)
-            //     setRate(data.rate)
-            //     setDuration(data.duration)
-            //     setBudget(data.budget)
-            //     setCurrancy(data.currency)
-            //     setLatitude(data.latitude)
-            //     setLongitude(data.longitude)
-            // });
-            fetch(`${ipAddress}/posts/${route.params.postId}/${token}`)
+            fetch(`${ipAddress}posts/${route.params.postId}/${token}`)
             .then(res => {
                 if (!res.ok) { 
                     throw Error('Could not fetch the data for that resource');
                 } 
                 return res.json();
             })
-            .then(data => {
-                console.log(data)
-                onChangeText(data.description)
-                setTags(data.tags)
-                setPhotos(data.photos)
+            .then(res => {
+                console.log("hiiii")
+                const data = res[0];
+                onChangeText(data.body)
+                if(data.tags !== null){
+                    data.tags = JSON.parse(data.tags);
+                    setTags(data.tags)
+                }
+                if(data.photos !== null){
+                    data.photos = JSON.parse(data.photos);
+                    console.log(data.photos)
+                    setPhotos(data.photos)
+                }
                 setOrganisation(data.organisation)
                 setRate(data.rate)
-                setDuration(data.duration)
-                setBudget(data.budget)
+                setDuration(data.duration + '')
+                setBudget(data.budget + '')
                 setCurrancy(data.currency)
                 setLatitude(data.latitude)
-                setLongitude(data.longitude)
+                setLongitude(data.longitude)                
             })
             .catch(function(error) {
                 console.log('There has been a problem with your fetch operation: ' + error.message);
@@ -89,9 +82,10 @@ function PostCreation({ navigation, route }) {
                 throw error;
             });
         }
-    });
+    }, []);
 
     const createPost = () => {
+        console.log("aloo")
         if (description === '' || duration === '' || budget === 0) {
             Alert.alert(
                 "Be Careful",
@@ -103,9 +97,8 @@ function PostCreation({ navigation, route }) {
             return
         }
         var url = "";
-        console.log("hi")
         setProcessing(true)
-        var body = JSON.stringify({
+        var body = {
             email: token,
             body: description,
             tags: tags,
@@ -116,14 +109,18 @@ function PostCreation({ navigation, route }) {
             budget: budget,
             currency: currency,
             latitude: latitude,
-            longitude: longitude
-        })
-        console.log(body)
+            longitude: longitude,
+        }
         if(route.params.edit){
             body['deletedTags'] = deletedTags
             body['deletedPhotos'] = deletedPhotos
+            body['postId'] = route.params.postId
+            body['tags'] = addedTags
+            body['photos'] = addedPhotos
+            body = JSON.stringify(body)
             url = 'Edit'
         } else {
+            body = JSON.stringify(body)
             url = 'TripCreation'
         }
         console.log(url)
@@ -137,6 +134,10 @@ function PostCreation({ navigation, route }) {
         }).then((res) => {
             console.log(JSON.stringify(res))
             setProcessing(false)
+            // const resetAction = StackActions.reset({
+            //     index: 0,
+            //     actions: [NavigationActions.navigate({ routeName: 'Feed' })],
+            // });
             navigation.navigate("Feed")
         });
     }
@@ -145,17 +146,14 @@ function PostCreation({ navigation, route }) {
         navigation.navigate('Map')
     }
     const goBack = () => {
-        // Alert.alert(
-        //     "Warning",
-        //     "Are you sure you want to discard your changes?",
-        //     [
-        //         { text: "Yes", onPress: () => navigation.navigate("Feed") },
-        //         { text: "Continue", onPress: () => console.log("Continue") }
-        //     ]
-        // );
-        return(
-            navigation.navigate("PostCreation", { edit:true, postId:8 })
-        )
+        Alert.alert(
+            "Warning",
+            "Are you sure you want to discard your changes?",
+            [
+                { text: "Yes", onPress: () => navigation.navigate("Feed") },
+                { text: "Continue", onPress: () => console.log("Continue") }
+            ]
+        );
     }
 
     return (
@@ -196,13 +194,13 @@ function PostCreation({ navigation, route }) {
                         imageSize={RFValue(2)}
                         onFinishRating={rate => setRate(rate)}
                     />
-                    <ImageSharing setPhotos={newPhotos} photos={photos}></ImageSharing>
+                    <ImageSharing setPhotos={setPhotos} photos={photos}  setaddedPhotos={setaddedPhotos} addedPhotos ={addedPhotos} ></ImageSharing>
                     <TouchableOpacity style={{ marginLeft: SCREEN_WIDTH * 0.01, marginTop: SCREEN_HEIGHT * 0.008 }} onPress={goToMaps}>
                         <FontAwesomeIcon icon={faMapMarkerAlt} size={SCREEN_WIDTH * 0.07} color={theme.SecondaryPurple}></FontAwesomeIcon>
                     </TouchableOpacity>
                 </View>
-                <TagsList setTags={newTags} tags ={tags} setDeletedTags={setDeletedTags} deletedTags ={deletedTags}></TagsList>
-                <PhotosList setPhotos={setPhotos} photos={photos} setDeletedPhotos={setDeletedPhotos} deletedPhotos={deletedPhotos}></PhotosList>
+                <TagsList edit={route.params.edit} setTags={newTags} tags ={tags} setDeletedTags={setDeletedTags} deletedTags ={deletedTags} setaddedTags={setaddedTags} addedTags ={addedTags}></TagsList>
+                <PhotosList setPhotos={setPhotos} photos={photos} setDeletedPhotos={setDeletedPhotos} deletedPhotos={deletedPhotos} edit={route.params.edit}></PhotosList>
                 <BudgetInput setBudget={setBudget} budget={budget} setCurrancy={setCurrancy} currency={currency}></BudgetInput>
                 <View style={{ flexDirection: "row" }}>
                     <TextInput

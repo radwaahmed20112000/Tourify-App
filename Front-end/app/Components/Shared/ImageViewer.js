@@ -14,7 +14,7 @@ export default function ImageViewer(props) {   /// images  as props
 
     useEffect(() => {
         let xx = props.images ? props.images : [];
-
+        console.log(props.images[0].photo)
         setImages(xx);
         let x = xx.length;
         setExtra(0);
@@ -81,7 +81,7 @@ export default function ImageViewer(props) {   /// images  as props
                     <View style={styles.row} >
                         {topImgs.map((e, ind) => {
                             return <TouchableOpacity style={{ flex: 1, margin: 2 }} key={ind} onPress={() => { openImg(ind) }}>
-                                <Image style={{ flex: 1 }} source={{ uri: e.uri }}></Image>
+                                <Image style={{ flex: 1 }} source={{ uri: e.photo }}></Image>
                             </TouchableOpacity>
                         })}
                     </View  >
@@ -94,7 +94,7 @@ export default function ImageViewer(props) {   /// images  as props
                     <View style={styles.row} >
                         {bottomImgs.map((e, ind) => {
                             return <TouchableOpacity style={{ flex: 1, margin: 2 }} key={ind} onPress={() => { openImg(ind + topImgs.length) }}>
-                                <Image style={{ flex: 1 }} source={{ uri: e.uri }}></Image>
+                                <Image style={{ flex: 1 }} source={{ uri: e.photo }}></Image>
                             </TouchableOpacity>
 
                         })}
