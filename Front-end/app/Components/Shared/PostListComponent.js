@@ -24,6 +24,7 @@ function PostListComponent(props) {
 
     const theme = useContext(ThemeContext);
     const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState } = props.item;
+    const isProfile = props.isProfile;
     const token = useContext(TokenContext);
 
     const deleteAlert = (post_id) =>
@@ -82,10 +83,10 @@ function PostListComponent(props) {
                         <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{"2m"}</Text>
                     </View>
                 </View>
-
+                {isProfile?
                 <View style={{ justifyContent: 'center' }} >
 
-                    <Menu  >
+                    <Menu>
                         <MenuTrigger>
                             <View style={{ paddingHorizontal: RFValue(20), paddingVertical: RFValue(10) }} >
                                 <FontAwesomeIcon icon={faEllipsisV} size={RFValue(15)} color={theme.SubText} ></FontAwesomeIcon>
@@ -102,6 +103,7 @@ function PostListComponent(props) {
                     </Menu>
 
                 </View>
+                : null}
 
 
             </View>
