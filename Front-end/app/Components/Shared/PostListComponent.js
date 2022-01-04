@@ -23,7 +23,7 @@ function navigateToPost(postId) {
 function PostListComponent(props) {
 
     const theme = useContext(ThemeContext);
-    const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState } = props.item;
+    const { created_at ,post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState } = props.item;
     const token = useContext(TokenContext);
 
     const deleteAlert = (post_id) =>
@@ -82,7 +82,7 @@ function PostListComponent(props) {
                         <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.Text }}>{userName}</Text>
 
                         {/* TODO add time stamp */}
-                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{"2m"}</Text>
+                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{created_at}</Text>
                     </View>
                 </View>
 

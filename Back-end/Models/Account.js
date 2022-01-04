@@ -49,7 +49,7 @@ module.exports = {
     create: async (account, cb) => {
         let insertQuery = `INSERT INTO ${tableName} 
         (email, name, password, photo, country, google) 
-        VALUES  ("${account.email}","${account.name}","${account.password}","${account.photo}", "${account.country}", ${account.googleBool}) ;`;
+        VALUES  ("${account.email}","${account.name}",${account.password},"${account.photo}", ${account.country}, ${account.googleBool}) ;`;
         console.log(insertQuery);
         try {
             let user = await DB(insertQuery)
@@ -67,15 +67,27 @@ module.exports = {
 
 
 
+    
+    editUser: async (email,query, cb) => {
+        let editQuery = `UPDATE ${tableName} 
+        SET  ${query} WHERE
+            email = "${email}" ;`;
+
+       
+        try {
+            let res = await DB(editQuery)
+            console.log("edited account : ", res.length)
+            return cb(null, res);
+        }
+        catch (e) {
+            console.log(e)
+            return cb(e, null);
+        }
+
+
+    },
+
+
+
 
 }
-
-
-
-
-
-
-
-
-
-
