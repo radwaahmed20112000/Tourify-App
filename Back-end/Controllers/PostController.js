@@ -5,14 +5,14 @@ const PostLocation = require('../Models/PostLocation')
 const PostPhoto = require('../Models/PostPhoto')
 const PostTags = require('../Models/PostTags')
 const { uploadPhotosToAzure } = require('../Services/PhotoUpload')
-
+const atob = require('atob')
 module.exports = {
 
    getFeedPosts: (req, res) => {
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
 
-      if (!req.userId)
+      if (!req.user_id)
          res.status(403)
 
       let query = `user.email != '${req.user_id}'`;
@@ -31,15 +31,15 @@ module.exports = {
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
 
-      var base64Url = req.body.email.split('.')[1];
-      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      const email = JSON.parse(jsonPayload).email;
+      // var base64Url = req.body.email.split('.')[1];
+      // var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      // var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+      //    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      // }).join(''));
+      // const email = JSON.parse(jsonPayload).email;
 
 
-      let query = `user.email = '${email}'`;
+      let query = `user.email = '${req.user_id}'`;
 
       Post.findAll(query, limit, offset, (err, posts) => {
 
@@ -66,6 +66,7 @@ module.exports = {
    },
 
    deletePost: (req, res) => {
+      console.log(req.query)
       Post.delete(req.query.id, (err) => {
 
          if (err)
