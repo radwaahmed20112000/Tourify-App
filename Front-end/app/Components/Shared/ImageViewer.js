@@ -80,7 +80,7 @@ export default function ImageViewer(props) {   /// images  as props
                 topImgs.length ?
                     <View style={styles.row} >
                         {topImgs.map((e, ind) => {
-                            return <TouchableOpacity style={{ flex: 1, margin: 2 }} key={ind} onPress={() => { openImg(ind) }}>
+                            return <TouchableOpacity style={{ flex: 1, margin: 2 }} key={ind}>
                                 <Image style={{ flex: 1 }} source={{ uri: e.photo }}></Image>
                             </TouchableOpacity>
                         })}

@@ -12,7 +12,7 @@ import ImageSharing from '../Components/PostCreation/ImageSharing';
 import BudgetInput from '../Components/PostCreation/BudgetInput';
 import PhotosList from '../Components/PostCreation/PhotosList';
 import baseUrl from "../API/IPAdress" 
-
+import { NavigationActions, StackActions } from 'react-navigation';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
@@ -96,6 +96,7 @@ function PostCreation({ navigation, route }) {
             );
             return
         }
+        
         var url = "";
         setProcessing(true)
         var body = {
@@ -138,6 +139,23 @@ function PostCreation({ navigation, route }) {
             //     index: 0,
             //     actions: [NavigationActions.navigate({ routeName: 'Feed' })],
             // });
+            // navigation.dispatch(resetAction); 
+            //reset :
+            onChangeText('');
+            setTags([]);
+            setDeletedTags([]);
+            setaddedTags([]);
+            setPhotos([]);
+            setDeletedPhotos([]);
+            setaddedPhotos([]);    
+            setOrganisation('');
+            setRate(3);
+            setDuration();
+            setBudget();
+            setCurrancy('USD');
+            setProcessing(false);
+            setLatitude(null)
+            setLongitude(null)
             navigation.navigate("Feed")
         });
     }

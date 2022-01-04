@@ -172,7 +172,7 @@ module.exports = {
          PostTags.deletePostTags(post_id, req.body.deletedTags)
          PostLocation.editPostLocation(post_id, req.body)
          console.log(post_id)
-         return
+         return 
       })
 
       .then(() => {return res.json();})
