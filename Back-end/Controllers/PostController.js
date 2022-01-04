@@ -175,11 +175,11 @@ module.exports = {
          return
       })
 
-      .then(() => res.status(200))
+      .then(() => {return res.json();})
 
-         .catch((err) => {
-            return res.status(500).json(err);
-         });
+      .catch((err) => {
+         return res.status(500).json(err);
+      });
 
    }
    
