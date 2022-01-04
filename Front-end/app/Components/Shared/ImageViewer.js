@@ -14,7 +14,6 @@ export default function ImageViewer(props) {   /// images  as props
 
     useEffect(() => {
         let xx = props.images ? props.images : [];
-        console.log(images)
 
         setImages(xx);
         let x = xx.length;

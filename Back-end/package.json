@@ -12,6 +12,7 @@
   "dependencies": {
     "async": "^3.2.2",
     "atob": "^2.1.2",
+    "azure-storage": "^2.10.6",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
