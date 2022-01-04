@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const auth = require("../Middleware/authentication")
 let PostController = require('../Controllers/PostController');
 
-router.post('/TripCreation',PostController.createPost);
-router.post('/edit',PostController.edit);
-router.post('/TripEdition',PostController.editPost);
-router.get('/feed' , PostController.getFeedPosts);
+router.post('/TripCreation', PostController.createPost);
+router.post('/', PostController.getPost);
+router.post('/edit', PostController.editPost);
+router.get('/feed', auth, PostController.getFeedPosts);
 router.get('/feedCount', PostController.getFeedPostsCount);
+router.delete('/delete', PostController.deletePost);
+router.get('/profilePosts', PostController.getProfilePosts);
 
-module.exports = router ;
+module.exports = router;

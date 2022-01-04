@@ -20,11 +20,11 @@ module.exports = {
         }
     },
 
-    editPostTags: async  (post_id,tags) => {
+    deletePostTags: async  (post_id,tags) => {
         for (const tag of tags) {
-            let editQuery = `UPDATE ${tableName}  SET tag = "${tag}" WHERE post_id =  "${post_id}" AND tag = "${tag}" ;`;
+            let deleteQuery = `DELETE FROM ${tableName} WHERE post_id = "${post_id}" AND tag = "${tag}" ;`;
             try {
-                let res = await DB(editQuery)
+                let res = await DB(deleteQuery)
                 return res
             }
             catch (e) {
