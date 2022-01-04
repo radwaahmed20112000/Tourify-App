@@ -10,8 +10,7 @@ module.exports = {
     findOne: async (post_id, email, cb) => {
         let selectQuery = `SELECT
                                 body, duration, organisation, rate, budget, currency, latitude, longititude, photos, tags
-                                FROM
-                                    (Post JOIN PostLocation)
+                                FROM (Post JOIN PostLocation)
                                     JOIN (
                                         SELECT 
                                             post_id, 
