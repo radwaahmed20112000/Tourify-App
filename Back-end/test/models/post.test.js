@@ -1,5 +1,3 @@
-
-
 const { post } = require('superagent');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -98,7 +96,57 @@ describe('Posts Model', function () {
     });
 
 
+    describe('find one ', function () {
+        let test = {
+            id: 2,
+            email: process.env.TEST_EMAIL,
+        }
+        it('it should retrun object contains specific post', (done) => {
+            Post.findOne(2 , test.email, (err , post) => {
 
+                should.equal(null, post);
+
+                post.should.have.property('body');
+                post.should.have.property('duration');
+                post.should.have.property('organisation');
+                post.should.have.property('rate');
+                post.should.have.property('budget');
+                post.should.have.property('currency');
+                post.should.have.property('latitude');
+                post.should.have.property('longitude');
+                post.should.have.property('photos');
+                post.should.have.property('tags');
+
+            done();
+
+            });
+
+        });
+        
+
+
+        it('it should retrun object contains specific post', (done) => {
+            Post.findOne(5 , test.email, (err , post) => {
+
+                should.equal(err, null);
+
+                post.should.have.property('body');
+                post.should.have.property('duration');
+                post.should.have.property('organisation');
+                post.should.have.property('rate');
+                post.should.have.property('budget');
+                post.should.have.property('currency');
+                post.should.have.property('latitude');
+                post.should.have.property('longitude');
+                post.should.have.property('photos');
+                post.should.have.property('tags');
+
+            done();
+
+            });
+
+        });
+
+    });
 
 });
-
