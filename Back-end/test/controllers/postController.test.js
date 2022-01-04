@@ -22,6 +22,7 @@ describe('Posts controller', function () {
                 it('it should retrun an array of the at most the specified size', (done) => {
                     chai.request(server)
                         .get(`/posts/feed?limit=${t.limit}&offset=${t.offset}`)
+                        .set('authorization', process.env.TEST_TOKEN)
                         .send({ email: process.env.TEST_TOKEN })
                         .end((err, res) => {
                             res.should.have.status(200);
@@ -58,6 +59,7 @@ describe('Posts controller', function () {
                 it('it should retrun an array of the at most the specified size with the test user email', (done) => {
                     chai.request(server)
                         .get(`/posts/profilePosts?limit=${t.limit}&offset=${t.offset}`)
+                        .set('authorization', process.env.TEST_TOKEN)
                         .send({ email: process.env.TEST_TOKEN })
                         .end((err, res) => {
                             res.should.have.status(200);
@@ -81,6 +83,93 @@ describe('Posts controller', function () {
 
             })
         })
+
+        describe('Delete /posts/delete', function () {
+            this.timeout(20000);
+            let testPost ={
+                post_id:999999999,
+                email: process.env.TEST_EMAIL ,
+                body : "test t t t t t t t"
+            } 
+
+            it('it should delete post with its componennts', (done) => {
+
+                let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL }','${testPost.body}');`
+                DB(query).then(() => {
+                    //done()
+                    let testPhoto = {
+                        photo: "htttp://test.com"
+                    } 
+                    console.log("inside  t")
+                    let query2 = `insert  ignore into  postphoto(post_id ,photo) values('${999999999}','${testPhoto.photo}');`
+                    DB(query2).then(()=>{
+
+                            chai.request(server)
+                                .delete(`/posts/delete?id=${999999999}`)
+                                .set('authorization', process.env.TEST_TOKEN)
+                                .send({ email: process.env.TEST_TOKEN })
+                                .end((err, res) => {
+                                    console.log(err)
+                                    res.should.have.status(200);
+                                    let query3 = `SELECT * FROM tourify.postphoto where post_id=${999999999};`
+                            
+
+                                    DB(query3).then((photos)=>{
+                                        photos.length.should.be.equal(0)
+                                        let query4 = `SELECT * FROM tourify.post where post_id=${999999999};`
+                                        DB(query4).then((posts) => {
+                                            posts.length.should.be.equal(0)
+                                            done();
+                                        })
+                                   
+                                    })
+                                });
+                        });
+                        
+                }).catch(e=>{
+                    console.log(e)
+                })
+
+            
+            })
+            console.log("ddd")
+
+
+        });
+        
+        describe('Delete /posts/delete', function () {
+            this.timeout(20000);
+            let testPost = {
+                post_id: 999999999,
+                email: process.env.TEST_EMAIL,
+                body: "test t t t t t t t"
+            }
+
+            it('it shouldn not  delete post of another user (return 401)', (done) => {
+
+                let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL}','${testPost.body}');`
+                DB(query).then(() => {
+    
+                        chai.request(server)
+                            .delete(`/posts/delete?id=${999999998}`)
+                            .set('authorization', process.env.TEST_TOKEN)
+                            .send({ email: process.env.TEST_TOKEN })
+                            .end((err, res) => {
+                                console.log(err)
+                                res.should.have.status(401);
+                                done();
+                            });
+                    
+
+                }).catch(e => {
+                    console.log(e)
+                })
+
+
+            })
+
+
+        });
 
         describe('GET /posts/feedCount', function () {
    

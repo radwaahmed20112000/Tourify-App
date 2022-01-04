@@ -46,12 +46,15 @@ function PostListComponent(props) {
                                 authorization: token,
 
                             },
-                        }).then((res) => {
+                        }).then(r=>r.json()).then((data) => {
+                            if(data.error)
+                                alert('error ocuured', data.msg )
+                               
                             deletePostFromState(post_id)
                         })
                             .catch(e => {
                                 console.log(e)
-                                alert('error ocuured', e)
+                                
                             })
 
                     }
