@@ -21,10 +21,8 @@ function navigateToPost(postId) {
 }
 
 function PostListComponent(props) {
-    console.log("ALO")
 
     const theme = useContext(ThemeContext);
-    console.log(props.item)
     const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState } = props.item;
     const token = useContext(TokenContext);
 
@@ -66,7 +64,7 @@ function PostListComponent(props) {
 
             <View style={styles.user}>
                 <View style={{
-                    flexDirection: 'row', justifyContent: 'center',
+                    flexDirection: 'row', justifyContent: 'center'
 
                 }} >
                     <TouchableOpacity onPress={() => navigateToProfile(email)}>
@@ -114,7 +112,7 @@ function PostListComponent(props) {
                     <Text style={{ textAlign: 'left', fontSize: RFValue(12), color: theme.PrimaryColor }}>{ }{body}</Text>
                 </SafeAreaView>
             </TouchableOpacity>
-            <View style={photos && photos.length ? { height: RFValue(300), width: "100%", paddingVertical: RFValue(10), paddingRight: RFValue(30) } : { height: RFValue(100), width: "100%", paddingVertical: RFValue(10) }}>
+            <View style={photos && photos.length ? { height: RFValue(300), width: "100%", paddingVertical: RFValue(10) } : { height: RFValue(100), width: "100%", paddingVertical: RFValue(10) }}>
                 {photos && photos.length ?
                     <ImageViewer images={photos}  ></ImageViewer>
                     :
@@ -136,43 +134,23 @@ const styles = StyleSheet.create({
         paddingLeft: RFValue(10),
         elevation: 5
     },
-    button: {
-        width: 100,
-        height: 100,
-        alignItems: 'center',
-        justifyContent: "center",
-        marginBottom: "3%",
-        top: "7%",
-        borderRadius: 50
 
-    },
-    text: {
-        //flex:1,
-        color: "white",
-        fontSize: RFValue(18),
-        fontWeight: "900"
-    },
     user: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: RFValue(10),
-        marginHorizontal: RFValue(5),
         width: SCREEN_WIDTH,
-        paddingRight: RFValue(15)
+        paddingHorizontal: RFValue(10)
     },
     userImage: {
         width: SCREEN_WIDTH * 0.15,
         height: SCREEN_WIDTH * 0.15,
     },
     postDescription: {
-        justifyContent: 'flex-start',
         flexDirection: 'row',
         paddingTop: RFValue(8),
-        paddingRight: RFValue(8),
-        //paddingLeft: RFValue(13),
-        width: SCREEN_WIDTH,
-        textAlign: 'left',
-        justifyContent: 'flex-start'
+        width: SCREEN_WIDTH * 0.98,
+        paddingLeft: RFValue(10)
     }
 });
 export default PostListComponent;
