@@ -23,7 +23,7 @@ function navigateToPost(postId) {
 function PostListComponent(props) {
 
     const theme = useContext(ThemeContext);
-    const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState } = props.item;
+    const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState, created_at } = props.item;
     const isProfile = props.isProfile;
     const token = useContext(TokenContext);
 
