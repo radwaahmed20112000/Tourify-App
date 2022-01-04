@@ -171,6 +171,7 @@ describe('Posts controller', function () {
 
         });
 
+        
         describe('GET /posts/feedCount', function () {
    
             it('it should retrun an array of the specified size', (done) => {
@@ -212,10 +213,11 @@ describe('Posts controller', function () {
 
         });   
 
+
         describe('GET/posts/:id/:token', function () {
             it('it should retrun a specific post its id and user token are passed through parameters', (done) => {
 
-                let query1 = `INSERT INTO Post
+                let query1 = `INSERT ignore INTO Post
                 (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
                 (2,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
                 DB(query1).then(() => {
@@ -225,9 +227,9 @@ describe('Posts controller', function () {
                         latitude: 30,
                         longitude: 50,
                     } 
-                    let query2 = `insert into PostPhoto(post_id ,photo) values('${2}','${test.photo}');`
-                    let query3 = `insert into PostTags(post_id ,tag_name) values('${2}','${test.tag}');`
-                    let query4 = `insert into PostLocation(post_id ,tag_name) values('${2}',${test.latitude},${test.longitude});`
+                    let query2 = `insert ignore into PostPhoto(post_id ,photo) values('${2}','${test.photo}');`
+                    let query3 = `insert ignore into PostTags(post_id ,tag_name) values('${2}','${test.tag}');`
+                    let query4 = `insert ignore into PostLocation(post_id ,tag_name) values('${2}',${test.latitude},${test.longitude});`
 
                     DB(query2)
                     DB(query3)
@@ -273,6 +275,7 @@ describe('Posts controller', function () {
                                         post.longitude.should.be.equal(50)
                                         post.photos.length.should.be.equal(1)
                                         post.tags.length.should.be.equal(1)
+                                        done();
                                     })
                                 });
                         });
@@ -283,6 +286,11 @@ describe('Posts controller', function () {
             
             })
         });
+
+      
+
+
+
 });
             
 
