@@ -117,11 +117,12 @@ module.exports = {
       }).join(''));
       const email = JSON.parse(jsonPayload);
       var post_id;
-
+      console.log("hi")
       await Post.createPost(email.email, req.body, (err, post) => {
          post_id = post.insertId;
       })
          .then(() => {
+            console.log("hi")
             PostPhoto.createPostPhoto(post_id, req.body.photos)
             PostLocation.createPostLocation(post_id, req.body)
             PostTags.createPostTags(post_id, req.body.tags)

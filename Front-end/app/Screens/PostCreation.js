@@ -32,17 +32,19 @@ function PostCreation({ navigation, route }) {
     const [duration, setDuration] = useState();
     const [budget, setBudget] = useState();
     const [currency, setCurrancy] = useState('');
+    const [onProcessing, setProcessing] = useState(false);
+    const [latitude, setLatitude] = useState(null)
+    const [longitude, setLongitude] = useState(null)
     const newTags = (newTags) => setTags(newTags)
     const newPhotos = (newPhotos) => setPhotos(newPhotos)     
-    const [onProcessing, setProcessing] = useState(false);
 
 
     useEffect(() => {
         console.log(route.params.postId)
-        // if (latitude != null && longitude != null) {
-        //     setLongitude(params.longitude)
-        //     setLatitude(params.latitude)
-        // }
+        if (route.params.longitude != undefined && route.params.latitude != undefined) {
+            setLongitude(route.params.longitude)
+            setLatitude(route.params.latitude)
+        }
         if (route.params.edit) {
             console.log('hi')
             console.log(token)
@@ -103,6 +105,7 @@ function PostCreation({ navigation, route }) {
             return
         }
         var url = "";
+        console.log("hi")
         setProcessing(true)
         var body = JSON.stringify({
             email: token,
@@ -117,13 +120,16 @@ function PostCreation({ navigation, route }) {
             latitude: latitude,
             longitude: longitude
         })
+        console.log(body)
         if(route.params.edit){
             body['deletedTags'] = deletedTags
             body['deletedPhotos'] = deletedPhotos
             url = 'Edit'
-        } else 
+        } else {
             url = 'TripCreation'
-        fetch(ipAddress + '/posts/' + url, {
+        }
+        console.log(url)
+        fetch(ipAddress + 'posts/' + url, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -131,7 +137,7 @@ function PostCreation({ navigation, route }) {
             },
             body: body
         }).then((res) => {
-            console.log(JSON.stringify(res.post_id))
+            console.log(JSON.stringify(res))
             setProcessing(false)
             navigation.navigate("Feed")
         });
@@ -143,14 +149,14 @@ function PostCreation({ navigation, route }) {
     const goBack = () => {
         // Alert.alert(
         //     "Warning",
-        //     "Are you sure you want to discart your changes?",
+        //     "Are you sure you want to discard your changes?",
         //     [
         //         { text: "Yes", onPress: () => navigation.navigate("Feed") },
         //         { text: "Continue", onPress: () => console.log("Continue") }
         //     ]
         // );
         return(
-            navigation.navigate("PostCreation", { edit:true, postId:16 })
+            navigation.navigate("PostCreation", { edit:true, postId:26 })
         )
     }
 
