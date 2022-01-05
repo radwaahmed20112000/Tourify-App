@@ -10,6 +10,7 @@ const containerName = 'images'
 
 module.exports = {
     uploadPhotosToAzure: (photos) => {
+        var Url=[];
         Promise.all(photos.map(async photo => {
 
             let name = photo.name;
@@ -24,7 +25,9 @@ module.exports = {
                 const imgUrl = `https://tourifyphotos.blob.core.windows.net/${containerName}/${name}`;
     
                 // resolve(imgUrl)
+                Url.push(imgUrl);
             })
         }));
+        return Url;
     }
 }
