@@ -1,5 +1,3 @@
-
-
 const { post } = require('superagent');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -96,9 +94,4 @@ describe('Posts Model', function () {
 
 
     });
-
-
-
-
-});
-
+})
