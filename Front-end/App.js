@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { ThemeContext, AppTheme } from './app/Context/ThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,8 +12,23 @@ import Registeration from './app/Screens/Registeration';
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
 import Map from './app/Screens/Map';
-
+import Constants from 'expo-constants';
+import Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import { Text, View, Button, Platform } from 'react-native';
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 export default function App() {
+  //notifications
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
   //navigation:
   const Stack = createStackNavigator();
   //theme:
@@ -69,6 +84,23 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
+  useEffect(() => {
     //check if user logged  in or not
     setTimeout(async () => {
       try {
@@ -87,32 +119,67 @@ export default function App() {
   }
   else {
     return (
+
       <ThemeContext.Provider value={Theme}>
-          <AuthContext.Provider value={authContext}>
-            <TokenContext.Provider value={loginState.userToken}>
-              <NavigationContainer>
-                <Stack.Navigator screenOptions={{ headerShown: false }}>
-                  {loginState.userToken ?
-                    <Stack.Screen name="NavigationTabs"
-                      component={NavigationTabs} />
-                    :
-                    <Stack.Screen
-                      name="Registeration"
-                      component={Registeration}
-                      initialParams={{ isSignUp: false }}
-                    />
-                  }
-                  <Stack.Screen 
-                    name="Map"
-                    component={Map} />
-                </Stack.Navigator>
-              </NavigationContainer>
-            </TokenContext.Provider>
-          </AuthContext.Provider>
+        <AuthContext.Provider value={authContext}>
+          <TokenContext.Provider value={loginState.userToken}>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false }}>
+                {loginState.userToken ?
+                  <Stack.Screen name="NavigationTabs"
+                    component={NavigationTabs} />
+                  :
+                  <Stack.Screen
+                    name="Registeration"
+                    component={Registeration}
+                    initialParams={{ isSignUp: false }}
+                  />
+                }
+                <Stack.Screen
+                  name="Map"
+                  component={Map} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </TokenContext.Provider>
+        </AuthContext.Provider>
       </ThemeContext.Provider>
+
     );
   }
 }
+
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
+}
+
 //   if (isLoading) {
 //     return (
 //       <View style={styles.container}>
