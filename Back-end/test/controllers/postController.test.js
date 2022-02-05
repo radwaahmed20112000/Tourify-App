@@ -244,79 +244,80 @@ describe('Posts controller', function () {
         });   
 
       
-//         describe('GET/posts/:id/:token', function () { 
-//             it('it shoud return a specific post its id and user token are passed through parameters', (done) => {
-//                 let query1 = `INSERT INTO Post
-//                 (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
-//                 (2,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
+        describe('GET/posts/:id/:token', function () { 
+            this.timeout(2000000);
+            it('it shoud return a specific post its id and user token are passed through parameters', (done) => {
+                let query1 = `INSERT INTO Post
+                (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
+                (2,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
 
-//                 let test = {
-//                     photo: "http/photo.jpg",
-//                     tag: "tag",
-//                     latitude: 30.5,
-//                     longitude: 50.5,
-//                 }
-//                 let query2 = `INSERT INTO PostPhoto(post_id,photo) VALUES (2,"${test.photo}");`
-//                 let query3 = `INSERT INTO PostTags(post_id,tag_name) VALUES (2,"${test.tag}");`
-//                 let query4 = `INSERT INTO PostLocation(post_id,latitude,longitude) VALUES (2,${test.latitude},${test.longitude});`
+                let test = {
+                    photo: "http/photo.jpg",
+                    tag: "tag",
+                    latitude: 30.5,
+                    longitude: 50.5,
+                }
+                let query2 = `INSERT INTO PostPhoto(post_id,photo) VALUES (2,"${test.photo}");`
+                let query3 = `INSERT INTO PostTags(post_id,tag_name) VALUES (2,"${test.tag}");`
+                let query4 = `INSERT INTO PostLocation(post_id,latitude,longitude) VALUES (2,${test.latitude},${test.longitude});`
 
-//                 DB(query1).then(async (posts) => {
-//                     console.log(posts)
-//                     await DB(query2)})
-//                 .then(async (tags) => {
-//                     console.log(tags)
-//                     await DB(query3)})
-//                 .then(async(location) => {
-//                     console.log(location)
-//                     await DB(query4) })                             
-//                 .then(() =>{
-//                             chai.request(server)
-//                             .get(`/posts/2/"${process.env.TEST_TOKEN}"`)
-//                             .set('authorization', process.env.TEST_TOKEN)
-//                             .send({ email: process.env.TEST_TOKEN })
-//                             .end((err, res) => {
-//                                 res.should.have.status(200);
-//                                 console.log(err)
-//                                 let query5 = `SELECT
-//                                 body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
-//                                 FROM
-//                                     (Post NATURAL LEFT JOIN PostLocation)
-//                                     LEFT JOIN (
-//                                         SELECT 
-//                                             post_id, 
-//                                             JSON_ARRAYAGG(JSON_OBJECT('photo', photo)) photos 
-//                                         FROM PostPhoto 
-//                                         GROUP BY post_id
-//                                     ) ph ON Post.post_id = ph.post_id
-//                                     LEFT JOIN (
-//                                         SELECT 
-//                                         post_id, 
-//                                         JSON_ARRAYAGG(tag_name) tags 
-//                                         FROM PostTags 
-//                                         GROUP BY post_id
-//                                     ) t ON Post.post_id = t.post_id
-//                                 WHERE Post.post_id = 2 AND email = "${process.env.TEST_EMAIL}" `
+                DB(query1).then(async (posts) => {
+                    console.log(posts)
+                    await DB(query2)})
+                .then(async (tags) => {
+                    console.log(tags)
+                    await DB(query3)})
+                .then(async(location) => {
+                    console.log(location)
+                    await DB(query4) })                             
+                .then(() =>{
+                            chai.request(server)
+                            .get(`/posts/2/${process.env.TEST_TOKEN}`)
+                            .set('authorization', process.env.TEST_TOKEN)
+                            .send({ email: process.env.TEST_TOKEN })
+                            .end((err, res) => {
+                                res.should.have.status(200);
+                                console.log(err)
+                                let query5 = `SELECT
+                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
+                                FROM
+                                    (Post NATURAL LEFT JOIN PostLocation)
+                                    LEFT JOIN (
+                                        SELECT 
+                                            post_id, 
+                                            JSON_ARRAYAGG(JSON_OBJECT('photo', photo)) photos 
+                                        FROM PostPhoto 
+                                        GROUP BY post_id
+                                    ) ph ON Post.post_id = ph.post_id
+                                    LEFT JOIN (
+                                        SELECT 
+                                        post_id, 
+                                        JSON_ARRAYAGG(tag_name) tags 
+                                        FROM PostTags 
+                                        GROUP BY post_id
+                                    ) t ON Post.post_id = t.post_id
+                                WHERE Post.post_id = 2 AND email = "${process.env.TEST_EMAIL}" `
 
-//                                     DB(query5).then((post)=>{
-//                                     console.log(post)
-//                                     res.body.count.should.be.a('number');
-//                                     res.duration.count.should.be.a('number');
-//                                     res.organisation.count.should.be.a('number');
-//                                     res.body.rate.should.be.a('number');
-//                                     res.budget.count.should.be.a('number');
-//                                     res.currency.count.should.be.a('number');
-//                                     res.latitude.count.should.be.a('number');
-//                                     res.longitude.count.should.be.a('number');
-//                                     post.photos.length.should.be.equal(1)
-//                                     post.tags.length.should.be.equal(1)
-//                                     done();
-//                                 })
-//                             });
-//                 }).catch(e=>{
-//                     console.log(e)
-//                 })
-//         });
-// });
+                                    DB(query5).then((post)=>{
+                                    console.log(post)
+                                    res.body.count.should.be.a('number');
+                                    res.duration.count.should.be.a('number');
+                                    res.organisation.count.should.be.a('number');
+                                    res.body.rate.should.be.a('number');
+                                    res.budget.count.should.be.a('number');
+                                    res.currency.count.should.be.a('number');
+                                    res.latitude.count.should.be.a('number');
+                                    res.longitude.count.should.be.a('number');
+                                    post.photos.length.should.be.equal(1)
+                                    post.tags.length.should.be.equal(1)
+                                    done();
+                                })
+                            });
+                }).catch(e=>{
+                    console.log(e)
+                })
+        });
+});
             
 
 
