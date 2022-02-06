@@ -9,95 +9,108 @@ import { LinearGradient } from 'expo-linear-gradient';
 import GradientText from '../Shared/GradientText';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { TokenContext } from '../../Context/TokenContext';
+import { NotificationsContext } from '../../Context/NotificationsContext';
+
 import PostCreation from '../../Screens/PostCreation';
 import Feed from '../../Screens/Feed';
 import { MenuProvider } from 'react-native-popup-menu';
 import FlashMessage from "react-native-flash-message";
+import NotificationsBadge from '../NotificationsBadge';
 
 const Tab = createBottomTabNavigator();
 
 function NavigationTabs(props) {
     const theme = useContext(ThemeContext);
     const token = useContext(TokenContext);
-    console.log(token);
+    const notificationsCount = useContext(NotificationsContext);
+
+
+    const BadgedIcon = NotificationsBadge(notificationsCount, {
+        left: 25,
+    })(MaterialIcons);
     return (
-    <MenuProvider>
-    <FlashMessage position="top" hideStatusBar={true}/>
-    <Tab.Navigator
-        screenOptions={({ route }) => ({
-            tabBarShowLabel: false,
-            headerShown: false,
-            tabBarStyle: {
-                position: 'absolute',
-                bottom: RFValue(10),
-                left: RFValue(20),
-                right: RFValue(20),
-                borderRadius: RFValue(20),
-                height: RFValue(60),
-                backgroundColor: theme.Primary,
-                elevation: 1,
-                shadowOpacity: 1,
-                whiteSpace: 'nowrap',
-                numberOfLines:1
-            },
-            tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
-                let text
-                if (route.name === 'Feed') {
-                    iconName = 'home';
-                    text = 'Feed'
-                }
-                else if (route.name === 'Notifications') {
-                    iconName = 'notifications'
-                    text = 'Notification'
-                }
-                else if (route.name === 'Profile') {
-                    iconName = 'person'
-                    text = 'Profile'
-                }
-                else if (route.name === 'PostCreation') {
-                    iconName = 'add'
-                    text = 'New Trip'
-                }
+        <MenuProvider>
+            <FlashMessage position="top" hideStatusBar={true} />
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarShowLabel: false,
+                    headerShown: false,
+                    tabBarStyle: {
+                        position: 'absolute',
+                        bottom: RFValue(10),
+                        left: RFValue(20),
+                        right: RFValue(20),
+                        borderRadius: RFValue(20),
+                        height: RFValue(60),
+                        backgroundColor: theme.Primary,
+                        elevation: 1,
+                        shadowOpacity: 1,
+                        whiteSpace: 'nowrap',
+                        numberOfLines: 1
+                    },
+                    tabBarIcon: ({ focused, color, size }) => {
+                        let hidden = true;
+                        let iconName;
+                        let text
+                        if (route.name === 'Feed') {
+                            iconName = 'home';
+                            text = 'Feed'
+                        }
+                        else if (route.name === 'Notifications') {
+                            hidden = false;
+                            iconName = 'notifications'
+                            text = 'Notification'
+                        }
+                        else if (route.name === 'Profile') {
+                            iconName = 'person'
+                            text = 'Profile'
+                        }
+                        else if (route.name === 'PostCreation') {
+                            iconName = 'add'
+                            text = 'New Trip'
+                        }
 
-                if (focused)
-                    return <View style={{
-                        marginBottom: RFValue(20),
-                        alignItems: 'center',
-                        flex: 1,
-                        justifyContent: 'center'
-                    }}>
-                        <LinearGradient
-                            colors={[theme.SecondaryCyan, theme.SecondaryPurple]}
-                            start={{ x: 0, y: 1 }}
-                            end={{ x: 1, y: 1 }}
-                            style={styles.button}>
-                            <MaterialIcons name={iconName} size={30} color={theme.Primary} />
-                        </LinearGradient>
-                        <GradientText numberOfLines={1} style={{ fontSize: RFValue(15) }}>{text}</GradientText>
-                    </View>
+                        if (focused)
+                            return <View style={{
+                                marginBottom: RFValue(20),
+                                alignItems: 'center',
+                                flex: 1,
+                                justifyContent: 'center'
+                            }}>
+                                <LinearGradient
+                                    colors={[theme.SecondaryCyan, theme.SecondaryPurple]}
+                                    start={{ x: 0, y: 1 }}
+                                    end={{ x: 1, y: 1 }}
+                                    style={styles.button}>
+                                    <MaterialIcons name={iconName} size={30} color={theme.Primary} />
+                                </LinearGradient>
+                                <GradientText numberOfLines={1} style={{ fontSize: RFValue(15) }}>{text}</GradientText>
+                            </View>
+                        else
+                            return <View style={{
+                                alignItems: 'center',
+                                flex: 1,
+                                justifyContent: 'center'
+                            }}>
+                                {!hidden && (<BadgedIcon
+                                    name={iconName} size={30} color={theme.SubText}
 
-                else
-                    return <View style={{
-                        alignItems: 'center',
-                        flex: 1,
-                        justifyContent: 'center'
-                    }}>
-                        <MaterialIcons name={iconName} size={30} color={theme.SubText} />
-                    </View>
-            }
-        })}>
-        <Tab.Screen name="Feed" component={Feed} />
-        <Tab.Screen name="PostCreation" component={PostCreation} 
-            initialParams={{edit:false}} 
-            screenOptions={{
-                tabBarVisible:false,
-            }}
-        />
-        <Tab.Screen name="Notifications" component={Notifications} />
-        <Tab.Screen name="Profile" component={Profile} />
-    </Tab.Navigator>
-    </MenuProvider>
+                                />)}
+                                {hidden && (<MaterialIcons name={iconName} size={30} color={theme.SubText} />)}
+                            </View>
+                    }
+                })}>
+                <Tab.Screen name="Feed" component={Feed} />
+                <Tab.Screen name="PostCreation" component={PostCreation} 
+                    initialParams={{edit:false}} 
+                    screenOptions={{
+                        tabBarVisible:false,
+                    }}
+                />  
+                <Tab.Screen name="Notifications" component={Notifications} />
+                <Tab.Screen name="Profile" component={Profile} />
+            </Tab.Navigator>
+        </MenuProvider>
     )
 
 }
@@ -112,6 +125,7 @@ const styles = StyleSheet.create({
         marginBottom: "3%",
         top: "7%",
         borderRadius: circleDiameter / 2,
-    }
+    },
+
 });
 export default NavigationTabs;

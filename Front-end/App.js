@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { StyleSheet, Platform } from 'react-native';
 import { ThemeContext, AppTheme } from './app/Context/ThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,12 +12,29 @@ import Registeration from './app/Screens/Registeration';
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
 import Map from './app/Screens/Map';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import { NotificationsContext } from './app/Context/NotificationsContext';
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 export default function App() {
+  //notifications
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
   //navigation:
   const Stack = createStackNavigator();
   //theme:
   const [lightMode, setLightMode] = useState(true)
+  const [notificationsCount, setNotificationsCount] = useState(0)
+
   const [Theme, setTheme] = useState(AppTheme.light);
   function changeTheme() {
     setLightMode(!lightMode);
@@ -69,6 +86,24 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+      setNotificationsCount(notificationsCount => notificationsCount + 1)
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
+  useEffect(() => {
     //check if user logged  in or not
     setTimeout(async () => {
       try {
@@ -87,9 +122,11 @@ export default function App() {
   }
   else {
     return (
+
       <ThemeContext.Provider value={Theme}>
-          <AuthContext.Provider value={authContext}>
-            <TokenContext.Provider value={loginState.userToken}>
+        <AuthContext.Provider value={authContext}>
+          <TokenContext.Provider value={loginState.userToken}>
+            <NotificationsContext.Provider value={notificationsCount}>
               <NavigationContainer>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                   {loginState.userToken ?
@@ -102,33 +139,52 @@ export default function App() {
                       initialParams={{ isSignUp: false }}
                     />
                   }
-                  <Stack.Screen 
+                  <Stack.Screen
                     name="Map"
                     component={Map} />
                 </Stack.Navigator>
               </NavigationContainer>
-            </TokenContext.Provider>
-          </AuthContext.Provider>
+            </NotificationsContext.Provider>
+          </TokenContext.Provider>
+        </AuthContext.Provider>
       </ThemeContext.Provider>
+
     );
   }
 }
-//   if (isLoading) {
-//     return (
-//       <View style={styles.container}>
-//         <ActivityIndicator size="large" animating={true} color={Theme.light.SecondaryPurple} />
-//       </View>
-//     )
-//   }
-//   else {
-//     return (
-//       <ThemeContext.Provider value={{ theme, changeTheme }}>
-//         <Registeration isSignUp={signUp} changeSigning={changeSigning} />
-//         <Feed />
-//       </ThemeContext.Provider>
-//     );
-//   }
-// }
+
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
+}
+
 
 const styles = StyleSheet.create({
   container: {
