@@ -86,7 +86,6 @@ function NavigationTabs(props) {
                                 </LinearGradient>
                                 <GradientText numberOfLines={1} style={{ fontSize: RFValue(15) }}>{text}</GradientText>
                             </View>
-
                         else
                             return <View style={{
                                 alignItems: 'center',
@@ -102,7 +101,12 @@ function NavigationTabs(props) {
                     }
                 })}>
                 <Tab.Screen name="Feed" component={Feed} />
-                <Tab.Screen name="PostCreation" component={PostCreation} initialParams={{ edit: false }} />
+                <Tab.Screen name="PostCreation" component={PostCreation} 
+                    initialParams={{edit:false}} 
+                    screenOptions={{
+                        tabBarVisible:false,
+                    }}
+                />  
                 <Tab.Screen name="Notifications" component={Notifications} />
                 <Tab.Screen name="Profile" component={Profile} />
             </Tab.Navigator>

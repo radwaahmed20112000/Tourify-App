@@ -13,16 +13,17 @@ function PhotosList({ photos, setPhotos, deletedPhotos, setDeletedPhotos }) {
     const [state, setState] = useState({refresh:true})
 
     const deletePhoto = (index) => {
-        const photo = photos.splice(index, 1)
+        const photo = photos[index]
+        photos.splice(index, 1)
         setPhotos(photos)
-        deletedPhotos.push(photo)
-        setDeletedPhotos(deletedPhotos)
+        if(!("base64" in photo))
+        {
+            deletedPhotos.push(photo)
+            setDeletedPhotos(deletedPhotos)
+        }
         setState({ refresh: ! state.refresh })
     }
-    useEffect(() => {
-        console.log(photos.length)
 
-    }, [])
     return (
         <View>
         {photos.length > 0 && 

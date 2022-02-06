@@ -8,7 +8,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
-function ImageSharing({setPhotos, photos, addedPhotos, setaddedPhotos}) {
+function ImageSharing({setPhotos, photos}) {
     const theme = useContext(ThemeContext);
 
     let openImagePickerAsync = async () => {
@@ -33,7 +33,6 @@ function ImageSharing({setPhotos, photos, addedPhotos, setaddedPhotos}) {
             photo:pickerResult.uri
         }
         setPhotos(photos.concat(photo));
-        setaddedPhotos(addedPhotos.concat(photo))
     };
   
     return (

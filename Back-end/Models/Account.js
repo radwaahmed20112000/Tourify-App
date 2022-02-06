@@ -24,32 +24,33 @@ module.exports = {
          }
     
      
-     },
+    },
 
-     getPassword : async ( email, cb )=>{
+    getPassword : async ( email, cb )=>{
     
         email = email || '';
       
-         let selectQuery = `SELECT password FROM ${tableName} WHERE email = "${email}" ;`;
+        let selectQuery = `SELECT password FROM ${tableName} WHERE email = "${email}" ;`;
+
+        try {
+            let pass = await DB(selectQuery)
+            return cb(null, pass[0].password);
+
+        } catch (e) {
+            console.log(e)
+            return cb(e, null);
     
-         try {
-             let pass = await DB(selectQuery)
-             return cb(null, pass[0].password);
-    
-         } catch (e) {
-             console.log(e)
-             return cb(e, null);
-    
-         }
-    
-     
-     },
+        }
+    },
 
 
     create: async (account, cb) => {
+
         let insertQuery = `INSERT INTO ${tableName} 
-        (email, name, password, photo, country, google) 
-        VALUES  ("${account.email}","${account.name}",${account.password},"${account.photo}", ${account.country}, ${account.googleBool}) ;`;
+                            (email, name, password, photo, country, google) 
+                            VALUES  ("${account.email}","${account.name}",
+                                        ${account.password},"${account.photo}",
+                                        ${account.country}, ${account.googleBool}) ;`;
         console.log(insertQuery);
         try {
             let user = await DB(insertQuery)
@@ -65,15 +66,12 @@ module.exports = {
 
     },
 
-
-
     
     editUser: async (email,query, cb) => {
         let editQuery = `UPDATE ${tableName} 
         SET  ${query} WHERE
             email = "${email}" ;`;
 
-       
         try {
             let res = await DB(editQuery)
             console.log("edited account : ", res.length)
@@ -84,10 +82,22 @@ module.exports = {
             return cb(e, null);
         }
 
-
     },
 
+    saveNotificationToken: (email, token, cb) => {
 
+        let updateQuery = `UPDATE ${tableName} 
+                            SET notify_token = '${token}'
+                            WHERE email = '${email}'`
+        
+        try {
+            console.log(DB(updateQuery))
+            return cb(null)
+        }
+        catch(e) {
+            return cb(e)
+        }
+    }
 
 
 }

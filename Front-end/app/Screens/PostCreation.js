@@ -13,6 +13,7 @@ import BudgetInput from '../Components/PostCreation/BudgetInput';
 import PhotosList from '../Components/PostCreation/PhotosList';
 import baseUrl from "../API/IPAdress" 
 import { NavigationActions, StackActions } from 'react-navigation';
+import { CommonActions } from '@react-navigation/native';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
@@ -27,7 +28,6 @@ function PostCreation({ navigation, route }) {
     const [addedTags, setaddedTags] = useState([]);
     const [photos, setPhotos] = useState([]);
     const [deletedPhotos, setDeletedPhotos] = useState([]);
-    const [addedPhotos, setaddedPhotos] = useState([]);    
     const [organisation, setOrganisation] = useState('');
     const [rate, setRate] = useState(3);
     const [duration, setDuration] = useState();
@@ -37,7 +37,6 @@ function PostCreation({ navigation, route }) {
     const [latitude, setLatitude] = useState(null)
     const [longitude, setLongitude] = useState(null)
     const newTags = (newTags) => setTags(newTags)
-    const newPhotos = (newPhotos) => setPhotos(newPhotos)     
 
 
     useEffect(() => {
@@ -46,8 +45,6 @@ function PostCreation({ navigation, route }) {
             setLatitude(route.params.latitude)
         }
         if (route.params.edit) {
-            console.log('hi')
-            console.log(token)
             fetch(`${ipAddress}posts/${route.params.postId}/${token}`)
             .then(res => {
                 if (!res.ok) { 
@@ -56,7 +53,6 @@ function PostCreation({ navigation, route }) {
                 return res.json();
             })
             .then(res => {
-                console.log("hiiii")
                 const data = res[0];
                 onChangeText(data.body)
                 if(data.tags !== null){
@@ -65,8 +61,7 @@ function PostCreation({ navigation, route }) {
                 }
                 if(data.photos !== null){
                     data.photos = JSON.parse(data.photos);
-                    console.log(data.photos)
-                    setPhotos(data.photos)
+                    setPhotos(data.photos)       
                 }
                 setOrganisation(data.organisation)
                 setRate(data.rate)
@@ -112,18 +107,23 @@ function PostCreation({ navigation, route }) {
             latitude: latitude,
             longitude: longitude,
         }
-        if(route.params.edit){
+        if(route.params.edit)
+        {
             body['deletedTags'] = deletedTags
             body['deletedPhotos'] = deletedPhotos
             body['postId'] = route.params.postId
             body['tags'] = addedTags
-            body['photos'] = addedPhotos
-            body = JSON.stringify(body)
+            var x = photos.filter(photo => {
+                console.log("base64" in photo)
+                if("base64" in photo) return true
+                return false
+            })
+            console.log(x)
+            body['photos'] = x
             url = 'Edit'
-        } else {
-            body = JSON.stringify(body)
+        } else 
             url = 'TripCreation'
-        }
+        body = JSON.stringify(body)
         console.log(url)
         fetch(ipAddress + 'posts/' + url, {
             method: 'POST',
@@ -135,31 +135,18 @@ function PostCreation({ navigation, route }) {
         }).then((res) => {
             console.log(JSON.stringify(res))
             setProcessing(false)
-            // const resetAction = StackActions.reset({
-            //     index: 0,
-            //     actions: [NavigationActions.navigate({ routeName: 'Feed' })],
-            // });
-            // navigation.dispatch(resetAction); 
-            //reset :
-            onChangeText('');
-            setTags([]);
-            setDeletedTags([]);
-            setaddedTags([]);
-            setPhotos([]);
-            setDeletedPhotos([]);
-            setaddedPhotos([]);    
-            setOrganisation('');
-            setRate(3);
-            setDuration();
-            setBudget();
-            setCurrancy('USD');
-            setProcessing(false);
-            setLatitude(null)
-            setLongitude(null)
-            navigation.navigate("Feed")
+            goHome()
         });
     }
-
+    const newPhotos = () => setPhotos(photos => photos.filter(photo => "base64" in photo))
+    const goHome = () => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index:4,
+                routes:[{name:'Feed'}]
+            })
+        )
+    }
     const goToMaps = () => {
         navigation.navigate('Map')
     }
@@ -168,7 +155,7 @@ function PostCreation({ navigation, route }) {
             "Warning",
             "Are you sure you want to discard your changes?",
             [
-                { text: "Yes", onPress: () => navigation.navigate("Feed") },
+                { text: "Yes", onPress: () => goHome() },
                 { text: "Continue", onPress: () => console.log("Continue") }
             ]
         );
@@ -212,13 +199,13 @@ function PostCreation({ navigation, route }) {
                         imageSize={RFValue(2)}
                         onFinishRating={rate => setRate(rate)}
                     />
-                    <ImageSharing setPhotos={setPhotos} photos={photos}  setaddedPhotos={setaddedPhotos} addedPhotos ={addedPhotos} ></ImageSharing>
+                    <ImageSharing setPhotos={setPhotos} photos={photos} ></ImageSharing>
                     <TouchableOpacity style={{ marginLeft: SCREEN_WIDTH * 0.01, marginTop: SCREEN_HEIGHT * 0.008 }} onPress={goToMaps}>
                         <FontAwesomeIcon icon={faMapMarkerAlt} size={SCREEN_WIDTH * 0.07} color={theme.SecondaryPurple}></FontAwesomeIcon>
                     </TouchableOpacity>
                 </View>
                 <TagsList edit={route.params.edit} setTags={newTags} tags ={tags} setDeletedTags={setDeletedTags} deletedTags ={deletedTags} setaddedTags={setaddedTags} addedTags ={addedTags}></TagsList>
-                <PhotosList setPhotos={setPhotos} photos={photos} setDeletedPhotos={setDeletedPhotos} deletedPhotos={deletedPhotos} edit={route.params.edit}></PhotosList>
+                <PhotosList setPhotos={setPhotos} photos={photos} setDeletedPhotos={setDeletedPhotos} deletedPhotos={deletedPhotos}></PhotosList>
                 <BudgetInput setBudget={setBudget} budget={budget} setCurrancy={setCurrancy} currency={currency}></BudgetInput>
                 <View style={{ flexDirection: "row" }}>
                     <TextInput
