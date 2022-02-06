@@ -49,7 +49,7 @@ module.exports = {
             return res.status(500).json(err);
          posts = formatPostsDate(posts)
          return res.status(200).json(posts);
-      })
+      })    
 
    },
 
@@ -134,17 +134,7 @@ module.exports = {
          PostTags.createPostTags(post_id, req.body.tags)
          console.log(post)
          return
-      })
-      .then(() => {
-         console.log("hi")
-         console.log(photos)
-         PostPhoto.createPostPhoto(post_id, photos)
-         PostLocation.createPostLocation(post_id, req.body)
-         PostTags.createPostTags(post_id, req.body.tags)
-         console.log(post)
-         return
-      })
-
+      }) 
       .then(() => {return res.status(200).json({})})
 
       .catch((err) => {
@@ -162,27 +152,28 @@ module.exports = {
       }).join(''));
       const email = JSON.parse(jsonPayload);
       const post_id = req.body.postId;
-      console.log(req.body.tags)
-      console.log(req.body.deletedTags)
+      console.log(req.body.photos)
+      // console.log(req.body.deletedPhotos)
       await Post.editPost(email.email, req.body)
       .then(() => {
-         PostPhoto.createPostPhoto(post_id, req.body.photos)
+         uploadPhotosToAzure(req.body.photos)
          PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
-         PostTags.createPostTags(post_id, req.body.tags)
+         PostPhoto.createPostPhoto(post_id, req.body.photos)
          PostTags.deletePostTags(post_id, req.body.deletedTags)
-         PostLocation.editPostLocation(post_id, req.body)
+         PostTags.createPostTags(post_id, req.body.tags)
+         // PostLocation.editPostLocation(post_id, req.body)
          console.log(post_id)
          return 
       })
 
       .then(() => {return res.json();})
-
+ 
       .catch((err) => {
          return res.status(500).json(err);
       });
 
    }
-   
+    
 
 }
 

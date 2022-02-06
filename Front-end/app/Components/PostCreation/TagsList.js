@@ -14,12 +14,16 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit, addedTags, 
 
     const [state, setState] = useState({refresh:true})
 
-    useEffect(() => {
-        if(edit){
-            tagsList.filter(function(val) {
-                return tags.indexOf(val) == -1;
-            });
-            setTagsList(tagsList)
+    useEffect(async () => {
+        if(edit)
+        {
+            var list = await tags.filter(function(val) {
+                return tagsList.indexOf(val) == -1;
+            }); 
+            for(var item in list)
+                tagsList.splice(tagsList.length - 1, 0, list[item]);
+            setTagsList(tagsList )
+            setState({ refresh: ! state.refresh })  
         }
     },[])
 
@@ -35,8 +39,8 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit, addedTags, 
             if(edit) deletedTags.push(tag)
         }
         else {
-            tags.push(tag)
             addedTags.push(tag)
+            tags.push(tag)
         }
         setaddedTags(addedTags)
         setTags(tags)
@@ -86,7 +90,9 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit, addedTags, 
                 tagsList.splice(tagsList.length - 1, 0, inputText);
                 setTagsList(tagsList)
                 tags.push(inputText)
+                addedTags.push(inputText)
                 setTags(tags)
+                setaddedTags(addedTags)
                 setState({ refresh: ! state.refresh }) 
                 setVisible(false)
             } }
