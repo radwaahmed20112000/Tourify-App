@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ThemeContext, AppTheme } from './app/Context/ThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -13,9 +13,8 @@ import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
 import Map from './app/Screens/Map';
 import Constants from 'expo-constants';
-import Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import { Text, View, Button, Platform } from 'react-native';
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -88,10 +87,13 @@ export default function App() {
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
+      handleNotification();
+
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
+      handleNotification();
     });
 
     return () => {
@@ -180,22 +182,6 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
-//   if (isLoading) {
-//     return (
-//       <View style={styles.container}>
-//         <ActivityIndicator size="large" animating={true} color={Theme.light.SecondaryPurple} />
-//       </View>
-//     )
-//   }
-//   else {
-//     return (
-//       <ThemeContext.Provider value={{ theme, changeTheme }}>
-//         <Registeration isSignUp={signUp} changeSigning={changeSigning} />
-//         <Feed />
-//       </ThemeContext.Provider>
-//     );
-//   }
-// }
 
 const styles = StyleSheet.create({
   container: {
