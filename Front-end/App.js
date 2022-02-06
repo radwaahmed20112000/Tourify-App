@@ -14,6 +14,7 @@ import { TokenContext } from './app/Context/TokenContext';
 import Map from './app/Screens/Map';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
+import { NotificationsContext } from './app/Context/NotificationsContext';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -32,6 +33,8 @@ export default function App() {
   const Stack = createStackNavigator();
   //theme:
   const [lightMode, setLightMode] = useState(true)
+  const [notificationsCount, setNotificationsCount] = useState(0)
+
   const [Theme, setTheme] = useState(AppTheme.light);
   function changeTheme() {
     setLightMode(!lightMode);
@@ -87,13 +90,11 @@ export default function App() {
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
-      handleNotification();
-
+      setNotificationsCount(notificationsCount => notificationsCount + 1)
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
-      handleNotification();
     });
 
     return () => {
@@ -125,23 +126,25 @@ export default function App() {
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
           <TokenContext.Provider value={loginState.userToken}>
-            <NavigationContainer>
-              <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {loginState.userToken ?
-                  <Stack.Screen name="NavigationTabs"
-                    component={NavigationTabs} />
-                  :
+            <NotificationsContext.Provider value={notificationsCount}>
+              <NavigationContainer>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                  {loginState.userToken ?
+                    <Stack.Screen name="NavigationTabs"
+                      component={NavigationTabs} />
+                    :
+                    <Stack.Screen
+                      name="Registeration"
+                      component={Registeration}
+                      initialParams={{ isSignUp: false }}
+                    />
+                  }
                   <Stack.Screen
-                    name="Registeration"
-                    component={Registeration}
-                    initialParams={{ isSignUp: false }}
-                  />
-                }
-                <Stack.Screen
-                  name="Map"
-                  component={Map} />
-              </Stack.Navigator>
-            </NavigationContainer>
+                    name="Map"
+                    component={Map} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </NotificationsContext.Provider>
           </TokenContext.Provider>
         </AuthContext.Provider>
       </ThemeContext.Provider>
