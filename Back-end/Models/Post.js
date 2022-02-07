@@ -31,10 +31,10 @@ module.exports = {
             let post = await DB(selectQuery)
             if (post.photos)
                 post.photos = JSON.parse(post.photos)
-            
+
             if (post.tags)
                 post.tags = JSON.parse(post.tags)
-            
+
             return cb(null, post);
         }
         catch (e) {
@@ -96,7 +96,7 @@ module.exports = {
 
         }
     },
-    delete: async (postId,cb) => {
+    delete: async (postId, cb) => {
 
         let query = `DELETE FROM  ${tableName} WHERE  post_id = ${postId} `;
 
@@ -119,6 +119,8 @@ module.exports = {
             (email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
             ("${email}","${newPost.body}",${newPost.duration},"${newPost.organisation}",${newPost.rate}, ${newPost.budget},"${newPost.currency}", 0, 0 ) ;`;
         try {
+            console.log({ newPost })
+            console.log(insertQuery)
             let res = await DB(insertQuery)
             console.log(res)
             return cb(null, res);
@@ -129,14 +131,14 @@ module.exports = {
         }
     },
 
-    editPost: async (email,editedPost) => {
+    editPost: async (email, editedPost) => {
         let editQuery = `UPDATE ${tableName} 
             SET body = "${editedPost.body}" , duration = ${editedPost.duration},
                 organisation = "${editedPost.organisation}", rate = ${editedPost.rate},
                 budget = ${editedPost.budget}, currency = "${editedPost.currency}"  
             WHERE
                 email = "${email}" AND post_id = ${editedPost.postId};`
-            console.log(editQuery)
+        console.log(editQuery)
         try {
             let res = await DB(editQuery)
             console.log(res)
@@ -146,7 +148,7 @@ module.exports = {
             return e
         }
     },
-    
+
     getOne: async (postId, cb) => {
         if (!postId)
             return cb(null, null)
