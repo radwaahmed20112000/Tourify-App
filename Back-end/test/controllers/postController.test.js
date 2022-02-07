@@ -259,7 +259,7 @@ describe('Posts controller', function () {
                 }
                 let query2 = `INSERT INTO PostPhoto(post_id,photo) VALUES (2,"${test.photo}");`
                 let query3 = `INSERT INTO PostTags(post_id,tag_name) VALUES (2,"${test.tag}");`
-                let query4 = `INSERT INTO PostLocation(post_id,latitude,longitude) VALUES (2,${test.latitude},${test.longitude});`
+                let query4 = `INSERT INTO PostLocation(post_id,latitude,longititude) VALUES (2,${test.latitude},${test.longitude});`
 
                 DB(query1).then(async (posts) => {
                     console.log(posts)
@@ -279,7 +279,7 @@ describe('Posts controller', function () {
                                 res.should.have.status(200);
                                 console.log(err)
                                 let query5 = `SELECT
-                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
+                                body, duration, organisation, rate, budget, currency, latitude, longititude, photos, tags
                                 FROM
                                     (Post NATURAL LEFT JOIN PostLocation)
                                     LEFT JOIN (

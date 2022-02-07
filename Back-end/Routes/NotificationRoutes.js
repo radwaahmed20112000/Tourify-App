@@ -4,3 +4,5 @@ const router = express.Router();
 
 router.get('/', notificationController.getNotifications);
 router.put('/view/:id', notificationController.viewNotification)
+
+module.exports = router;
