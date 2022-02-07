@@ -7,6 +7,7 @@ const PostTags = require('../Models/PostTags')
 const {uploadPhotosToAzure} = require('../Services/PhotoUpload')
 const atob = require('atob')
 const moment = require('moment') 
+
 module.exports = {
 
    getFeedPosts: (req, res) => {
@@ -33,14 +34,6 @@ module.exports = {
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
 
-      // var base64Url = req.body.email.split('.')[1];
-      // var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      // var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-      //    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      // }).join(''));
-      // const email = JSON.parse(jsonPayload).email;
-
-
       let query = `user.email = '${req.user_id}'`;
 
       Post.findAll(query, limit, offset, (err, posts) => {
@@ -49,7 +42,7 @@ module.exports = {
             return res.status(500).json(err);
          posts = formatPostsDate(posts)
          return res.status(200).json(posts);
-      })
+      })    
 
    },
 
@@ -115,16 +108,12 @@ module.exports = {
    },
 
    createPost: async (req, res) => {
-      var base64Url = req.body.email.split('.')[1];
-      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      
-      const email = JSON.parse(jsonPayload);
+      console.log("hi")
+      const email = req.user_id;
+      console.log({email})
       var post_id;
       console.log("hi from photos")
-      await Post.createPost(email.email, req.body, (err, post) => {
+      await Post.createPost(email, req.body, (err, post) => {
          post_id = post.insertId;
       })
       .then(() => {
@@ -134,17 +123,7 @@ module.exports = {
          PostTags.createPostTags(post_id, req.body.tags)
          console.log(post)
          return
-      })
-      .then(() => {
-         console.log("hi")
-         console.log(photos)
-         PostPhoto.createPostPhoto(post_id, photos)
-         PostLocation.createPostLocation(post_id, req.body)
-         PostTags.createPostTags(post_id, req.body.tags)
-         console.log(post)
-         return
-      })
-
+      }) 
       .then(() => {return res.status(200).json({})})
 
       .catch((err) => {
@@ -155,34 +134,30 @@ module.exports = {
 
    editPost: async (req, res) => {
       console.log("received");
-      var base64Url = req.body.email.split('.')[1];
-      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      const email = JSON.parse(jsonPayload);
+      const email = req.user_id;
       const post_id = req.body.postId;
-      console.log(req.body.tags)
-      console.log(req.body.deletedTags)
-      await Post.editPost(email.email, req.body)
+      console.log(req.body.photos)
+      // console.log(req.body.deletedPhotos)
+      await Post.editPost(email, req.body)
       .then(() => {
-         PostPhoto.createPostPhoto(post_id, req.body.photos)
+         uploadPhotosToAzure(req.body.photos)
          PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
-         PostTags.createPostTags(post_id, req.body.tags)
+         PostPhoto.createPostPhoto(post_id, req.body.photos)
          PostTags.deletePostTags(post_id, req.body.deletedTags)
-         PostLocation.editPostLocation(post_id, req.body)
+         PostTags.createPostTags(post_id, req.body.tags)
+         // PostLocation.editPostLocation(post_id, req.body)
          console.log(post_id)
          return 
       })
 
       .then(() => {return res.json();})
-
+ 
       .catch((err) => {
          return res.status(500).json(err);
       });
 
    }
-   
+    
 
 }
 

@@ -213,6 +213,18 @@ module.exports = {
             }
 
         });
+    },
+
+    saveNotificationToken: (req, res) => {
+        
+        var email = req.user_id
+
+        Account.saveNotificationToken(email, (err) => {
+
+            if(err) res.status(500).json(err)
+
+            res.status(200).json({ message: "Token Saved successfully" });
+        })
     }
 
 

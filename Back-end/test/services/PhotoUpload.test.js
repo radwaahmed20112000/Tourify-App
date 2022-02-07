@@ -6,8 +6,6 @@ var expect = chai.expect;
 
 describe('Account controller', function () {
 
-       
-
         describe('wordSearch', function() {
             let photos =[]
             

@@ -1,41 +1,48 @@
+import IPAdress from './IPAdress';
+import { CommonActions } from '@react-navigation/native';
 
-const createPost = () => {
-    if(description === '' || duration === '' || budget === 0 ) {
-        Alert.alert(
-            "Please Enter all required fields!",
-            [
-                { text: "OK", onPress: () => console.log("OK Pressed") }
-            ]
-        );
-        return
-    }
-    var newTags = [];
-    for (const [key, value] of Object.entries(tags)) {
-        console.log(`${key}: ${value}`);
-        if (value){
-            newTags.push(key)
-        }
-    }
-    var body = JSON.stringify({
-        user: token, //TODO
-        description: description,
-        tags: newTags,
-        photos: photos,  //TODO
-        organisation : organisation,
-        rate: rate,
-        duration: duration,
-        budget: budget + currency,
-        latitude: latitude, //TODO
-        longitude: longitude //TODO
-    })
-    console.log(body)
-    fetch(ipAddress+'/posts/TripCreation', {
+const createPost = (body, navigation, setProcessing) => {
+    console.log("aloo")
+    
+    checkPostValidation(body)
+    setProcessing(true)
+    console.log(url)
+
+    fetch(IPAdress + 'posts/' + url, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
         },
         body: body
-    }).then((res)=>console.log(JSON.stringify(res)));
+    }).then((res) => {
+        console.log(JSON.stringify(res))
+        setProcessing(false)
+        goHome(navigation)
+    });
 }
 
+const checkPostValidation = (body) => {
+    if (body.description === '' || body.duration === '' || body.budget === 0) {
+        Alert.alert(
+            "Be Careful",
+            "You should Enter all required fields!",
+            [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ]
+        );
+        return false
+    }
+    return true
+}
+
+const goHome = (navigation) => {
+    navigation.dispatch(
+        CommonActions.reset({
+            index:4,
+            routes:[{name:'Feed'}]
+        })
+    )
+}
+
+export { goHome, createPost }
