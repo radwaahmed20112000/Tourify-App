@@ -21,8 +21,9 @@ function Notifications (props) {
 
     useEffect( () => {
         setProcessing(true)
+        console.log("hi")
         const notifs = getAllNotifications()
-        console.log(notifs)
+        console.log({notifs})
         setNotifications(notifs)
         setProcessing(false)
     }, [])

@@ -18,7 +18,9 @@ const markAsRead = async(id) => {
         return false
     }
 }
+
 const getAllNotifications = async () => {
+    console.log("alo")
     try{
         const resp = await fetch(IPAdress + `notifications/`,
         {
@@ -26,16 +28,18 @@ const getAllNotifications = async () => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': useContext(TokenContext)
+                'Authorization': useContext(TokenContext) 
             },
         })
-        .catch(err => false);
+        .catch(err => err);
 
         if(resp.status !== 200) return false;
-        else 
+        else {
+            console.log("hello")
             return resp.json();
+        }
     }
-    catch { () => false }
+    catch { (err) => err }
 }
 
 

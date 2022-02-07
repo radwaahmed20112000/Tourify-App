@@ -10,12 +10,12 @@ import GradientText from '../Shared/GradientText';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { TokenContext } from '../../Context/TokenContext';
 import { NotificationsContext } from '../../Context/NotificationsContext';
-
 import PostCreation from '../../Screens/PostCreation';
 import Feed from '../../Screens/Feed';
 import { MenuProvider } from 'react-native-popup-menu';
 import FlashMessage from "react-native-flash-message";
 import NotificationsBadge from '../NotificationsBadge';
+import { CommonActions } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -107,7 +107,18 @@ function NavigationTabs(props) {
                         tabBarVisible:false,
                     }}
                 />  
-                <Tab.Screen name="Notifications" component={Notifications} />
+                <Tab.Screen name="Notifications" component={Notifications} 
+                    listeners={({navigation,route})=>({
+                        blur:()=>{
+                          navigation.dispatch(
+                            CommonActions.reset({
+                              index:4,
+                              routes:[{name:'Profile'}]
+                            })
+                          )
+                        },
+                    })}
+                />
                 <Tab.Screen name="Profile" component={Profile} />
             </Tab.Navigator>
         </MenuProvider>
