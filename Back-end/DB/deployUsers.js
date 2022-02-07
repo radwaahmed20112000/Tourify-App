@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const Account = require('../Models/Account.js');
+const coolImages = require("cool-images");
+
 module.exports = {
     deploy: () => {
         const emails = ['1@gmail.com',
@@ -32,7 +34,6 @@ module.exports = {
             'Botswana',
             'Iraq',
             'Estonia']
-        const photo = 'https://picsum.photos/200/300'
         const password = 'Password0!'
         for (let i = 0; i < 10; i++) {
             bcrypt.hash(password, 12, (err, passwordHash) => {
@@ -40,6 +41,8 @@ module.exports = {
 
                 if (passwordHash) {
                     console.log('haah')
+                    const photo = coolImages.one()
+
 
                     //create user account
                     return Account.create({

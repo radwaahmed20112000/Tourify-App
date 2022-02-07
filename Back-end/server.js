@@ -21,12 +21,14 @@ app.use('/notifications', NotificationRouters)
 app.listen(process.env.PORT || '3000', () => {
   console.log(`server running on port : ${process.env.PORT}`);
 });
-// const mama = require('./Controllers/NotificationsController')
 
-// mama.sendNotification(['ExponentPushToken[avuS9MKf8Zsq2MgrspZ5yi]'])
 
+//deploy data
+//users
 // const deployUsers = require('./DB/deployUsers');
 // deployUsers.deploy()
-const deployPosts = require('./DB/deployPosts');
-deployPosts.deploy();
+
+//posts
+// const deployPosts = require('./DB/deployPosts');
+// deployPosts.deploy();
 module.exports = app; 
