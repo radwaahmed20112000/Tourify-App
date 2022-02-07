@@ -13,8 +13,7 @@ import BudgetInput from '../Components/PostCreation/BudgetInput';
 import PhotosList from '../Components/PostCreation/PhotosList';
 import baseUrl from "../API/IPAdress" 
 import { NavigationActions, StackActions } from 'react-navigation';
-import { CommonActions } from '@react-navigation/native';
-
+import { goHome, createPost } from '../API/PostCreation';
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
@@ -135,18 +134,10 @@ function PostCreation({ navigation, route }) {
         }).then((res) => {
             console.log(JSON.stringify(res))
             setProcessing(false)
-            goHome()
+            goHome(navigation)
         });
     }
-    const newPhotos = () => setPhotos(photos => photos.filter(photo => "base64" in photo))
-    const goHome = () => {
-        navigation.dispatch(
-            CommonActions.reset({
-                index:4,
-                routes:[{name:'Feed'}]
-            })
-        )
-    }
+
     const goToMaps = () => {
         navigation.navigate('Map')
     }
@@ -155,7 +146,7 @@ function PostCreation({ navigation, route }) {
             "Warning",
             "Are you sure you want to discard your changes?",
             [
-                { text: "Yes", onPress: () => goHome() },
+                { text: "Yes", onPress: () => goHome(navigation) },
                 { text: "Continue", onPress: () => console.log("Continue") }
             ]
         );

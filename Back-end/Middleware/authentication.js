@@ -14,6 +14,7 @@ const verifyToken = (req, res, next) => {
 
         Account.findEmail(decoded.email, (err, user) => {
             if (err) {
+                console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhh")
                 return res.status(500).json(err);
             }
             if (user.length == 0) {
@@ -22,6 +23,7 @@ const verifyToken = (req, res, next) => {
         })
         req.user_id = decoded.email;
         console.log(decoded.email)
+        console.log("decoded.email")
 
     } catch (err) {
         return res.status(401).send("Invalid Token");
