@@ -15,6 +15,7 @@ import Map from './app/Screens/Map';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { NotificationsContext } from './app/Context/NotificationsContext';
+//TODO : Save Token
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -86,7 +87,10 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync().then(token => {
+      setExpoPushToken(token)
+
+    });
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);

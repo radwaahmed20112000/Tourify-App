@@ -16,7 +16,7 @@ module.exports = {
 
     },
 
-    viewNotification: (req, res) => {
+    readNotification: (req, res) => {
 
         const id = req.params.id
 
@@ -27,6 +27,6 @@ module.exports = {
         })
     },
 
-    
+
 
 }
