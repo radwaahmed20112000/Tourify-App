@@ -2,7 +2,7 @@ const { Expo } = require('expo-server-sdk');
 // const expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
 const expo = new Expo();
 
-exports.sendNotification = (pushTokens) => {
+exports.sendNotification = (pushTokens, message) => {
 
     let messages = [];
     for (let pushToken of pushTokens) {
@@ -12,12 +12,7 @@ exports.sendNotification = (pushTokens) => {
             continue;
         }
 
-        messages.push({
-            to: pushToken,
-            sound: 'default',
-            body: 'This is a test notification',
-            data: { withSome: 'data' },
-        })
+        messages.push(message)
     }
 
     let chunks = expo.chunkPushNotifications(messages);
