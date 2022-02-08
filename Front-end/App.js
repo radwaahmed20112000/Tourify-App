@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { StyleSheet, Platform } from 'react-native';
 import { ThemeContext, AppTheme } from './app/Context/ThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
@@ -15,7 +15,7 @@ import Map from './app/Screens/Map';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { NotificationsContext } from './app/Context/NotificationsContext';
-//TODO : Save Token
+import { saveNotificationToken } from './app/API/NotificatonAPI'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -30,6 +30,8 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  const user_token = useContext(TokenContext)
+
   //navigation:
   const Stack = createStackNavigator();
   //theme:
@@ -89,7 +91,9 @@ export default function App() {
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
-
+      // Save Notification token to database
+      console.log({token})
+      // saveNotificationToken(user_token, token)
     });
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {

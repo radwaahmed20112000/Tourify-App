@@ -10,18 +10,18 @@ module.exports = {
     
         email = email || '';
       
-         let selectQuery = `SELECT * FROM ${tableName} WHERE email = "${email}" ;`;
-    
-         try {
-             let user = await DB(selectQuery)
-             console.log("user : ", user)
-             return cb(null, user);
-    
-         } catch (e) {
-             console.log(e)
-             return cb(e, null);
-    
-         }
+        let selectQuery = `SELECT * FROM ${tableName} WHERE email = "${email}" ;`;
+
+        try {
+            let user = await DB(selectQuery)
+            // console.log("user : ", user)
+            return cb(null, user);
+
+        } catch (e) {
+            console.log(e)
+            return cb(e, null);
+
+        }
     
      
     },
@@ -67,10 +67,11 @@ module.exports = {
     },
 
     
-    editUser: async (email,query, cb) => {
+    editUser: async (email, query, cb) => {
+
         let editQuery = `UPDATE ${tableName} 
-        SET  ${query} WHERE
-            email = "${email}" ;`;
+                            SET  ${query} 
+                            WHERE email = "${email}" ;`;
 
         try {
             let res = await DB(editQuery)
@@ -84,20 +85,20 @@ module.exports = {
 
     },
 
-    saveNotificationToken: (email, token, cb) => {
+    // saveNotificationToken: (email, token, cb) => {
 
-        let updateQuery = `UPDATE ${tableName} 
-                            SET notify_token = '${token}'
-                            WHERE email = '${email}'`
+    //     let updateQuery = `UPDATE ${tableName} 
+    //                         SET notify_token = '${token}'
+    //                         WHERE email = '${email}'`
         
-        try {
-            console.log(DB(updateQuery))
-            return cb(null)
-        }
-        catch(e) {
-            return cb(e)
-        }
-    }
+    //     try {
+    //         console.log(DB(updateQuery))
+    //         return cb(null)
+    //     }
+    //     catch(e) {
+    //         return cb(e)
+    //     }
+    // }
 
 
 }
