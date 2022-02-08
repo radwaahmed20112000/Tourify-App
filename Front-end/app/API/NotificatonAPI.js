@@ -1,46 +1,62 @@
 import IPAdress from './IPAdress';
-import { TokenContext } from '../Context/TokenContext';
 
 
-const markAsRead = async(id) => {
+const markAsRead = async(user_token, id) => {
+
     try {
-        let response = await fetch(IPAdress + `notifications/view/${id}`, {
+        await fetch(IPAdress + `notifications/view/${id}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': useContext(TokenContext)
+                'Authorization': user_token
             },
-        })
-        if (response.status === 200) 
-            return true
-        return false
-    } catch (error) {
-        return false
-    }
+        })    
+        .catch(err => console.error(err));
+        return true
+
+    }catch{() => false}
+
 }
 
-const getAllNotifications = async () => {
+const getAllNotifications = async (user_token) => {
     console.log("alo")
     try{
+
         const resp = await fetch(IPAdress + `notifications/`,
         {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': useContext(TokenContext) 
+                'Authorization': user_token
             },
         })
-        .catch(err => err);
+        .catch((err)=>{return false});
 
         if(resp.status !== 200) return false;
-        else {
-            console.log("hello")
+        else 
             return resp.json();
-        }
-    }
-    catch { (err) => err }
+    }catch{() => false}
+
 }
 
+const saveNotificationToken = async (user_token, token) => {
 
-export { markAsRead, getAllNotifications }
+    console.log("Save token")
+
+    await fetch(IPAdress + `account/saveNotifyToken`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': user_token
+        },
+        body: JSON.stringify({ notificationToken: token })
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(err => console.error(err));
+
+}
+
+export { markAsRead, getAllNotifications, saveNotificationToken }
