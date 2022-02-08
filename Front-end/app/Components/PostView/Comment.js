@@ -6,23 +6,33 @@ import { RFValue } from 'react-native-responsive-fontsize';
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device width
 import { ThemeContext } from '../../Context/ThemeContext';
+import { editComment, deleteComment } from '../../API/CommentApi'
+import { TokenContext } from '../../Context/TokenContext';
 
 export default function Comment(props) {   /// images  as props   
     const theme = useContext(ThemeContext);
+    const token = useContext(TokenContext);
 
-    const deleteComment = ()=>{
-     let id = props.id
+    const DeleteComment = async()=>{
+        console.log("ffff")
+        const res = await deleteComment(token, props.item.comment_id)
+        //console.log(res)
+        if(!res)
+            console.log("error")
+
+        console.log("done")
+       props.deleteCommentFromList(props.item.comment_id)
     }
 
 
     const editComment = () => {
-        let id = props.id
+        props.navigation.navigate('EditComment', { comment: props.item, updateCommentBody: props.updateCommentBody })
     }
  
     return (
         <View style={styles.container}>
             <View style={styles.uImg}>
-            <ImageBackground style={{ flex: 1 }} source={{ uri: 'https://avatars.githubusercontent.com/u/61039282?s=40&v=4' }} 
+                <ImageBackground style={{ flex: 1 }} source={{ uri: props.item.photo }} 
             style={styles.userImage}
             imageStyle={{
                 borderRadius: SCREEN_WIDTH * 0.15,
@@ -33,16 +43,16 @@ export default function Comment(props) {   /// images  as props
          </View>
            <View>
             <View style={styles.commentBox}>
-                <View style={{ paddingLeft: RFValue(10), justifyContent: 'center' , marginBottom:3 }}>
-                    <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.Text , fontWeight:'bold'}}>{'ali ali'}</Text>
+                <View style={{ paddingLeft: RFValue(1), justifyContent: 'center' , marginBottom:3 }}>
+                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.Text, fontWeight: 'bold' }}>{props.item.name}</Text>
 
-                    <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{'1m'}</Text>
+                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{props.item.created_at}</Text>
                 </View>
                 <View>
-                <Text> Duis dolore pariatur veniam proident in incididunt elit tempor ad.Lorem elit sunt in 
-                    eiusmod duis eiusmod elit id nulla laborum consequat.Officia anim occaecat consectetur nulla exercitation aliqua velit.</Text>
+                <Text>{props.item.body}</Text>
                 </View>
            </View>
+                {props.item.ownerFlag?
             <View style={styles.commentActions} >
                     <TouchableOpacity style={styles.actionLink} onPress={() => editComment()}>
                         <View style={styles.actionLink}>
@@ -55,13 +65,14 @@ export default function Comment(props) {   /// images  as props
                             |
                         </Text>
                     </View>
-                    <TouchableOpacity onPress={() => deleteComment()}>
+                    <TouchableOpacity onPress={() => DeleteComment()}>
                         <View>
                             <Text style={{ fontWeight: 'bold', color: 'rgba( 5, 136, 188,1)' }}> Delete </Text>
                         </View>
                     </TouchableOpacity>
                
            </View>
+           :null}
         </View>
            
         </View>

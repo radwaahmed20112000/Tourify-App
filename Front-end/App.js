@@ -18,7 +18,9 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { NotificationsContext } from './app/Context/NotificationsContext';
 import { saveNotificationToken } from './app/API/NotificatonAPI'
-
+import PostView from './app/Components/Shared/PostView';
+import LikeList from './app/Components/PostView/LikeList'
+import EditComment from './app/Components/PostView/EditComment'
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -164,6 +166,16 @@ export default function App() {
                   <Stack.Screen
                     name="Map"
                     component={Map} />
+                  <Stack.Screen
+                    name="postView"
+                    component={PostView} />
+                  <Stack.Screen
+                    name="LikesList"
+                    component={LikeList} />
+                  <Stack.Screen
+                    name="EditComment"
+                    component={EditComment} />
+                  
                 </Stack.Navigator>
               </NavigationContainer>
             </NotificationsContext.Provider>

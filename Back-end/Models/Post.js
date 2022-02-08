@@ -9,9 +9,10 @@ module.exports = {
 
     findOne: async (post_id, cb) => {
         let selectQuery = `SELECT
-                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags, number_of_likes, number_of_comments
+                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags, number_of_likes, number_of_comments ,user.email ,name as userName , photo as userPhoto , photos ,Post.created_at
                                 FROM
-                                    (Post NATURAL LEFT JOIN PostLocation)
+                                
+                                    (Post join user  on user.email = Post.email  NATURAL LEFT JOIN PostLocation)
                                     LEFT JOIN (
                                         SELECT 
                                             post_id, 
@@ -29,6 +30,7 @@ module.exports = {
                                 WHERE Post.post_id = ${post_id} `
         try {
             let post = await DB(selectQuery)
+            post =post[0]
             if (post.photos)
                 post.photos = JSON.parse(post.photos)
 
