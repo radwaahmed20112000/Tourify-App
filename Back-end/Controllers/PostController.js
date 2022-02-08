@@ -127,11 +127,10 @@ module.exports = {
 
    editPost: async (req, res) => {
       console.log("received");
-      const email = req.user_id;
       const post_id = req.body.postId;
       console.log(req.body.photos)
       // console.log(req.body.deletedPhotos)
-      await Post.editPost(email, req.body)
+      await Post.editPost(req.body)
          .then(() => {
             uploadPhotosToAzure(req.body.photos)
             PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
