@@ -203,6 +203,7 @@ describe('Posts controller', function () {
             it('it should retrun Ok response', () => {
                 chai.request(server)
                     .post(`/posts/TripCreation`)
+                    .set('authorization', process.env.TEST_TOKEN)
                     .send(body)
                     .end((err, res) => {
                         console.log(res);
@@ -317,9 +318,52 @@ describe('Posts controller', function () {
                     console.log(e)
                 })
         });
-});
+    });
             
+    describe('GET /posts/viewPost', function () {
+    
+        it('it should post and its comments', (done) => {
+            chai.request(server)
+                .get(`/posts/viewPost?id=${1000000000}`)
+                .set('authorization', process.env.TEST_TOKEN)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    console.log(res.body.post);
+                    console.log(res.body.comments);
+                    console.log(res.body.likes);
 
+
+                    let post = res.body.post ; 
+                        post[0].should.have.property('body');
+                        post[0].should.have.property('duration');
+                        post[0].should.have.property('organisation');
+                        post[0].should.have.property('rate');
+                        post[0].should.have.property('budget');
+                        post[0].should.have.property('currency');
+                        post[0].should.have.property('latitude');
+                        post[0].should.have.property('longitude');
+                        post[0].should.have.property('photos');
+                        post[0].should.have.property('tags');
+                        post[0].should.have.property('number_of_likes');
+                        post[0].should.have.property('number_of_comments');
+
+                        let comments = res.body.comments ; 
+                        comments.forEach (c => {
+                        c[0].should.have.property('email');
+                        c[0].should.have.property('body');
+                        c[0].should.have.property('created_at');
+                        c[0].should.have.property('updated_at');
+                        })
+
+                        let likes = res.body.likes ; 
+                        likes.forEach (l => {
+                        l[0].should.have.property('email');
+                        })
+                        done();
+                });
+        });
+
+    });
 
 });   
 

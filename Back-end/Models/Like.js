@@ -66,4 +66,20 @@ module.exports = {
         }
     },
 
+    getAll: async (post_id, cb) => {
+
+        let selectQuery = `SELECT email FROM ${tableName} WHERE post_id = ${post_id};`;
+
+        try {
+            let likes = await DB(selectQuery)
+            return cb(null, likes);
+
+        } catch (e) {
+            console.log(e)
+            return cb(e, null);
+
+        }
+
+    },
+
 }

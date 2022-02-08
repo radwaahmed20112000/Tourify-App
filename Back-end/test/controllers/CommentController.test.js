@@ -119,14 +119,10 @@ describe('Comment controller', function () {
                             .set('authorization', process.env.TEST_TOKEN)
                             .send(body)
                             .end((err, res) => {
-                                console.log(res)
-                                console.log("erooooooor"+err)
                                 res.should.have.status(200);
-                                console.log("DONEEEEEEE")
                                 let query3 = `SELECT * FROM tourify.Comments where comment_id=${testPost.comment_id};`
                                 console.log(query3)
                                 DB(query3).then((comment)=>{
-                                    console.log(comment)
                                     comment[0].body.should.be.equal('updatedddddddd')
                                     done();
                                 })
