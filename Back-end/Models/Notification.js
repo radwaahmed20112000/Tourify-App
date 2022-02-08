@@ -6,7 +6,7 @@ module.exports = {
     tableName: tableName,
 
     findAll: async (reciever_email, cb) => {
-        
+
         let selectQuery = `SELECT 
                                 ${tableName}.id, ${tableName}.comment_id, user.name,
                                 ${tableName}.post_id, ${tableName}.sender_email, user.photo,
@@ -23,14 +23,14 @@ module.exports = {
 
             let notifications = await DB(selectQuery)
             return cb(null, notifications)
-        } 
-        catch(e) {
+        }
+        catch (e) {
             return cb(e, null)
         }
     },
 
-    addNotification: async  (post_id, sender_email, reciever_email, comment_id=null) => {
-        
+    addNotification: async (post_id, sender_email, reciever_email, comment_id = null) => {
+
         if (sender_email === reciever_email) return
 
         let insertQuery = `INSERT INTO
@@ -44,12 +44,12 @@ module.exports = {
             return
         }
         catch (e) {
-             return e
+            return e
         }
     },
 
-    markAsRead: async  (notification_id, cb) => {
-        
+    markAsRead: async (notification_id, cb) => {
+
         let deleteQuery = `UPDATE 
                                 ${tableName}  
                             SET 
@@ -57,8 +57,8 @@ module.exports = {
                             WHERE 
                                 id = ${notification_id};`;
 
-        console.log({deleteQuery})
-    
+        console.log({ deleteQuery })
+
         try {
             DB(deleteQuery)
             return cb(null)
@@ -67,8 +67,8 @@ module.exports = {
             return cb(e)
         }
     },
-    
-    
+
+
 }
 
 

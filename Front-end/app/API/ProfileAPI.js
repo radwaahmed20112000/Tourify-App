@@ -86,5 +86,22 @@ const updateBio = async (token, bio) => {
     };
 }
 
+const getNotificationsCount = async (token) => {
+    try {
+        console.log(IPAdress + "account/notificationsCount")
+
+        const response = await fetch(IPAdress + "account/notificationsCount",
+            {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+            }).catch((err) => { return false });
+        if (response.status !== 200) return false;
+        else return response.json();
+    } catch { () => { return false; } }
+}
 // data : [{user info},[array of posts]]
-export { getUserProfile, updateCountry, updateBio, updatePhoto }
+export { getUserProfile, updateCountry, updateBio, updatePhoto, getNotificationsCount }

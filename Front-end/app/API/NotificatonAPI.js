@@ -1,7 +1,7 @@
 import IPAdress from './IPAdress';
 
 
-const markAsRead = async(user_token, id) => {
+const markAsRead = async (user_token, id) => {
 
     try {
         await fetch(IPAdress + `notifications/view/${id}`, {
@@ -10,33 +10,33 @@ const markAsRead = async(user_token, id) => {
                 'Content-Type': 'application/json',
                 'Authorization': user_token
             },
-        })    
-        .catch(err => console.error(err));
+        })
+            .catch(err => console.error(err));
         return true
 
-    }catch{() => false}
+    } catch { () => false }
 
 }
 
 const getAllNotifications = async (user_token) => {
     console.log("alo")
-    try{
+    try {
 
         const resp = await fetch(IPAdress + `notifications/`,
-        {
-            method: "GET",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': user_token
-            },
-        })
-        .catch((err)=>{return false});
+            {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': user_token
+                },
+            })
+            .catch((err) => { return false });
 
-        if(resp.status !== 200) return false;
-        else 
+        if (resp.status !== 200) return false;
+        else
             return resp.json();
-    }catch{() => false}
+    } catch { () => false }
 
 }
 
@@ -52,10 +52,10 @@ const saveNotificationToken = async (user_token, token) => {
         },
         body: JSON.stringify({ notificationToken: token })
     })
-    .then(data => {
-        console.log(data);
-    })
-    .catch(err => console.error(err));
+        .then(data => {
+            console.log(data);
+        })
+        .catch(err => console.error(err));
 
 }
 
