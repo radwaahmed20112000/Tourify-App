@@ -6,7 +6,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { TokenContext } from '../Context/TokenContext';
 import { useContext } from 'react';
 import NotificationList from '../Components/Notification/NotificationList';
-import { resetNotificationsCount } from '../API/ProfileAPI'
 import { NotificationsContext } from '../Context/NotificationsContext';
 
 function Notifications({ navigation }) {
@@ -25,7 +24,6 @@ function Notifications({ navigation }) {
         const data = await getAllNotifications(user_token)
         console.log({ data })
         setNotifications(data)
-        await resetNotificationsCount(user_token)
         setNotificationsCount(0)
         console.log({ notifications })
         console.log(notifications[0])

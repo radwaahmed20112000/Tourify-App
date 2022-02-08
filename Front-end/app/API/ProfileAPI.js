@@ -103,28 +103,6 @@ const getNotificationsCount = async (token) => {
     } catch { () => { return false; } }
 }
 
-const resetNotificationsCount = async (token) => {
-    try {
-        console.log(IPAdress + "account/resetNotificationsCount")
 
-        const response = await fetch(IPAdress + "account/resetNotificationsCount",
-            {
-                method: "GET",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                },
-            })
-        if (response.status === 200) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    } catch (error) {
-        return false;
-    };
-}
 // data : [{user info},[array of posts]]
-export { getUserProfile, updateCountry, updateBio, updatePhoto, getNotificationsCount, resetNotificationsCount }
+export { getUserProfile, updateCountry, updateBio, updatePhoto, getNotificationsCount }

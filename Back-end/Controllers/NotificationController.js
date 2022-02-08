@@ -1,5 +1,5 @@
 const Notify = require('../Models/Notification')
-
+const Account = require('../Models/Account')
 module.exports = {
 
     getNotifications: (req, res) => {
@@ -16,7 +16,17 @@ module.exports = {
 
             console.log({ notifications })
 
-            return res.send(notifications);
+            var query = ` notifications_count = 0 `;
+
+            Account.editUser(reciever_id, query, (err) => {
+                if (err)
+                    return res.status(500).json(err);
+
+                else
+                    return res.send(notifications);
+
+
+            })
         })
 
     },

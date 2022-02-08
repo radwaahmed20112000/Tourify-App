@@ -75,7 +75,7 @@ module.exports = {
 
         try {
             let res = await DB(editQuery)
-            console.log("edited account : ", res.length)
+            console.log("edited account : ", email)
             return cb(null, res);
         }
         catch (e) {
