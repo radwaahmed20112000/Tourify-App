@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
 import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
+import { getNotificationsCount } from './app/API/ProfileAPI';
+
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
 import Map from './app/Screens/Map';
@@ -58,6 +60,10 @@ export default function App() {
         } catch (e) {
           console.log(e);
         }
+        registerForPushNotificationsAsync().then(token => {
+          setExpoPushToken(token)
+        });
+
         dispatch({ type: 'Login', userToken });
       },
       signUp: async (email, userName, password, country, photo, googleBool) => {
@@ -72,6 +78,9 @@ export default function App() {
         } catch (e) {
           console.log(e);
         }
+        registerForPushNotificationsAsync().then(token => {
+          setExpoPushToken(token)
+        });
         dispatch({ type: 'Register', userToken });
       },
       signOut: async () => {
@@ -87,11 +96,6 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => {
-      setExpoPushToken(token)
-
-    });
-
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
       setNotificationsCount(notificationsCount => notificationsCount + 1)
@@ -112,11 +116,20 @@ export default function App() {
     setTimeout(async () => {
       try {
         userToken = await AsyncStorage.getItem('userToken')
+
+        if (userToken) {
+          //get notifications
+          const count = await getNotificationsCount(userToken);
+          console.log({ count })
+          setNotificationsCount(count)
+        }
+
       } catch (e) {
         console.log(e);
       }
       dispatch({ type: "RetrieveToken", userToken })
     }, 1000)
+
   }, [])
 
   if (loginState.isLoading) {

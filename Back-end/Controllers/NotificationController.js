@@ -2,7 +2,7 @@ const Notify = require('../Models/Notification')
 
 module.exports = {
 
-   getNotifications: (req, res) => {
+    getNotifications: (req, res) => {
 
         const reciever_id = req.body.reciever_id
 
@@ -26,7 +26,6 @@ module.exports = {
             return res.json();
         })
     },
-
 
 
 }

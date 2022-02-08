@@ -4,9 +4,9 @@ const Post = require('../Models/Post')
 const PostLocation = require('../Models/PostLocation')
 const PostPhoto = require('../Models/PostPhoto')
 const PostTags = require('../Models/PostTags')
-const {uploadPhotosToAzure} = require('../Services/PhotoUpload')
+const { uploadPhotosToAzure } = require('../Services/PhotoUpload')
 const atob = require('atob')
-const moment = require('moment') 
+const moment = require('moment')
 
 module.exports = {
 
@@ -24,7 +24,7 @@ module.exports = {
             return res.status(500).json(err);
          posts = formatPostsDate(posts)
          console.log("MAMA")
-         console.log(posts)
+         // console.log(posts)
          return res.send(posts);
       })
 
@@ -42,7 +42,7 @@ module.exports = {
             return res.status(500).json(err);
          posts = formatPostsDate(posts)
          return res.status(200).json(posts);
-      })    
+      })
 
    },
 
@@ -61,14 +61,14 @@ module.exports = {
    },
 
    deletePost: (req, res) => {
-      Post.getOne(req.query.id,(error, post)=>{
+      Post.getOne(req.query.id, (error, post) => {
 
-         if(error)
+         if (error)
             return res.status(500).json(err);
-         
-         if (!post|| !post.length || post[0].email != req.user_id){
 
-            return res.status(401).json({ error:true ,msg: "post doen't exist or that post doesn't belong to the loged user" });
+         if (!post || !post.length || post[0].email != req.user_id) {
+
+            return res.status(401).json({ error: true, msg: "post doen't exist or that post doesn't belong to the loged user" });
 
          }
          Post.delete(req.query.id, (err) => {
@@ -86,7 +86,7 @@ module.exports = {
 
    getPost: (req, res) => {
       console.log("recieved")
-      console.log(req.params) 
+      console.log(req.params)
       var base64Url = req.params.token.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
@@ -97,11 +97,11 @@ module.exports = {
       const post_id = req.params.id;
 
       Post.findOne(post_id, email.email, (err, post) => {
-         if (err){
+         if (err) {
             console.log(err);
             return res.status(500).json(err);
          }
-         console.log(post);
+         // console.log(post);
          return res.send(post);
       })
 
@@ -110,25 +110,25 @@ module.exports = {
    createPost: async (req, res) => {
       console.log("hi")
       const email = req.user_id;
-      console.log({email})
+      console.log({ email })
       var post_id;
       console.log("hi from photos")
       await Post.createPost(email, req.body, (err, post) => {
          post_id = post.insertId;
       })
-      .then(() => {
-         uploadPhotosToAzure(req.body.photos)
-         PostPhoto.createPostPhoto(post_id, req.body.photos)
-         PostLocation.createPostLocation(post_id, req.body)
-         PostTags.createPostTags(post_id, req.body.tags)
-         console.log(post)
-         return
-      }) 
-      .then(() => {return res.status(200).json({})})
+         .then(() => {
+            uploadPhotosToAzure(req.body.photos)
+            PostPhoto.createPostPhoto(post_id, req.body.photos)
+            PostLocation.createPostLocation(post_id, req.body)
+            PostTags.createPostTags(post_id, req.body.tags)
+            console.log(post)
+            return
+         })
+         .then(() => { return res.status(200).json({}) })
 
-      .catch((err) => {
-         return res.status(500).json(err);
-      });
+         .catch((err) => {
+            return res.status(500).json(err);
+         });
 
    },
 
@@ -139,48 +139,48 @@ module.exports = {
       console.log(req.body.photos)
       // console.log(req.body.deletedPhotos)
       await Post.editPost(email, req.body)
-      .then(() => {
-         uploadPhotosToAzure(req.body.photos)
-         PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
-         PostPhoto.createPostPhoto(post_id, req.body.photos)
-         PostTags.deletePostTags(post_id, req.body.deletedTags)
-         PostTags.createPostTags(post_id, req.body.tags)
-         // PostLocation.editPostLocation(post_id, req.body)
-         console.log(post_id)
-         return 
-      })
+         .then(() => {
+            uploadPhotosToAzure(req.body.photos)
+            PostPhoto.deletePostPhoto(post_id, req.body.deletedPhotos)
+            PostPhoto.createPostPhoto(post_id, req.body.photos)
+            PostTags.deletePostTags(post_id, req.body.deletedTags)
+            PostTags.createPostTags(post_id, req.body.tags)
+            // PostLocation.editPostLocation(post_id, req.body)
+            console.log(post_id)
+            return
+         })
 
-      .then(() => {return res.json();})
- 
-      .catch((err) => {
-         return res.status(500).json(err);
-      });
+         .then(() => { return res.json(); })
+
+         .catch((err) => {
+            return res.status(500).json(err);
+         });
 
    }
-    
+
 
 }
 
-function formatPostsDate(posts){
+function formatPostsDate(posts) {
    let asOfDate = moment(new Date())
 
 
-   posts.forEach(p=>{
-   let pDate = moment(p.created_at)
-   var diff = asOfDate.diff(pDate);
-   if(diff < 24 * 60 * 60 * 1000) {// less than 24 diff
-      if (diff < 60 * 60 * 1000){
-         p.created_at='less than 1h'
-         p.created_at = moment(diff).format("mm") + "m" 
-         p.created_at = p.created_at.charAt(0) == '0' ? p.created_at.substring(1) : p.created_at
+   posts.forEach(p => {
+      let pDate = moment(p.created_at)
+      var diff = asOfDate.diff(pDate);
+      if (diff < 24 * 60 * 60 * 1000) {// less than 24 diff
+         if (diff < 60 * 60 * 1000) {
+            p.created_at = 'less than 1h'
+            p.created_at = moment(diff).format("mm") + "m"
+            p.created_at = p.created_at.charAt(0) == '0' ? p.created_at.substring(1) : p.created_at
+         }
+         else {
+            p.created_at = moment(diff).format("hh") + "h"
+            p.created_at = p.created_at.charAt(0) == '0' ? p.created_at.substring(1) : p.created_at
+         }
+      } else {
+         p.created_at = moment(p.created_at).format("MMM Do")
       }
-      else{
-         p.created_at = moment(diff).format("hh") + "h" 
-         p.created_at = p.created_at.charAt(0) == '0' ? p.created_at.substring(1): p.created_at
-      }
-   }else{
-      p.created_at = moment(p.created_at).format("MMM Do")
-   }
 
    })
    return posts;

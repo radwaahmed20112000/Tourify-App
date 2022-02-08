@@ -216,16 +216,32 @@ module.exports = {
     },
 
     saveNotificationToken: (req, res) => {
-        
+
         var email = req.user_id
 
         Account.saveNotificationToken(email, (err) => {
 
-            if(err) res.status(500).json(err)
+            if (err) res.status(500).json(err)
 
             res.status(200).json({ message: "Token Saved successfully" });
         })
-    }
+    },
 
+    getNotificationsCount: (req, res) => {
+        console.log("strawberry")
+        var email = req.user_id
+
+        Account.getNotificationsCount(email, (err, count) => {
+            if (err) {
+                return res.status(500).json(err);
+
+            }
+            if (count) {
+                console.log(count)
+                return res.status(200).json(count);
+            }
+        })
+
+    }
 
 }

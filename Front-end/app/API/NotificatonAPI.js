@@ -2,7 +2,7 @@ import IPAdress from './IPAdress';
 import { TokenContext } from '../Context/TokenContext';
 
 
-const markAsRead = async(id) => {
+const markAsRead = async (id) => {
     try {
         let response = await fetch(IPAdress + `notifications/view/${id}`, {
             method: "PUT",
@@ -11,7 +11,7 @@ const markAsRead = async(id) => {
                 'Authorization': useContext(TokenContext)
             },
         })
-        if (response.status === 200) 
+        if (response.status === 200)
             return true
         return false
     } catch (error) {
@@ -19,24 +19,25 @@ const markAsRead = async(id) => {
     }
 }
 const getAllNotifications = async () => {
-    try{
+    try {
         const resp = await fetch(IPAdress + `notifications/`,
-        {
-            method: "GET",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': useContext(TokenContext)
-            },
-        })
-        .catch(err => false);
+            {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': useContext(TokenContext)
+                },
+            })
+            .catch(err => false);
 
-        if(resp.status !== 200) return false;
-        else 
+        if (resp.status !== 200) return false;
+        else
             return resp.json();
     }
     catch { () => false }
 }
+
 
 
 export { markAsRead, getAllNotifications }
