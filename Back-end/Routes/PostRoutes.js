@@ -10,5 +10,6 @@ router.get('/feed', auth, PostController.getFeedPosts);
 router.get('/feedCount', auth, PostController.getFeedPostsCount);
 router.delete('/delete', auth, PostController.deletePost);
 router.get('/profilePosts', auth, PostController.getProfilePosts);
+router.get('/viewPost', auth, PostController.viewPost);
 
 module.exports = router; 

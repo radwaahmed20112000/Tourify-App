@@ -4,6 +4,8 @@ const Post = require('../Models/Post')
 const PostLocation = require('../Models/PostLocation')
 const PostPhoto = require('../Models/PostPhoto')
 const PostTags = require('../Models/PostTags')
+const Comment = require('../Models/Comment')
+const Like = require('../Models/Like')
 const {uploadPhotosToAzure} = require('../Services/PhotoUpload')
 const atob = require('atob')
 const moment = require('moment') 
@@ -85,18 +87,9 @@ module.exports = {
 
 
    getPost: (req, res) => {
-      console.log("recieved")
-      console.log(req.params) 
-      var base64Url = req.params.token.split('.')[1];
-      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-
-      const email = JSON.parse(jsonPayload);
       const post_id = req.params.id;
 
-      Post.findOne(post_id, email.email, (err, post) => {
+      Post.findOne(post_id, (err, post) => {
          if (err){
             console.log(err);
             return res.status(500).json(err);
@@ -156,9 +149,31 @@ module.exports = {
          return res.status(500).json(err);
       });
 
-   }
-    
+   },
 
+   viewPost: (req, res) => {
+      const post_id = req.query.id;
+      Post.findOne(post_id, (err, post) => {
+         if (err){
+            console.log(err);
+            return res.status(500).json(err);
+         }
+         Comment.getAll(post_id, (err, comments) => {
+            if (err){
+               return res.status(500).json(err);
+            }
+            Like.getAll(post_id, (err, likes) => {
+               if (err){
+                  return res.status(500).json(err);
+               }
+               console.log({post,comments,likes});
+               return res.send({post,comments,likes});
+            })
+         })
+      })
+    
+   },
+    
 }
 
 function formatPostsDate(posts){

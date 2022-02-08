@@ -99,23 +99,17 @@ module.exports = {
 
     getAll: async (post_id, cb) => {
 
-        let selectQuery = `SELECT * FROM  `
+        let selectQuery = `SELECT email, body, created_at, updated_at FROM ${tableName} WHERE post_id = ${post_id};`;
 
         try {
-            let posts = await DB(selectQuery)
-            posts.forEach(p => {
-                if (p.photos)
-                    p.photos = JSON.parse(p.photos)
-            });
-
-            return cb(null, posts);
+            let comments = await DB(selectQuery)
+            return cb(null, comments);
 
         } catch (e) {
             console.log(e)
             return cb(e, null);
 
         }
-
 
     },
 

@@ -7,9 +7,9 @@ module.exports = {
 
     tableName: tableName,
 
-    findOne: async (post_id, email, cb) => {
+    findOne: async (post_id, cb) => {
         let selectQuery = `SELECT
-                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
+                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags, number_of_likes, number_of_comments
                                 FROM
                                     (Post NATURAL LEFT JOIN PostLocation)
                                     LEFT JOIN (
@@ -26,7 +26,7 @@ module.exports = {
                                         FROM PostTags 
                                         GROUP BY post_id
                                     ) t ON Post.post_id = t.post_id
-                                WHERE Post.post_id = ${post_id} AND email = "${email}" `
+                                WHERE Post.post_id = ${post_id} `
         try {
             let post = await DB(selectQuery)
             if (post.photos)
@@ -96,6 +96,7 @@ module.exports = {
 
         }
     },
+
     delete: async (postId, cb) => {
 
         let query = `DELETE FROM  ${tableName} WHERE  post_id = ${postId} `;
@@ -166,6 +167,8 @@ module.exports = {
             return cb(e, null);
 
         }
-    }
+    },
+
+
 
 }
