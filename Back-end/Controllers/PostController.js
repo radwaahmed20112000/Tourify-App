@@ -61,7 +61,7 @@ module.exports = {
    },
 
    deletePost: (req, res) => {
-      Post.getOne(req.query.id,(error, post)=>{
+      Post.getOne(req.query.id, (error, post)=>{
 
          if(error)
             return res.status(500).json(err);

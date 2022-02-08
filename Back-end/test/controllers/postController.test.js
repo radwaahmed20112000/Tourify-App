@@ -124,8 +124,7 @@ describe('Posts controller', function () {
                                    
                                     })
                                 });
-                        });
-                        
+                        })          
                 }).catch(e=>{
                     console.log(e)
                 })
@@ -187,7 +186,7 @@ describe('Posts controller', function () {
 
         });
 
-        describe('POST/posts/TripCreation', function () {
+        describe('POST /posts/TripCreation', function () {
             const body = {
                 email: process.env.TEST_TOKEN,
                 body: "Hello",
@@ -206,15 +205,16 @@ describe('Posts controller', function () {
                     .post(`/posts/TripCreation`)
                     .send(body)
                     .end((err, res) => {
-                        res.should.have.status(200);
                         console.log(res);
+                        console.log(err);
+                        res.should.have.status(200);
                     });
             });
 
         });  
         
         
-        describe('POST/posts/Edit', function () {
+        describe('POST /posts/Edit', function () {
             const body = {
                 postId: 2,
                 email: process.env.TEST_TOKEN,
@@ -244,7 +244,7 @@ describe('Posts controller', function () {
         });   
 
       
-        describe('GET/posts/:id/:token', function () { 
+        describe('GET /posts/:id/:token', function () { 
             this.timeout(2000000);
             it('it shoud return a specific post its id and user token are passed through parameters', (done) => {
                 let query1 = `INSERT INTO Post
@@ -259,7 +259,7 @@ describe('Posts controller', function () {
                 }
                 let query2 = `INSERT INTO PostPhoto(post_id,photo) VALUES (2,"${test.photo}");`
                 let query3 = `INSERT INTO PostTags(post_id,tag_name) VALUES (2,"${test.tag}");`
-                let query4 = `INSERT INTO PostLocation(post_id,latitude,longititude) VALUES (2,${test.latitude},${test.longitude});`
+                let query4 = `INSERT INTO PostLocation(post_id,latitude,longitude) VALUES (2,${test.latitude},${test.longitude});`
 
                 DB(query1).then(async (posts) => {
                     console.log(posts)
@@ -279,7 +279,7 @@ describe('Posts controller', function () {
                                 res.should.have.status(200);
                                 console.log(err)
                                 let query5 = `SELECT
-                                body, duration, organisation, rate, budget, currency, latitude, longititude, photos, tags
+                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
                                 FROM
                                     (Post NATURAL LEFT JOIN PostLocation)
                                     LEFT JOIN (

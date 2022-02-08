@@ -3,7 +3,7 @@ use tourify;
 CREATE TABLE user (
     email VARCHAR(200) PRIMARY KEY NOT NULL,
     name VARCHAR(200) NOT NULL,
-    password VARCHAR(200) NOT NULL,
+    password VARCHAR(200) ,
     photo varchar(500), #TODO 
     country varchar(200),
     bio TEXT,
