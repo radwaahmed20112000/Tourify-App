@@ -9,13 +9,13 @@ module.exports = {
         
         let selectQuery = `SELECT 
                                 ${tableName}.id, ${tableName}.comment_id, user.name,
-                                ${tableName}.post_id, ${tableName}.sender_id, user.photo,
+                                ${tableName}.post_id, ${tableName}.sender_email, user.photo,
                                 ${tableName}.viewed, ${tableName}.created_at
                             FROM 
                                 (${tableName} JOIN user 
                                             ON ${tableName}.sender_email = user.email)
                             WHERE 
-                                reciever_email = '${reciever_email}' 
+                                receiver_email = '${reciever_email}' 
                             ORDER BY 
                                 created_at DESC;`
 
