@@ -43,19 +43,20 @@ const getAllNotifications = async (user_token) => {
 const saveNotificationToken = async (user_token, token) => {
 
     console.log("Save token")
+    try {
+        await fetch(IPAdress + `account/saveNotifyToken`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': user_token
+            },
 
-    await fetch(IPAdress + `account/saveNotifyToken`, {
-        method: "PUT",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': user_token
-        },
-        body: JSON.stringify({ notificationToken: token })
-    })
-        .then(data => {
-            console.log(data);
+            body: JSON.stringify({ notificationToken: token })
         })
-        .catch(err => console.error(err));
+            .catch(err => console.error(err));
+        return true
+
+    } catch { () => false }
 
 }
 

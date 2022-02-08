@@ -39,7 +39,7 @@ function Feed({navigation}) {
   }else{
     return (
         <SafeAreaView style={styles.container}>
-        {posts? <ListOfPosts posts={posts} isProfile ={false}></ListOfPosts> : null}
+        {posts ? <ListOfPosts navigation={navigation} posts={posts} isProfile ={false}></ListOfPosts> : null}
         </SafeAreaView>
     );
   }

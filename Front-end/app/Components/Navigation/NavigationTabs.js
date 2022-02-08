@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator();
 function NavigationTabs(props) {
     const theme = useContext(ThemeContext);
     const token = useContext(TokenContext);
-    const notificationsCount = useContext(NotificationsContext);
+    const [notificationsCount, setNotificationsCount] = useContext(NotificationsContext);
 
 
     const BadgedIcon = NotificationsBadge(notificationsCount, {
@@ -101,21 +101,21 @@ function NavigationTabs(props) {
                     }
                 })}>
                 <Tab.Screen name="Feed" component={Feed} />
-                <Tab.Screen name="PostCreation" component={PostCreation} 
-                    initialParams={{edit:false}} 
+                <Tab.Screen name="PostCreation" component={PostCreation}
+                    initialParams={{ edit: false }}
                     screenOptions={{
-                        tabBarVisible:false,
+                        tabBarVisible: false,
                     }}
-                />  
-                <Tab.Screen name="Notifications" component={Notifications} 
-                    listeners={({navigation,route})=>({
-                        blur:()=>{
-                          navigation.dispatch(
-                            CommonActions.reset({
-                              index:4,
-                              routes:[{name:'Profile'}]
-                            })
-                          )
+                />
+                <Tab.Screen name="Notifications" component={Notifications}
+                    listeners={({ navigation, route }) => ({
+                        blur: () => {
+                            navigation.dispatch(
+                                CommonActions.reset({
+                                    index: 4,
+                                    routes: [{ name: 'Profile' }]
+                                })
+                            )
                         },
                     })}
                 />

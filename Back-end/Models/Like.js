@@ -68,7 +68,7 @@ module.exports = {
 
     getAll: async (post_id, cb) => {
 
-        let selectQuery = `SELECT email FROM ${tableName} WHERE post_id = ${post_id};`;
+        let selectQuery = `SELECT user.email , name , photo  FROM ${tableName} Left join user on Likes.email=user.email  WHERE post_id = ${post_id};`;
 
         try {
             let likes = await DB(selectQuery)

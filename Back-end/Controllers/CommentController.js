@@ -59,6 +59,7 @@ module.exports = {
    
 
      deleteComment: (req, res) => {
+        console.log("inside  dele")
         Comment.getOne(req.query.id,(error, comment)=>{
   
            if(error)

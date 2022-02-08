@@ -231,7 +231,6 @@ module.exports = {
             if (err) return res.status(500).json(err);
 
             console.log("Notification Token Saved successfully")
-            delete user.password;
             res.status(200).json({ message: "Notification Token Saved successfully" });
 
         });
@@ -246,11 +245,26 @@ module.exports = {
                 return res.status(500).json(err);
 
             }
-            if (count) {
-                console.log(count)
-                return res.status(200).json(count);
-            }
+            console.log(count)
+            return res.status(200).json(count);
+
         })
+
+    },
+
+    resetNotificationsCount: (req, res) => {
+        var email = req.user_id
+
+        var query = ` notifications_count = 0 `;
+
+        Account.editUser(email, query, (err, user) => {
+
+            if (err) return res.status(500).json(err);
+
+            console.log("Notification count reset successfully")
+            res.status(200).json({ message: "Notification count reset successfully" });
+
+        });
 
     }
 

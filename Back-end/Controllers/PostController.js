@@ -25,7 +25,7 @@ module.exports = {
          if (err)
             return res.status(500).json(err);
          posts = formatPostsDate(posts)
-         console.log("MAMA")
+         console.log("Rrrrrr")
          // console.log(posts)
          return res.send(posts);
       })
@@ -152,19 +152,27 @@ module.exports = {
 
    viewPost: (req, res) => {
       const post_id = req.query.id;
+      
       Post.findOne(post_id, (err, post) => {
          if (err){
             console.log(err);
             return res.status(500).json(err);
          }
          Comment.getAll(post_id, (err, comments) => {
+
             if (err){
                return res.status(500).json(err);
             }
+            const email = req.user_id;
+            comments.forEach(c=>{
+               if(c.email==email)
+                  c.ownerFlag =true
+            })
             Like.getAll(post_id, (err, likes) => {
                if (err){
                   return res.status(500).json(err);
                }
+               post.post_id = post_id
                console.log({post,comments,likes});
                return res.send({post,comments,likes});
             })
