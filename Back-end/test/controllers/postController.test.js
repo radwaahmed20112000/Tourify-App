@@ -124,8 +124,7 @@ describe('Posts controller', function () {
                                    
                                     })
                                 });
-                        });
-                        
+                        })          
                 }).catch(e=>{
                     console.log(e)
                 })
@@ -187,7 +186,7 @@ describe('Posts controller', function () {
 
         });
 
-        describe('POST/posts/TripCreation', function () {
+        describe('POST /posts/TripCreation', function () {
             const body = {
                 email: process.env.TEST_TOKEN,
                 body: "Hello",
@@ -204,17 +203,19 @@ describe('Posts controller', function () {
             it('it should retrun Ok response', () => {
                 chai.request(server)
                     .post(`/posts/TripCreation`)
+                    .set('authorization', process.env.TEST_TOKEN)
                     .send(body)
                     .end((err, res) => {
-                        res.should.have.status(200);
                         console.log(res);
+                        console.log(err);
+                        res.should.have.status(200);
                     });
             });
 
         });  
         
         
-        describe('POST/posts/Edit', function () {
+        describe('POST /posts/Edit', function () {
             const body = {
                 postId: 2,
                 email: process.env.TEST_TOKEN,
@@ -244,7 +245,7 @@ describe('Posts controller', function () {
         });   
 
       
-        describe('GET/posts/:id/:token', function () { 
+        describe('GET /posts/:id/:token', function () { 
             this.timeout(2000000);
             it('it shoud return a specific post its id and user token are passed through parameters', (done) => {
                 let query1 = `INSERT INTO Post
@@ -317,9 +318,52 @@ describe('Posts controller', function () {
                     console.log(e)
                 })
         });
-});
+    });
             
+    describe('GET /posts/viewPost', function () {
+    
+        it('it should post and its comments', (done) => {
+            chai.request(server)
+                .get(`/posts/viewPost?id=${1000000000}`)
+                .set('authorization', process.env.TEST_TOKEN)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    console.log(res.body.post);
+                    console.log(res.body.comments);
+                    console.log(res.body.likes);
 
+
+                    let post = res.body.post ; 
+                        post[0].should.have.property('body');
+                        post[0].should.have.property('duration');
+                        post[0].should.have.property('organisation');
+                        post[0].should.have.property('rate');
+                        post[0].should.have.property('budget');
+                        post[0].should.have.property('currency');
+                        post[0].should.have.property('latitude');
+                        post[0].should.have.property('longitude');
+                        post[0].should.have.property('photos');
+                        post[0].should.have.property('tags');
+                        post[0].should.have.property('number_of_likes');
+                        post[0].should.have.property('number_of_comments');
+
+                        let comments = res.body.comments ; 
+                        comments.forEach (c => {
+                        c[0].should.have.property('email');
+                        c[0].should.have.property('body');
+                        c[0].should.have.property('created_at');
+                        c[0].should.have.property('updated_at');
+                        })
+
+                        let likes = res.body.likes ; 
+                        likes.forEach (l => {
+                        l[0].should.have.property('email');
+                        })
+                        done();
+                });
+        });
+
+    });
 
 });   
 

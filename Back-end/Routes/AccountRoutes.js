@@ -10,5 +10,7 @@ router.put('/updateCountry', auth, accountController.updateCountry);
 router.put('/updateBio', auth, accountController.updateBio);
 router.put('/updatePhoto', auth, accountController.updatePhoto)
 router.put('/saveNotifyToken', auth, accountController.saveNotificationToken)
+router.get('/notificationsCount', auth, accountController.getNotificationsCount);
+router.get('/resetNotificationsCount', auth, accountController.resetNotificationsCount);
 
 module.exports = router;

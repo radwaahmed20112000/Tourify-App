@@ -10,19 +10,19 @@ import GradientText from '../Shared/GradientText';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { TokenContext } from '../../Context/TokenContext';
 import { NotificationsContext } from '../../Context/NotificationsContext';
-
 import PostCreation from '../../Screens/PostCreation';
 import Feed from '../../Screens/Feed';
 import { MenuProvider } from 'react-native-popup-menu';
 import FlashMessage from "react-native-flash-message";
 import NotificationsBadge from '../NotificationsBadge';
+import { CommonActions } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 function NavigationTabs(props) {
     const theme = useContext(ThemeContext);
     const token = useContext(TokenContext);
-    const notificationsCount = useContext(NotificationsContext);
+    const [notificationsCount, setNotificationsCount] = useContext(NotificationsContext);
 
 
     const BadgedIcon = NotificationsBadge(notificationsCount, {
@@ -101,13 +101,24 @@ function NavigationTabs(props) {
                     }
                 })}>
                 <Tab.Screen name="Feed" component={Feed} />
-                <Tab.Screen name="PostCreation" component={PostCreation} 
-                    initialParams={{edit:false}} 
+                <Tab.Screen name="PostCreation" component={PostCreation}
+                    initialParams={{ edit: false }}
                     screenOptions={{
-                        tabBarVisible:false,
+                        tabBarVisible: false,
                     }}
-                />  
-                <Tab.Screen name="Notifications" component={Notifications} />
+                />
+                <Tab.Screen name="Notifications" component={Notifications}
+                    listeners={({ navigation, route }) => ({
+                        blur: () => {
+                            navigation.dispatch(
+                                CommonActions.reset({
+                                    index: 4,
+                                    routes: [{ name: 'Profile' }]
+                                })
+                            )
+                        },
+                    })}
+                />
                 <Tab.Screen name="Profile" component={Profile} />
             </Tab.Navigator>
         </MenuProvider>

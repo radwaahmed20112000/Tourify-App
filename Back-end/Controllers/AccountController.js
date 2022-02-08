@@ -216,16 +216,56 @@ module.exports = {
     },
 
     saveNotificationToken: (req, res) => {
-        
+
+        console.log("HOOOHHOH")
+
+        let email = req.user_id
+        let token = req.body.notificationToken
+
+        console.log("Save Notification Token:")
+        console.log({ token })
+        var query = ` notify_token = '${token}' `;
+
+        Account.editUser(email, query, (err, user) => {
+
+            if (err) return res.status(500).json(err);
+
+            console.log("Notification Token Saved successfully")
+            res.status(200).json({ message: "Notification Token Saved successfully" });
+
+        });
+    },
+
+    getNotificationsCount: (req, res) => {
+        console.log("strawberry")
         var email = req.user_id
 
-        Account.saveNotificationToken(email, (err) => {
+        Account.getNotificationsCount(email, (err, count) => {
+            if (err) {
+                return res.status(500).json(err);
 
-            if(err) res.status(500).json(err)
+            }
+            console.log(count)
+            return res.status(200).json(count);
 
-            res.status(200).json({ message: "Token Saved successfully" });
         })
-    }
 
+    },
+
+    resetNotificationsCount: (req, res) => {
+        var email = req.user_id
+
+        var query = ` notifications_count = 0 `;
+
+        Account.editUser(email, query, (err, user) => {
+
+            if (err) return res.status(500).json(err);
+
+            console.log("Notification count reset successfully")
+            res.status(200).json({ message: "Notification count reset successfully" });
+
+        });
+
+    }
 
 }
