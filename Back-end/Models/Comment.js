@@ -95,6 +95,29 @@ module.exports = {
             console.log(e)
             return cb(e, null);
         }
-    }
+    },
+
+    getAll: async (post_id, cb) => {
+
+        let selectQuery = `SELECT * FROM  `
+
+        try {
+            let posts = await DB(selectQuery)
+            posts.forEach(p => {
+                if (p.photos)
+                    p.photos = JSON.parse(p.photos)
+            });
+
+            return cb(null, posts);
+
+        } catch (e) {
+            console.log(e)
+            return cb(e, null);
+
+        }
+
+
+    },
+
 
 }
