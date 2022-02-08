@@ -68,9 +68,10 @@ module.exports = {
 
 
     editUser: async (email, query, cb) => {
+
         let editQuery = `UPDATE ${tableName} 
-        SET  ${query} WHERE
-            email = "${email}" ;`;
+                            SET  ${query} 
+                            WHERE email = "${email}" ;`;
 
         try {
             let res = await DB(editQuery)

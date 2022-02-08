@@ -217,14 +217,24 @@ module.exports = {
 
     saveNotificationToken: (req, res) => {
 
-        var email = req.user_id
+        console.log("HOOOHHOH")
 
-        Account.saveNotificationToken(email, (err) => {
+        let email = req.user_id
+        let token = req.body.notificationToken
 
-            if (err) res.status(500).json(err)
+        console.log("Save Notification Token:")
+        console.log({ token })
+        var query = ` notify_token = '${token}' `;
 
-            res.status(200).json({ message: "Token Saved successfully" });
-        })
+        Account.editUser(email, query, (err, user) => {
+
+            if (err) return res.status(500).json(err);
+
+            console.log("Notification Token Saved successfully")
+            delete user.password;
+            res.status(200).json({ message: "Notification Token Saved successfully" });
+
+        });
     },
 
     getNotificationsCount: (req, res) => {

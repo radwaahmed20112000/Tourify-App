@@ -124,8 +124,7 @@ describe('Posts controller', function () {
                                    
                                     })
                                 });
-                        });
-                        
+                        })          
                 }).catch(e=>{
                     console.log(e)
                 })
@@ -187,7 +186,7 @@ describe('Posts controller', function () {
 
         });
 
-        describe('POST/posts/TripCreation', function () {
+        describe('POST /posts/TripCreation', function () {
             const body = {
                 email: process.env.TEST_TOKEN,
                 body: "Hello",
@@ -206,15 +205,16 @@ describe('Posts controller', function () {
                     .post(`/posts/TripCreation`)
                     .send(body)
                     .end((err, res) => {
-                        res.should.have.status(200);
                         console.log(res);
+                        console.log(err);
+                        res.should.have.status(200);
                     });
             });
 
         });  
         
         
-        describe('POST/posts/Edit', function () {
+        describe('POST /posts/Edit', function () {
             const body = {
                 postId: 2,
                 email: process.env.TEST_TOKEN,
@@ -244,7 +244,7 @@ describe('Posts controller', function () {
         });   
 
       
-        describe('GET/posts/:id/:token', function () { 
+        describe('GET /posts/:id/:token', function () { 
             this.timeout(2000000);
             it('it shoud return a specific post its id and user token are passed through parameters', (done) => {
                 let query1 = `INSERT INTO Post
