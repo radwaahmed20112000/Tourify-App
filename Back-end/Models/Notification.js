@@ -68,6 +68,37 @@ module.exports = {
         }
     },
 
+    deleteCommentNotification(comment_id) {
+
+        let deleteQuery = `DELETE FROM
+                                    ${tableName} 
+                            WHERE  
+                                    comment_id = ${comment_id} ;`;
+        try {
+            DB(deleteQuery)
+            return
+        }
+        catch (e) {
+            return e
+        }
+    },
+
+    deleteLikeNotification(post_id, sender_email) {
+
+        let deleteQuery = `DELETE FROM
+                                    ${tableName} 
+                            WHERE  
+                                    post_id = ${post_id} 
+                                    AND sender_email = ${sender_email} ;`;
+        try {
+            DB(deleteQuery)
+            return
+        }
+        catch (e) {
+            return e
+        }
+    }
+
 
 }
 

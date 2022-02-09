@@ -50,6 +50,7 @@ module.exports = {
             if (err){
                return res.status(500).json(err);
             }
+            
             console.log(comment);
             return res.status(200).json(comment);
          }) 
