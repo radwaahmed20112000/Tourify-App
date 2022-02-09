@@ -106,18 +106,18 @@ function NavigationTabs(props) {
                     screenOptions={{
                         tabBarVisible: false,
                     }}
-                />
-                <Tab.Screen name="Notifications" component={Notifications}
-                    listeners={({ navigation, route }) => ({
-                        blur: () => {
-                            navigation.dispatch(
-                                CommonActions.reset({
-                                    index: 4,
-                                    routes: [{ name: 'Profile' }]
-                                })
-                            )
-                        },
-                    })}
+                />  
+                <Tab.Screen name="Notifications" component={Notifications} 
+                    // listeners={({navigation,route})=>({
+                    //     blur:()=>{
+                    //       navigation.dispatch(
+                    //         CommonActions.reset({
+                    //           index:4,
+                    //           routes:[{name:'Profile'}]
+                    //         })
+                    //       )
+                    //     },
+                    // })}
                 />
                 <Tab.Screen name="Profile" component={Profile} />
             </Tab.Navigator>
