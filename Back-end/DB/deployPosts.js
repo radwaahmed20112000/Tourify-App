@@ -32,7 +32,7 @@ module.exports = {
         });
 
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 5; i++) {
             var post_id;
             const len = Math.floor(Math.random() * 5 + 1);
             let photos = []
@@ -41,13 +41,13 @@ module.exports = {
             }
             var post = {
                 body: lorem.generateSentences(Math.floor(Math.random() * 8)),
-                tags: null,
+                tags: ["Historic"],
                 photos: photos,
-                organisation: null,
-                rate: null,
-                duration: null,
-                budget: null,
-                currency: null,
+                organisation: "Haha",
+                rate: 2,
+                duration: 10,
+                budget: 2000,
+                currency: 'USD',
                 latitude: null,
                 longitude: null,
             }

@@ -2,13 +2,13 @@ import React, { useContext, useState } from 'react';
 import { Button, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground, SafeAreaView, Alert } from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faHeart, faComment} from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { ThemeContext } from '../../Context/ThemeContext';
 import ImageViewer from './ImageViewer';
 import { deletePost } from '../../API/PostDeletion'
 import { TokenContext } from '../../Context/TokenContext';
-import baseUrl from "../../API/IPAdress"
+import baseUrl from "../../API/IPAdress";
 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
@@ -21,13 +21,13 @@ function navigateToProfile(userId) {
 function PostListComponent(props) {
 
     const theme = useContext(ThemeContext);
-    const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState, created_at } = props.item;
+    const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState, created_at, number_of_likes, number_of_comments } = props.item;
     const isProfile = props.isProfile;
     const token = useContext(TokenContext);
 
     function navigateToPost() {
         console.log(post_id)
-        props.navigation.navigate('postView', { post_id: post_id})
+        props.navigation.navigate('postView', { post_id: post_id , user :props.user})
     }
 
     const deleteAlert = (post_id) =>
@@ -74,19 +74,29 @@ function PostListComponent(props) {
                     flexDirection: 'row', justifyContent: 'center'
 
                 }} >
-                    <TouchableOpacity onPress={() => navigateToProfile(email)}>
+                    <View style={{flexDirection: "row"}}>
+                        <TouchableOpacity onPress={() => navigateToProfile(email)}>
 
-                        <ImageBackground style={{ flex: 1 }} source={{ uri: userPhoto }} style={styles.userImage} imageStyle={{
-                            borderRadius: SCREEN_WIDTH * 0.15, borderColor: theme.PrimaryColor,
-                            borderWidth: 0.25
-                        }}></ImageBackground>
-                    </TouchableOpacity>
+                            <ImageBackground style={{ flex: 1 }} source={{ uri: userPhoto }} style={styles.userImage} imageStyle={{
+                                borderRadius: SCREEN_WIDTH * 0.15, borderColor: theme.PrimaryColor,
+                                borderWidth: 0.25
+                            }}></ImageBackground>
+                        </TouchableOpacity>
+                        
+                        <View style={{ paddingLeft: RFValue(10), justifyContent: 'center', marginRight:SCREEN_WIDTH*0.3 }}>
+                            <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.Text }}>{userName}</Text>
 
-                    <View style={{ paddingLeft: RFValue(10), justifyContent: 'center' }}>
-                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.Text }}>{userName}</Text>
-
-                        {/* TODO add time stamp */}
-                        <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{created_at}</Text>
+                            {/* TODO add time stamp */}
+                            <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{created_at}</Text>
+                        </View>
+                        <View style={styles.likes}>
+                            <FontAwesomeIcon icon={faHeart} color={"grey"} size={18}></FontAwesomeIcon>
+                            <Text>{number_of_likes}</Text>
+                        </View>
+                        <View style={styles.likes}>
+                            <FontAwesomeIcon icon={faComment} color={"grey"} size={18}></FontAwesomeIcon>
+                            <Text>{number_of_comments}</Text>
+                        </View>
                     </View>
                 </View>
                 {isProfile?
@@ -159,6 +169,12 @@ const styles = StyleSheet.create({
         paddingTop: RFValue(8),
         width: SCREEN_WIDTH * 0.98,
         paddingLeft: RFValue(10)
+    },
+    likes:
+    {
+        flexDirection:"row",
+        marginTop:"3%",
+        padding:"2%"
     }
 });
 export default PostListComponent;
