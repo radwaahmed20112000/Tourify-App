@@ -5,6 +5,7 @@ const Account = require('../Models/Account.js');
 const verifyToken = (req, res, next) => {
     // console.log(req.headers)
     const token = req.body.email || req.headers['authorization'];
+    console.log({ token })
     // console.log(token)
     if (!token) {
         return res.status(403).send("A token is required for authentication");

@@ -1,39 +1,49 @@
 const Comment = require('../Models/Comment')
-const Notification = require('../Services/SendNotification')
-const Account = require('../Models/Account.js');
+const Notification = require('../Models/Notification')
 const Post = require('../Models/Post')
 
 module.exports = {
 
-    createComment: async (req, res) => {
+   createComment: async (req, res) => {
       const email = req.user_id;
       let query = `1`
-      console.log("inside")
       Comment.create(email,req.body, (err, comment) => {
+      console.log("comment creation")
+      console.log(req.body)
 
-         if (err){
+      Comment.create(email, req.body, (err, comment) => {
+         if (err) {
             return res.status(500).json(err);
          }
          comment_id = comment.insertId;
          Post.getOne(req.body.post_id, (err, post) => {
-            if (err){
+            if (err) {
                return res.status(500).json(err);
             }
             console.log(post[0].number_of_comments);
-            if(post[0].number_of_comments != null){
+            if (post[0].number_of_comments != null) {
                query = `number_of_comments + 1`;
             }
-            Comment.increment(query,req.body.post_id, (err) => {
-            if (err){
-            return res.status(500).json(err);
-            } 
-               console.log(comment)
-               return res.json({ id: comment_id });
+            Comment.increment(query, req.body.post_id, (err) => {
+               if (err) {
+                  return res.status(500).json(err);
+               }
+               if (email !== post[0].email) {
+                  Notification.notify(email, post[0].email, req.body.post_id, comment_id, (err) => {
+                     if (err) {
+                        return res.status(500).json(err);
+                     }
+                     return res.json();
+                  })
+               }
+               else
+                  return res.json();
             })
-         })
-      })   
 
-     },
+         })
+      })
+
+   },
 
 
      editComment: async (req, res) => {
@@ -48,44 +58,45 @@ module.exports = {
    
          }
          Comment.edit(req.body, (err, comment) => {
-   
-            if (err){
+
+            if (err) {
                return res.status(500).json(err);
             }
+            
             console.log(comment);
             return res.status(200).json(comment);
-         }) 
-      })  
-     },
+         })
+      })
+   },
 
-   
 
-     deleteComment: (req, res) => {
-        console.log("inside  dele")
-        Comment.getOne(req.query.id,(error, comment)=>{
-  
-           if(error)
-              return res.status(500).json(err);
-           
-           if (!comment|| !comment.length || comment[0].email != req.user_id){
-  
-              return res.status(401).json({ error:true ,msg: "comment doen't exist or that comment doesn't belong to the loged user" });
-  
-           }
-           Comment.delete(req.query.id, (err) => {
-  
-              if (err)
-                 return res.status(500).json(err);
 
-               Comment.decrement(req.query.id, (err) => {
+   deleteComment: (req, res) => {
+      console.log("inside  dele")
+      Comment.getOne(req.query.id, (error, comment) => {
+
+         if (error)
+            return res.status(500).json(err);
+
+         if (!comment || !comment.length || comment[0].email != req.user_id) {
+
+            return res.status(401).json({ error: true, msg: "comment doen't exist or that comment doesn't belong to the loged user" });
+
+         }
+         Comment.delete(req.query.id, (err) => {
+
+            if (err)
+               return res.status(500).json(err);
+
+            Comment.decrement(req.query.id, (err) => {
                if (err)
                   return res.status(500).json(err);
                return res.json();
-               })
-           })
-        })
-  
-     },
+            })
+         })
+      })
+
+   },
 
    //   comment: (req, res) => {
    //      Account.findEmail(email, (err, user) => {
@@ -115,6 +126,6 @@ module.exports = {
 
 
    //  }
-  
+
 
 }

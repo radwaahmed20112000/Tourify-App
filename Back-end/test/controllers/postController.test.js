@@ -94,14 +94,14 @@ describe('Posts controller', function () {
 
             it('it should delete post with its componennts', (done) => {
 
-                let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL }','${testPost.body}');`
+                let query = `insert  ignore into  Post(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL }','${testPost.body}');`
                 DB(query).then(() => {
                     //done()
                     let testPhoto = {
                         photo: "htttp://test.com"
                     } 
                     console.log("inside  t")
-                    let query2 = `insert  ignore into  postphoto(post_id ,photo) values('${999999999}','${testPhoto.photo}');`
+                    let query2 = `insert  ignore into  PostPhoto(post_id ,photo) values('${999999999}','${testPhoto.photo}');`
                     DB(query2).then(()=>{
 
                             chai.request(server)
@@ -111,12 +111,12 @@ describe('Posts controller', function () {
                                 .end((err, res) => {
                                     console.log(err)
                                     res.should.have.status(200);
-                                    let query3 = `SELECT * FROM tourify.postphoto where post_id=${999999999};`
+                                    let query3 = `SELECT * FROM tourify.PostPhoto where post_id=${999999999};`
                             
 
                                     DB(query3).then((photos)=>{
                                         photos.length.should.be.equal(0)
-                                        let query4 = `SELECT * FROM tourify.post where post_id=${999999999};`
+                                        let query4 = `SELECT * FROM tourify.Post where post_id=${999999999};`
                                         DB(query4).then((posts) => {
                                             posts.length.should.be.equal(0)
                                             done();
@@ -144,9 +144,9 @@ describe('Posts controller', function () {
                 body: "test t t t t t t t"
             }
 
-            it('it should not  delete post of another user (return 401)', (done) => {
+            it('it should not  delete Post of another user (return 401)', (done) => {
 
-                let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL}','${testPost.body}');`
+                let query = `insert  ignore into  Post(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL}','${testPost.body}');`
                 DB(query).then(() => {
     
                         chai.request(server)
