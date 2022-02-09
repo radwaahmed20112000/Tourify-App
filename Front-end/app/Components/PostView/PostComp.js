@@ -96,6 +96,7 @@ export default function PostComp(props) {
         setModalVisible(true)
     });
     useEffect( () => {
+        console.log("kkkkkkkkkkkkkkk",props.comments)
         setComments(props.comments)
         if (likeFlag)
             setLiked(true)
@@ -178,16 +179,18 @@ export default function PostComp(props) {
         const data = await createComment(token, b);
         console.log("inssssssssssssssssssssss" , data)
         let newComm = {
-            photo : userPhoto,
-            name: userName ,
+            photo : props.user?props.user.photo : userPhoto,
+            name: props.user?props.user.name:userName ,
             body : text ,
             created_at :  '0m',
-            comment_id : data.id,
-            ownerFlag : true
+            comment_id: data.id || data.comment_id,
+            ownerFlag : true,
+           // comment_id: data.comment_id
 
         }
         let y =[...commentList]
         y.push(newComm)
+         console.log("heywhy ",y)
         setComments(y)
         
     }
@@ -238,7 +241,7 @@ export default function PostComp(props) {
 
                     //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     // }
-                    //keyExtractor={(item) => item.post_id}
+                        keyExtractor={(item) => item.comment_id}
                     ListHeaderComponent={() => {
                         return <View key={-1} style={Contstyles}>
                            
@@ -323,7 +326,7 @@ export default function PostComp(props) {
                     }
                     renderItem={({ item }) => {
                         return (
-                            <Comment upComment={upComment} updateCommentBody={updateCommentBody} deleteCommentFromList={deleteCommentFromList} navigation ={props.navigation} key={item.comment_id} item = {item} />
+                            <Comment key={item.comment_id} upComment={upComment} updateCommentBody={updateCommentBody} deleteCommentFromList={deleteCommentFromList} navigation ={props.navigation} key={item.comment_id} item = {item} />
                         )
                     }} />
 
@@ -337,7 +340,7 @@ export default function PostComp(props) {
             
             
             }}>
-                  <ImageBackground style={{ flex: 1 }} source={{ uri: userPhoto }} style={styles.commentIMG} imageStyle={{
+                            <ImageBackground style={{ flex: 1 }} source={{ uri: props.user ? props.user.photo : userPhoto }} style={styles.commentIMG} imageStyle={{
                     borderRadius: SCREEN_WIDTH * 0.1, borderColor: theme.PrimaryColor,
                     borderWidth: 0.15
                 }}></ImageBackground>

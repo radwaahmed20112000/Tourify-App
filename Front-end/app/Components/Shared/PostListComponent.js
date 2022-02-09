@@ -27,7 +27,7 @@ function PostListComponent(props) {
 
     function navigateToPost() {
         console.log(post_id)
-        props.navigation.navigate('postView', { post_id: post_id})
+        props.navigation.navigate('postView', { post_id: post_id , user :props.user})
     }
 
     const deleteAlert = (post_id) =>

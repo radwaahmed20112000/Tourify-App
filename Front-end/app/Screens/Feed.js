@@ -16,6 +16,7 @@ function Feed({navigation}) {
   const [photo, setPhoto] = useState(null);
   const [name, setName] = useState(null);
   const [filterObj, setFilterObj] = useState(null)
+  const [user , setUser] = useState({})
   useEffect(async () => {
     const data = await getFeedPosts(token, filterObj);
     const userData = await getUserPhoto(token);
@@ -25,6 +26,7 @@ function Feed({navigation}) {
       setPhoto(userData.photo);
       setName(userData.name)
       setLoading(false);
+      setUser(userData)
     }
     else
       setMessage("An error occurred, check your network..");
@@ -60,7 +62,7 @@ function Feed({navigation}) {
         <SafeAreaView style={styles.container}>
         {photo?<TitleBar photo = {photo} navigation={navigation} style={styles.titleBar}></TitleBar> :null}
         <TagsBar setFilterObj = {setFilterObj} filterObj= {filterObj} name = {name}></TagsBar>
-        {posts? <ListOfPosts posts={posts} isProfile ={false}  navigation={navigation}></ListOfPosts> : 
+        {posts? <ListOfPosts user ={user} posts={posts} isProfile ={false}  navigation={navigation}></ListOfPosts> : 
         message?
         <View style={{justifyContent:"center", alignItems:"center", flex:1}}>
          <Text style={{color:"#999999", fontSize:normalize(17)}}>{message}</Text>
