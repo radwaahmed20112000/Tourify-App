@@ -153,13 +153,13 @@ function PostCreation({ navigation, route }) {
 
     return (
         <SafeAreaView style={[{backgroundColor: theme.primary}, styles.container]}>
-            <View style={[styles.upperSection, {borderColor:theme.SecondaryPurple}]}>
+            <View style={[styles.upperSection, {borderColor:theme.SecondaryCyan}]}>
                 <TouchableOpacity onPress={() => goBack()} >
-                    <FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) }  color={theme.SecondaryPurple}  style={{marginRight :SCREEN_WIDTH*0.68, marginTop : SCREEN_WIDTH*0.028 }}/>
+                    <FontAwesomeIcon icon={faArrowLeft} size={ RFValue(18) }  color={theme.SecondaryCyan}  style={{marginRight :SCREEN_WIDTH*0.68, marginTop : SCREEN_WIDTH*0.028 }}/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => createPost()}>
                     <LinearGradient
-                        colors={[theme.SecondaryCyan, theme.SecondaryPurple]}
+                        colors={[theme.SecondaryCyan, theme.SecondaryCyan]}
                         start={{ x: 0, y: 1 }}
                         end={{ x: 1, y: 1 }}
                         style={styles.button}>
@@ -171,7 +171,7 @@ function PostCreation({ navigation, route }) {
             <View style={{ flexDirection: "column" }}>
                 <TextInput
                     value={description}
-                    style={[{ borderColor: theme.SecondaryPurple }, styles.description]}
+                    style={[{ borderColor: theme.SecondaryCyan }, styles.description]}
                     onChangeText={text => onChangeText(text)}
                     placeholder="How was your trip?"
                     multiline={true}
@@ -184,14 +184,14 @@ function PostCreation({ navigation, route }) {
                         showRating={false}
                         size={RFValue(20)}
                         reviewSize={RFValue(20)}
-                        selectedColor={theme.SecondaryPurple}
-                        reviewColor={theme.SecondaryPurple}
+                        selectedColor={theme.SecondaryCyan}
+                        reviewColor={theme.SecondaryCyan}
                         imageSize={RFValue(2)}
                         onFinishRating={rate => setRate(rate)}
                     />
                     <ImageSharing setPhotos={setPhotos} photos={photos} ></ImageSharing>
                     <TouchableOpacity style={{ marginLeft: SCREEN_WIDTH * 0.01, marginTop: SCREEN_HEIGHT * 0.008 }} onPress={goToMaps}>
-                        <FontAwesomeIcon icon={faMapMarkerAlt} size={SCREEN_WIDTH * 0.07} color={theme.SecondaryPurple}></FontAwesomeIcon>
+                        <FontAwesomeIcon icon={faMapMarkerAlt} size={SCREEN_WIDTH * 0.07} color={theme.SecondaryCyan}></FontAwesomeIcon>
                     </TouchableOpacity>
                 </View>
                 <TagsList edit={route.params.edit} setTags={newTags} tags ={tags} setDeletedTags={setDeletedTags} deletedTags ={deletedTags} setaddedTags={setaddedTags} addedTags ={addedTags}></TagsList>
@@ -222,7 +222,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingTop: SCREEN_WIDTH * 0.1
+        paddingTop: SCREEN_WIDTH * 0.1,
+        backgroundColor:"white"
     },
     button: {
         alignItems: 'center',
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
         width: SCREEN_WIDTH,
     },
     description: {
-        height: SCREEN_HEIGHT * 0.3,
+        height: SCREEN_HEIGHT * 0.35,
         width: SCREEN_WIDTH * 0.9,
         fontSize: RFValue(18),
         borderBottomWidth: 0.3,

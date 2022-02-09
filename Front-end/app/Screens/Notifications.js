@@ -17,11 +17,10 @@ function Notifications({ navigation }) {
     const [processing, setProcessing] = useState(true)
     const user_token = useContext(TokenContext)
     const [state, setState] = useState({ refresh: true })
+    const [refreshing, setRefreshing] = React.useState(false);
 
-
-    useEffect(async () => {
-        // setProcessing(true)
-        // console.log("hi")
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
         const data = await getAllNotifications(user_token)
         console.log({ data })
         setNotifications(data)
@@ -30,6 +29,12 @@ function Notifications({ navigation }) {
         console.log(notifications[0])
         setProcessing(false)
         setState({ refresh: !state.refresh })
+        setRefreshing(false)
+    }, []);
+
+    useEffect(async () => {
+        onRefresh()
+
     }, [])
 
     return (
@@ -42,7 +47,7 @@ function Notifications({ navigation }) {
                     textStyle={{ color: '#FFF' }}
                 />}
             {!processing &&
-                <NotificationList navigation={navigation} notifications={notifications} />
+                <NotificationList navigation={navigation} notifications={notifications} onRefresh={onRefresh} refreshing={refreshing}/>
             }
         </SafeAreaView>
     );

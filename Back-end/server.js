@@ -7,7 +7,6 @@ const AccountRouters = require('./Routes/AccountRoutes');
 const NotificationRouters = require('./Routes/NotificationRoutes');
 const LikeRouters = require('./Routes/LikeRoutes');
 const CommentRouters = require('./Routes/CommentRoutes');
-// app.use(express.json());
 
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '50mb', parameterLimit: 100000, extended: true }));

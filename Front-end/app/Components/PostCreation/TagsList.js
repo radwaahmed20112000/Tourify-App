@@ -5,13 +5,15 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TouchableOpacity } from 'react-native';
 import DialogInput from 'react-native-dialog-input';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 
 function TagsList({setTags, tags, setDeletedTags, deletedTags, edit, addedTags, setaddedTags}) {
     const theme = useContext(ThemeContext);
     const [isDialogVisible, setVisible] = useState(false);
     const [tagsList, setTagsList] = useState([ "Historical", "Beach", "Fun", "Romantic", "Relaxation",
     "Camping", "Volunteer", "Road", "Custom" ]);
-
+    const [open, setOpen] = useState(false);
     const [state, setState] = useState({refresh:true})
 
     useEffect(async () => {
@@ -52,11 +54,12 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit, addedTags, 
         <SafeAreaView style={{marginBottom:SCREEN_WIDTH*0.02}}>
         <Collapse>
             <CollapseHeader >
-                <View style={{borderBottomWidth:0.5, width:SCREEN_WIDTH*0.3, borderBottomColor:theme.SecondaryPurple,}}>
-                    <Text style={{fontSize:RFValue(15), color:theme.Text, textAlign:"left"}}>Tags</Text>
+                <View style={{ flexDirection:'row'}} onPress={() => setOpen(!open)}>
+                    <FontAwesomeIcon icon={open?faCaretUp:faCaretDown} size={ RFValue(20) }  color={theme.text} style={{marginTop:SCREEN_WIDTH*0.01}}/>
+                    <Text style={{fontSize:RFValue(16), color:theme.Text, textAlign:"left", fontWeight:"bold"}}>  Tags</Text>
                 </View>
             </CollapseHeader>
-            <CollapseBody>
+            <CollapseBody >
                 <FlatList
                     extraData={state.refresh}
                     data={tagsList}
@@ -73,7 +76,7 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit, addedTags, 
                             <TouchableOpacity 
                                 onPress={() => chooseTag(item)}
                                 style={[styles.container, 
-                                    {backgroundColor:tags.indexOf(item) > -1? '#d6d4ce':'white', marginRight:SCREEN_WIDTH*0.01}]}>
+                                    {backgroundColor:tags.indexOf(item) > -1? '#d6d4ce':'white', marginRight:SCREEN_WIDTH*0.01 }]}>
                                 <Text style={{fontSize:RFValue(14),}}>{ item}</Text>
                             </TouchableOpacity> 
                         )
@@ -106,10 +109,11 @@ function TagsList({setTags, tags, setDeletedTags, deletedTags, edit, addedTags, 
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 const styles = StyleSheet.create({
     container:{
-        borderWidth: 0.3,
+        borderWidth: 0.7,
         borderRadius: SCREEN_WIDTH*0.1,
         padding:SCREEN_WIDTH*0.015,
-        borderColor:"white",
+        marginTop:SCREEN_WIDTH*0.03,
+        borderColor:"#d6d4ce",
     }
 })
 

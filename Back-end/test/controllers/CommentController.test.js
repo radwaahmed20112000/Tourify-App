@@ -52,7 +52,8 @@ describe('Comment controller', function () {
             email: process.env.TEST_EMAIL ,
             body : "test"
         } 
-    
+        console.log(testPost.email)
+        console.log("aloooooooooooooooooooooo")
         it('it should delete comment and decrement number of comments', (done) => {
     
             let query = `insert ignore into Post(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL }','${testPost.body}');`

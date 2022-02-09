@@ -2,14 +2,14 @@ import React from 'react';
 import { markAsRead } from '../../API/NotificatonAPI';
 import { TokenContext } from '../../Context/TokenContext';
 import { useContext } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { Dimensions } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { timeDifference } from '../../Service/TimeDifference';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device height
-function NotificationList({ navigation, notifications }) {
+function NotificationList({ navigation, notifications, onRefresh, refreshing }) {
 
     const user_token = useContext(TokenContext)
     const theme = useContext(ThemeContext);
@@ -20,12 +20,15 @@ function NotificationList({ navigation, notifications }) {
         navigation.navigate('postView', { post_id: item.post_id})
     }
 
+
     return (
         <View>
             <FlatList
             style={styles.root}
             data={notifications}
-            // extraData={state.refresh}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             ItemSeparatorComponent={() => {
                 return (
                 <View style={styles.separator}/>

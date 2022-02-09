@@ -44,6 +44,7 @@ module.exports = {
                 return res.status(500).json(err);
 
             console.log("Successfully Viewed!")
+            
 
             return res.status(200).json({ message : "Successfully Viewed!"});
         })

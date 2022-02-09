@@ -2,10 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, FlatList } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
 import {Collapse,CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
-import { faTimes  } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faCaretDown, faCaretUp  } from '@fortawesome/free-solid-svg-icons';
 import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 
 function PhotosList({ photos, setPhotos, deletedPhotos, setDeletedPhotos }) {
@@ -29,8 +28,9 @@ function PhotosList({ photos, setPhotos, deletedPhotos, setDeletedPhotos }) {
         {photos.length > 0 && 
             <Collapse>
             <CollapseHeader>
-                <View style={{borderBottomWidth:0.5, width:SCREEN_WIDTH*0.3, borderBottomColor:theme.SecondaryPurple,}}>
-                    <Text style={{fontSize:RFValue(15), color:theme.Text, textAlign:"left"}}>Photos</Text>
+                <View style={{ flexDirection:'row' }}>
+                    <FontAwesomeIcon icon={faCaretDown} size={ RFValue(20) }  color={theme.text} style={{marginTop:SCREEN_WIDTH*0.005}}/>   
+                    <Text style={{fontSize:RFValue(16), color:theme.Text, textAlign:"left", fontWeight:'bold'}}>  Photos</Text>
                 </View>
             </CollapseHeader>
             <CollapseBody >
@@ -51,7 +51,7 @@ function PhotosList({ photos, setPhotos, deletedPhotos, setDeletedPhotos }) {
                                     style={styles.avatar}
                                     resizeMethod="scale"
                                 />   
-                                <TouchableOpacity style={[{backgroundColor: theme.SecondaryPurple},styles.upload]} onPress={() => deletePhoto(index)}>
+                                <TouchableOpacity style={[{backgroundColor: theme.SecondaryCyan},styles.upload]} onPress={() => deletePhoto(index)}>
                                     <FontAwesomeIcon icon={faTimes} size={ RFValue(8) }  color="white" ></FontAwesomeIcon>
                                 </TouchableOpacity>
                             </View>                    

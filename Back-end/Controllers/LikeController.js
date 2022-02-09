@@ -50,6 +50,8 @@ module.exports = {
             Like.decrement(req.query.id, (err) => {
                 if (err)
                     return res.status(500).json(err);
+
+                Notification.deleteLikeNotification(req.query.id, email)
                 return res.json();
             })
         })
