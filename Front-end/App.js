@@ -13,27 +13,27 @@ import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
 import Map from './app/Screens/Map';
 import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
-import { NotificationsContext } from './app/Context/NotificationsContext';
+// import * as Notifications from 'expo-notifications';
+// import { NotificationsContext } from './app/Context/NotificationsContext';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//   }),
+// });
 export default function App() {
   //notifications
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
+  // const [expoPushToken, setExpoPushToken] = useState('');
+  // const [notification, setNotification] = useState(false);
+  // const notificationListener = useRef();
+  // const responseListener = useRef();
   //navigation:
   const Stack = createStackNavigator();
   //theme:
   const [lightMode, setLightMode] = useState(true)
-  const [notificationsCount, setNotificationsCount] = useState(0)
+  // const [notificationsCount, setNotificationsCount] = useState(0)
 
   const [Theme, setTheme] = useState(AppTheme.light);
   function changeTheme() {
@@ -85,23 +85,23 @@ export default function App() {
     }
   }, [])
 
-  useEffect(() => {
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-      setNotificationsCount(notificationsCount => notificationsCount + 1)
-    });
+  //   notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+  //     setNotification(notification);
+  //     setNotificationsCount(notificationsCount => notificationsCount + 1)
+  //   });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
+  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+  //     console.log(response);
+  //   });
 
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
+  //   return () => {
+  //     Notifications.removeNotificationSubscription(notificationListener.current);
+  //     Notifications.removeNotificationSubscription(responseListener.current);
+  //   };
+  // }, []);
 
   useEffect(() => {
     //check if user logged  in or not
@@ -126,7 +126,7 @@ export default function App() {
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
           <TokenContext.Provider value={loginState.userToken}>
-            <NotificationsContext.Provider value={notificationsCount}>
+            {/* <NotificationsContext.Provider value={notificationsCount}> */}
               <NavigationContainer>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                   {loginState.userToken ?
@@ -144,7 +144,7 @@ export default function App() {
                     component={Map} />
                 </Stack.Navigator>
               </NavigationContainer>
-            </NotificationsContext.Provider>
+            {/* </NotificationsContext.Provider> */}
           </TokenContext.Provider>
         </AuthContext.Provider>
       </ThemeContext.Provider>
@@ -154,36 +154,36 @@ export default function App() {
 }
 
 
-async function registerForPushNotificationsAsync() {
-  let token;
-  if (Constants.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-  } else {
-    alert('Must use physical device for Push Notifications');
-  }
+// async function registerForPushNotificationsAsync() {
+//   let token;
+//   if (Constants.isDevice) {
+//     const { status: existingStatus } = await Notifications.getPermissionsAsync();
+//     let finalStatus = existingStatus;
+//     if (existingStatus !== 'granted') {
+//       const { status } = await Notifications.requestPermissionsAsync();
+//       finalStatus = status;
+//     }
+//     if (finalStatus !== 'granted') {
+//       alert('Failed to get push token for push notification!');
+//       return;
+//     }
+//     token = (await Notifications.getExpoPushTokenAsync()).data;
+//     console.log(token);
+//   } else {
+//     alert('Must use physical device for Push Notifications');
+//   }
 
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
+//   if (Platform.OS === 'android') {
+//     Notifications.setNotificationChannelAsync('default', {
+//       name: 'default',
+//       importance: Notifications.AndroidImportance.MAX,
+//       vibrationPattern: [0, 250, 250, 250],
+//       lightColor: '#FF231F7C',
+//     });
+//   }
 
-  return token;
-}
+//   return token;
+// }
 
 
 const styles = StyleSheet.create({

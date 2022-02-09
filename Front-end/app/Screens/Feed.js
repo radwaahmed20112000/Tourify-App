@@ -9,18 +9,24 @@ const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 import {getFeedPosts} from '../API/PostListAPI';
 import { normalize } from '../util/FontNormalization';
-
+import {getUserPhoto} from '../API/ProfileAPI';
+import TitleBar from '../Components/Feed/TitleBar';
+import TagsBar from '../Components/Feed/TagsBar';
 function Feed({navigation}) {
   const token = useContext(TokenContext);
   const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
-
+  const [photo, setPhoto] = useState(null);
+  const [name, setName] = useState(null);
   useEffect(async () => {
     const data = await getFeedPosts(token);
-    if(data !== false)
+    const userData = await getUserPhoto(token);
+    if(data !== false && userData !== false)
     {
       setPosts(data);
+      setPhoto(userData.photo);
+      setName(userData.name)
       setLoading(false);
     }
     else
@@ -39,6 +45,8 @@ function Feed({navigation}) {
   }else{
     return (
         <SafeAreaView style={styles.container}>
+        {photo?<TitleBar photo = {photo} navigation={navigation} style={styles.titleBar}></TitleBar> :null}
+        <TagsBar name = {name}></TagsBar>
         {posts? <ListOfPosts posts={posts} isProfile ={false}></ListOfPosts> : null}
         </SafeAreaView>
     );
@@ -51,7 +59,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: RFValue(50)
+    // marginVertical: RFValue(50)
   }
+
 });
 export default Feed;

@@ -45,6 +45,21 @@ const getUserProfile = async (token) => {
         return { successful: true, userInfo: data[0], userPosts: data[1] };
     else return { successful: false, message: "Error ocurred, check your network.." };
 }
+const getUserPhoto = async(token) => {
+    try{
+        const resp = await fetch(IPAdress + "account/userProfile",
+            {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization':token
+                },
+            }).catch((err)=>{return false});
+            if(resp.status !== 200) return false;
+            else return resp.json();
+        }catch{()=>{return false;}}
+}
 const updateCountry = async (token, country) => {
     try {
         let response = await fetch(IPAdress + "account/updateCountry", {
@@ -87,4 +102,4 @@ const updateBio = async (token, bio) => {
 }
 
 // data : [{user info},[array of posts]]
-export { getUserProfile, updateCountry, updateBio, updatePhoto }
+export { getUserProfile, updateCountry, updateBio, updatePhoto, getUserPhoto}
