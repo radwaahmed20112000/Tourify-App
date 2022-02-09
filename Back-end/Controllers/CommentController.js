@@ -43,7 +43,8 @@ module.exports = {
          })
       })
 
-   },
+   })
+},
 
 
      editComment: async (req, res) => {
