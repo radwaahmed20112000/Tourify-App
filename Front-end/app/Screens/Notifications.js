@@ -24,7 +24,7 @@ function Notifications ({navigation}) {
         console.log(notifications[0])
         setProcessing(false)
         setState({ refresh: ! state.refresh })
-    }, [])
+    }, [navigation])
 
     return (
         <SafeAreaView style={{paddingTop:"8%"}}>

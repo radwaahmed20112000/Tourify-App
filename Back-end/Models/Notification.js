@@ -29,16 +29,16 @@ module.exports = {
         }
     },
 
-    addNotification: async  (post_id, sender_email, reciever_email, comment_id=null) => {
+    addNotification: async  (post_id, sender_email, receiver_email, comment_id=null) => {
         
         if (sender_email === reciever_email) return
 
         let insertQuery = `INSERT INTO
                                     ${tableName} (post_id, sender_email,
-                                                reciever_email, comment_id, viewed)
+                                                receiver_email, comment_id, viewed)
                             VALUES  
                                     (${post_id}, '${sender_email}', 
-                                    '${reciever_email}', ${comment_id}, false) ;`;
+                                    '${receiver_email}', ${comment_id}, false) ;`;
         try {
             DB(insertQuery)
             return
