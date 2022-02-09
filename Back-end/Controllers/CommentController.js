@@ -8,6 +8,7 @@ module.exports = {
     createComment: async (req, res) => {
       const email = req.user_id;
       let query = `1`
+      console.log("inside")
       Comment.create(email,req.body, (err, comment) => {
 
          if (err){
@@ -25,8 +26,9 @@ module.exports = {
             Comment.increment(query,req.body.post_id, (err) => {
             if (err){
             return res.status(500).json(err);
-            }
-            return res.json();
+            } 
+               console.log(comment)
+               return res.json({ id: comment_id });
             })
          })
       })   
@@ -38,7 +40,7 @@ module.exports = {
       Comment.getOne(req.body.comment_id,(error, comment)=>{
   
          if(error)
-            return res.status(500).json(err);
+            return res.status(500).json(error);
          
          if (!comment|| !comment.length || comment[0].email != req.user_id){
    

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Text, RefreshControl, StyleSheet, Dimensions, FlatList, SafeAreaView, View, ImageBackground } from 'react-native';
+import { TouchableOpacity,Text, RefreshControl, StyleSheet, Dimensions, FlatList, SafeAreaView, View, ImageBackground } from 'react-native';
 import { TokenContext } from '../../Context/TokenContext';
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
@@ -7,12 +7,16 @@ const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { ThemeContext } from '../../Context/ThemeContext';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faArrowLeft, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { useIsFocused } from "@react-navigation/native";
 
 function ListOfPosts(props) {
     const Theme = React.useContext(ThemeContext);
     const token = React.useContext(TokenContext);
     const [posts, setPosts] = useState(props.posts);
     const [refreshing, setRefreshing] = React.useState(false);
+    const theme = React.useContext(ThemeContext);
 
 
     let header= {
@@ -23,7 +27,7 @@ function ListOfPosts(props) {
                     backgroundColor:Theme.SecondaryPurple
     }
     useEffect(async () => {
-        setPosts(props.route.params.likes)
+        setPosts(props.likes)
     }, []);
     const showErrorMessage = () => {
         showMessage({
@@ -58,17 +62,27 @@ function ListOfPosts(props) {
     }, []);
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={header}>
-                <Text style={{fontSize:32 , fontWeight:'600'}}>Likes</Text>
-            </View>
+          
+                <TouchableOpacity
+                    style={{
+                        marginBottom: RFValue(12),
+                        marginLeft: RFValue(12)
+                    }}
+                    onPress={() => props.viewmain()} >
+                    <FontAwesomeIcon icon={faArrowLeft} size={RFValue(18)} color={theme.SecondaryPurple} style={{ marginRight: SCREEN_WIDTH * 0.78, marginTop: SCREEN_WIDTH * 0.028 }} />
+                </TouchableOpacity>
+
+            <Text style={{ fontSize: 20, color: theme.SecondaryPurple, fontWeight: '400' ,marginLeft:RFValue(12), margin:RFValue(7)}}> {posts && posts.length} likes</Text>
+            
             <FlatList
+               style ={{width:SCREEN_WIDTH}}
                 data={posts}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: SCREEN_HEIGHT * 0.07 }}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }
-                keyExtractor={(item) => item.post_id}
+                keyExtractor={(item) => item.email}
                 renderItem={({ item }) => {
                    
                     return (
@@ -103,7 +117,7 @@ const styles = StyleSheet.create({
     },
     like:{
         display:'flex',
-        backgroundColor:'rgba(226, 226, 226, 0.3)',
+        backgroundColor:'rgba(226, 226, 226, 0.1)',
         flexDirection:"row",
         padding:RFValue(20),
         elevation:1

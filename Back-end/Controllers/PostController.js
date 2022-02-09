@@ -158,11 +158,15 @@ module.exports = {
             console.log(err);
             return res.status(500).json(err);
          }
+         let temp = formatPostsDate([post])
+         post = temp[0]
          Comment.getAll(post_id, (err, comments) => {
 
             if (err){
                return res.status(500).json(err);
             }
+            comments = formatPostsDate(comments)
+
             const email = req.user_id;
             comments.forEach(c=>{
                if(c.email==email)
@@ -172,6 +176,10 @@ module.exports = {
                if (err){
                   return res.status(500).json(err);
                }
+               likes.forEach(c => {
+                  if (c.email == email)
+                     post.likeFlag = true
+               })
                post.post_id = post_id
                console.log({post,comments,likes});
                return res.send({post,comments,likes});

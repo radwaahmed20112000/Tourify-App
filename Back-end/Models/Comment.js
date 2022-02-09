@@ -83,7 +83,7 @@ module.exports = {
     
     getOne: async (comment_id, cb) => {
         if (!comment_id)
-            return cb(e, null)
+            return cb({error:true}, null)
 
         let query = `SELECT * FROM  ${tableName} WHERE  comment_id = ${comment_id} `;
 

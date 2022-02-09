@@ -100,7 +100,8 @@ function NavigationTabs(props) {
                             </View>
                     }
                 })}>
-                <Tab.Screen name="Feed" component={Feed} />
+                <Tab.Screen name="Feed" component={Feed} 
+                />
                 <Tab.Screen name="PostCreation" component={PostCreation}
                     initialParams={{ edit: false }}
                     screenOptions={{
