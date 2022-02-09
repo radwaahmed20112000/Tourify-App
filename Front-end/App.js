@@ -22,6 +22,7 @@ import PostView from './app/Components/Shared/PostView';
 import LikeList from './app/Components/PostView/LikeList'
 import EditComment from './app/Components/PostView/EditComment'
 import Temp from './app/Components/PostView/Temp'
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -35,6 +36,7 @@ export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
+
   const responseListener = useRef();
 
   //navigation:
@@ -104,6 +106,7 @@ export default function App() {
       }
     }
   }, [])
+  // const navigation = useNavigation();
 
   useEffect(() => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -113,8 +116,11 @@ export default function App() {
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
-      const navigation = useNavigation();
-      navigation.navigate('postView', {post_id:response.data.post_id})
+
+      return () => {
+        <PostView post_id = {response.data.id}></PostView>
+      }
+      // navigation.navigate('postView', {post_id:response.data.post_id})
     });
 
     return () => {

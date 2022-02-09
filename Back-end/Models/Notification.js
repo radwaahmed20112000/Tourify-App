@@ -76,7 +76,7 @@ module.exports = {
                                     ${tableName} 
                             WHERE  
                                     post_id = ${post_id} 
-                                    AND sender_email = ${sender_email} ;`;
+                                    AND sender_email = '${sender_email}' ;`;
         console.log({deleteQuery})     
         try {
             let res = DB(deleteQuery)
