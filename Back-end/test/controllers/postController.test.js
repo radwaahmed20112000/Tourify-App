@@ -124,8 +124,7 @@ describe('Posts controller', function () {
                                    
                                     })
                                 });
-                        });
-                        
+                        })          
                 }).catch(e=>{
                     console.log(e)
                 })
@@ -187,145 +186,184 @@ describe('Posts controller', function () {
 
         });
 
-        describe('POST/posts/TripCreation', function () {
-            const body = {
-                email: process.env.TEST_TOKEN,
-                body: "Hello",
-                tags: ["hicking"],
-                photos: ["photo1", "photo2"],
-                organisation: "Trip Travel",
-                rate: 5,
-                budget: 2000,
-                currency: "$",
-                duration: 5,
-                latitude: 32.5,
-                longitude: 51
-            };
-            it('it should retrun Ok response', () => {
+        describe('POST /posts/TripCreation', function () {
+            this.timeout(20000);
+            it('it should retrun Ok response', (done) => {
+                let body = {
+                    email: process.env.TEST_TOKEN,
+                    body: 'Hello',
+                    tags: [],
+                    photos: [],
+                    organisation: 'Trip Travel',
+                    rate: 5,
+                    budget: '2000',
+                    currency: 'USD',
+                    duration: '5',
+                    latitude: 32.5,
+                    longitude: 51
+                };
                 chai.request(server)
                     .post(`/posts/TripCreation`)
                     .send(body)
                     .end((err, res) => {
-                        res.should.have.status(200);
                         console.log(res);
+                        res.should.have.status(200);
+                        done();
                     });
             });
 
         });  
         
         
-        describe('POST/posts/Edit', function () {
-            const body = {
-                postId: 2,
-                email: process.env.TEST_TOKEN,
-                body: "Hello",
-                tags: ["tag1","tag2"],
-                photos: ["photo1", "photo2"],
-                organisation: "Trip Travel",
-                deletedPhotos: ["photo1"],
-                deletedTags: ["tag1"],
-                rate: 5,
-                budget: 2000,
-                currency: "$",
-                duration: 5,
-                latitude: 32.5,
-                longitude: 51
-            };
-            it('it should retrun Ok response', () => {
-                chai.request(server)
-                    .post(`/posts/Edit`)
-                    .send(body)
-                    .end((err, res) => {
-                        res.should.have.status(200);
-                        console.log(res);
-                    });
+        describe('POST /posts/Edit', function () {
+            it('it should retrun Ok response', (done) => {
+                let query1 = `INSERT INTO Post
+                (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
+                (85857,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,'$', 0, 0 ) ;`;
+
+                let test = {
+                    photo: "photo3",
+                    tag: "tag1",
+                    latitude: 30.5,
+                    longitude: 50.5,
+                }
+                let body = {
+                    postId: 85857,
+                    email: process.env.TEST_TOKEN,
+                    body: "Hello",
+                    tags: ["tag3","tag2"],
+                    photos: [{"photo":"photo1"},{"photo": "photo2"}],
+                    organisation: "Trip Travel",
+                    deletedPhotos: [{"photo":"photo3"}],
+                    deletedTags: ["tag1"],
+                    rate: 5,
+                    budget: 2000,
+                    currency: "$",
+                    duration: 5,
+                    latitude: 32.5,
+                    longitude: 51
+                };
+                let query2 = `INSERT INTO PostPhoto(post_id,photo) VALUES (85857,"${test.photo}");`
+                let query3 = `INSERT INTO PostTags(post_id,tag_name) VALUES (85857,"${test.tag}");`
+                let query4 = `INSERT INTO PostLocation(post_id,latitude,longitude) VALUES (85857,${test.latitude},${test.longitude});`
+
+                DB(query1).then(() => {
+                    DB(query2).then(()=>{
+                        DB(query3).then(()=>{
+                            DB(query4).then(()=>{
+                                chai.request(server)
+                                    .post(`/posts/Edit`)
+                                    .set('authorization', process.env.TEST_TOKEN)
+                                    .send(body)
+                                    .end((err, res) => {
+                                        res.should.have.status(200);
+                                        console.log(res);
+                                        done();
+                                    });
+                            }) 
+                        }) 
+                    })          
+                }).catch(e=>{
+                        console.log(e)
+                })
             });
 
         });   
 
+
       
-        describe('GET/posts/:id/:token', function () { 
-            this.timeout(2000000);
-            it('it shoud return a specific post its id and user token are passed through parameters', (done) => {
-                let query1 = `INSERT INTO Post
-                (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
-                (2,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,"$", 0, 0 ) ;`;
+    describe('GET /posts/:id/:token', function () {
+        this.timeout(20000);
+        
+        it('it shoud return a specific post its id and user token are passed through parameters', (done) => {
+            let query1 = `INSERT INTO Post
+            (post_id,email, body, duration, organisation, rate, budget, currency, number_of_comments, number_of_likes)  VALUES
+            (99,"${process.env.TEST_EMAIL}","postDescriotion",7,"Travel institution",3, 2000,'$', 0, 0 ) ;`;
 
-                let test = {
-                    photo: "http/photo.jpg",
-                    tag: "tag",
-                    latitude: 30.5,
-                    longitude: 50.5,
-                }
-                let query2 = `INSERT INTO PostPhoto(post_id,photo) VALUES (2,"${test.photo}");`
-                let query3 = `INSERT INTO PostTags(post_id,tag_name) VALUES (2,"${test.tag}");`
-                let query4 = `INSERT INTO PostLocation(post_id,latitude,longitude) VALUES (2,${test.latitude},${test.longitude});`
+            let test = {
+                photo: "http/photo.jpg",
+                tag: "tag",
+                latitude: 30.5,
+                longitude: 50.5,
+            }
+            let query2 = `INSERT INTO PostPhoto(post_id,photo) VALUES (99,"${test.photo}");`
+            let query3 = `INSERT INTO PostTags(post_id,tag_name) VALUES (99,"${test.tag}");`
+            let query4 = `INSERT INTO PostLocation(post_id,latitude,longitude) VALUES (99,${test.latitude},${test.longitude});`
 
-                DB(query1).then(async (posts) => {
-                    console.log(posts)
-                    await DB(query2)})
-                .then(async (tags) => {
-                    console.log(tags)
-                    await DB(query3)})
-                .then(async(location) => {
-                    console.log(location)
-                    await DB(query4) })                             
-                .then(() =>{
+            DB(query1).then(() => {
+                DB(query2).then(()=>{
+                    DB(query3).then(()=>{
+                        DB(query4).then(()=>{
                             chai.request(server)
-                            .get(`/posts/2/${process.env.TEST_TOKEN}`)
-                            .set('authorization', process.env.TEST_TOKEN)
-                            .send({ email: process.env.TEST_TOKEN })
-                            .end((err, res) => {
-                                res.should.have.status(200);
-                                console.log(err)
-                                let query5 = `SELECT
-                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
-                                FROM
-                                    (Post NATURAL LEFT JOIN PostLocation)
-                                    LEFT JOIN (
-                                        SELECT 
-                                            post_id, 
-                                            JSON_ARRAYAGG(JSON_OBJECT('photo', photo)) photos 
-                                        FROM PostPhoto 
-                                        GROUP BY post_id
-                                    ) ph ON Post.post_id = ph.post_id
-                                    LEFT JOIN (
-                                        SELECT 
-                                        post_id, 
-                                        JSON_ARRAYAGG(tag_name) tags 
-                                        FROM PostTags 
-                                        GROUP BY post_id
-                                    ) t ON Post.post_id = t.post_id
-                                WHERE Post.post_id = 2 AND email = "${process.env.TEST_EMAIL}" `
-
-                                    DB(query5).then((post)=>{
-                                    console.log(post)
-                                    res.body.count.should.be.a('number');
-                                    res.duration.count.should.be.a('number');
-                                    res.organisation.count.should.be.a('number');
-                                    res.body.rate.should.be.a('number');
-                                    res.budget.count.should.be.a('number');
-                                    res.currency.count.should.be.a('number');
-                                    res.latitude.count.should.be.a('number');
-                                    res.longitude.count.should.be.a('number');
-                                    post.photos.length.should.be.equal(1)
-                                    post.tags.length.should.be.equal(1)
+                                .get(`/posts/99/${process.env.TEST_TOKEN}`)
+                                .set('authorization', process.env.TEST_TOKEN)
+                                .end((err, res) => {
+                                    res.should.have.status(200);
+                                    let post = res.body[0];
+                                    post.body.should.be.equal('postDescriotion');
+                                    post.duration.should.be.equal(7);
+                                    post.organisation.should.be.equal('Travel institution');
+                                    post.rate.should.be.equal(3);
+                                    post.budget.should.be.equal(2000);
+                                    post.currency.should.be.equal('$');
+                                    post.latitude.should.be.equal(test.latitude);
+                                    post.longitude.should.be.equal(test.longitude);
                                     done();
-                                })
-                            });
-                }).catch(e=>{
+                                });
+                        }) 
+                    }) 
+                })          
+            }).catch(e=>{
                     console.log(e)
-                })
-        });
-});
+            })
             
+        })
+        console.log("Doneee")    
+    });
+            
+    describe('GET /posts/viewPost', function () {
+    
+        it('it should post and its comments', (done) => {
+            chai.request(server)
+                .get(`/posts/viewPost?id=${1000000000}`)
+                .set('authorization', process.env.TEST_TOKEN)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    console.log(res.body.post);
+                    console.log(res.body.comments);
+                    console.log(res.body.likes);
 
+
+                    let post = res.body.post ; 
+                        post[0].should.have.property('body');
+                        post[0].should.have.property('duration');
+                        post[0].should.have.property('organisation');
+                        post[0].should.have.property('rate');
+                        post[0].should.have.property('budget');
+                        post[0].should.have.property('currency');
+                        post[0].should.have.property('latitude');
+                        post[0].should.have.property('longitude');
+                        post[0].should.have.property('photos');
+                        post[0].should.have.property('tags');
+                        post[0].should.have.property('number_of_likes');
+                        post[0].should.have.property('number_of_comments');
+
+                        let comments = res.body.comments ; 
+                        comments.forEach (c => {
+                        c[0].should.have.property('email');
+                        c[0].should.have.property('body');
+                        c[0].should.have.property('created_at');
+                        c[0].should.have.property('updated_at');
+                        })
+
+                        let likes = res.body.likes ; 
+                        likes.forEach (l => {
+                        l[0].should.have.property('email');
+                        })
+                        done();
+                });
+        });
+
+    });
 
 });   
-
-   
-
-
-
-
-

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { StyleSheet, Platform } from 'react-native';
 import { ThemeContext, AppTheme } from './app/Context/ThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,31 +9,37 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
 import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
+import { getNotificationsCount } from './app/API/ProfileAPI';
+
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
 import Map from './app/Screens/Map';
 import Constants from 'expo-constants';
-// import * as Notifications from 'expo-notifications';
-// import { NotificationsContext } from './app/Context/NotificationsContext';
-
-// Notifications.setNotificationHandler({
-//   handleNotification: async () => ({
-//     shouldShowAlert: true,
-//     shouldPlaySound: false,
-//     shouldSetBadge: false,
-//   }),
-// });
+import * as Notifications from 'expo-notifications';
+import { NotificationsContext } from './app/Context/NotificationsContext';
+import { saveNotificationToken } from './app/API/NotificatonAPI'
+import PostView from './app/Components/Shared/PostView';
+import LikeList from './app/Components/PostView/LikeList'
+import EditComment from './app/Components/PostView/EditComment'
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 export default function App() {
   //notifications
-  // const [expoPushToken, setExpoPushToken] = useState('');
-  // const [notification, setNotification] = useState(false);
-  // const notificationListener = useRef();
-  // const responseListener = useRef();
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
   //navigation:
   const Stack = createStackNavigator();
   //theme:
   const [lightMode, setLightMode] = useState(true)
-  // const [notificationsCount, setNotificationsCount] = useState(0)
+  const [notificationsCount, setNotificationsCount] = useState(0)
 
   const [Theme, setTheme] = useState(AppTheme.light);
   function changeTheme() {
@@ -57,6 +63,13 @@ export default function App() {
         } catch (e) {
           console.log(e);
         }
+        registerForPushNotificationsAsync().then(async (token) => {
+          setExpoPushToken(token)
+          await saveNotificationToken(userToken, token);
+        });
+        const count = await getNotificationsCount(userToken);
+        console.log({ count })
+        setNotificationsCount(count)
         dispatch({ type: 'Login', userToken });
       },
       signUp: async (email, userName, password, country, photo, googleBool) => {
@@ -71,6 +84,10 @@ export default function App() {
         } catch (e) {
           console.log(e);
         }
+        registerForPushNotificationsAsync().then(async (token) => {
+          setExpoPushToken(token)
+          await saveNotificationToken(userToken, token);
+        });
         dispatch({ type: 'Register', userToken });
       },
       signOut: async () => {
@@ -85,34 +102,41 @@ export default function App() {
     }
   }, [])
 
-  // useEffect(() => {
-  //   registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+  useEffect(() => {
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+      setNotificationsCount(notificationsCount => notificationsCount + 1)
+    });
 
-  //   notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-  //     setNotification(notification);
-  //     setNotificationsCount(notificationsCount => notificationsCount + 1)
-  //   });
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
 
-  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-  //     console.log(response);
-  //   });
-
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notificationListener.current);
-  //     Notifications.removeNotificationSubscription(responseListener.current);
-  //   };
-  // }, []);
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   useEffect(() => {
     //check if user logged  in or not
     setTimeout(async () => {
       try {
         userToken = await AsyncStorage.getItem('userToken')
+
+        if (userToken) {
+          //get notifications
+          const count = await getNotificationsCount(userToken);
+          console.log({ count })
+          setNotificationsCount(count)
+        }
+
       } catch (e) {
         console.log(e);
       }
       dispatch({ type: "RetrieveToken", userToken })
     }, 1000)
+
   }, [])
 
   if (loginState.isLoading) {
@@ -126,7 +150,7 @@ export default function App() {
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
           <TokenContext.Provider value={loginState.userToken}>
-            {/* <NotificationsContext.Provider value={notificationsCount}> */}
+            <NotificationsContext.Provider value={[notificationsCount, setNotificationsCount]}>
               <NavigationContainer>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                   {loginState.userToken ?
@@ -142,9 +166,19 @@ export default function App() {
                   <Stack.Screen
                     name="Map"
                     component={Map} />
+                  <Stack.Screen
+                    name="postView"
+                    component={PostView} />
+                  <Stack.Screen
+                    name="LikesList"
+                    component={LikeList} />
+                  <Stack.Screen
+                    name="EditComment"
+                    component={EditComment} />
+                  
                 </Stack.Navigator>
               </NavigationContainer>
-            {/* </NotificationsContext.Provider> */}
+            </NotificationsContext.Provider>
           </TokenContext.Provider>
         </AuthContext.Provider>
       </ThemeContext.Provider>
@@ -154,36 +188,36 @@ export default function App() {
 }
 
 
-// async function registerForPushNotificationsAsync() {
-//   let token;
-//   if (Constants.isDevice) {
-//     const { status: existingStatus } = await Notifications.getPermissionsAsync();
-//     let finalStatus = existingStatus;
-//     if (existingStatus !== 'granted') {
-//       const { status } = await Notifications.requestPermissionsAsync();
-//       finalStatus = status;
-//     }
-//     if (finalStatus !== 'granted') {
-//       alert('Failed to get push token for push notification!');
-//       return;
-//     }
-//     token = (await Notifications.getExpoPushTokenAsync()).data;
-//     console.log(token);
-//   } else {
-//     alert('Must use physical device for Push Notifications');
-//   }
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
 
-//   if (Platform.OS === 'android') {
-//     Notifications.setNotificationChannelAsync('default', {
-//       name: 'default',
-//       importance: Notifications.AndroidImportance.MAX,
-//       vibrationPattern: [0, 250, 250, 250],
-//       lightColor: '#FF231F7C',
-//     });
-//   }
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
 
-//   return token;
-// }
+  return token;
+}
 
 
 const styles = StyleSheet.create({

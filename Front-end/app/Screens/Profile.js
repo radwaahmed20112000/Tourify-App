@@ -60,21 +60,27 @@ function Profile({ navigation }) {
   }
 
   useEffect(async () => {
+    let unmounted = false;
+
     const data = await getUserProfile(token);
-    if (data.successful) {
-      //set profile info:
-      setUsername(data.userInfo.name);
-      setCountry(data.userInfo.country);
-      setPhoto(data.userInfo.photo);
-      setBio(data.userInfo.bio);
-      oldBio = data.userInfo.bio;
-      //set user posts
-      setUserPosts(data.userPosts);
-      setLoading(false);
+    if (!unmounted) {
+      if (data.successful) {
+        //set profile info:
+        setUsername(data.userInfo.name);
+        setCountry(data.userInfo.country);
+        setPhoto(data.userInfo.photo);
+        setBio(data.userInfo.bio);
+        oldBio = data.userInfo.bio;
+        //set user posts
+        setUserPosts(data.userPosts);
+        setLoading(false);
+      }
+      else {
+        setMessage(data.message);
+      }
     }
-    else {
-      setMessage(data.message);
-    }
+    return () => { unmounted = true };
+
   }, [])
 
   if (loading) {

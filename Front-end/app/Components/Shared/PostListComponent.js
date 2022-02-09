@@ -16,9 +16,7 @@ function navigateToProfile(userId) {
 
 }
 
-function navigateToPost(postId) {
 
-}
 
 function PostListComponent(props) {
 
@@ -26,6 +24,10 @@ function PostListComponent(props) {
     const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState, created_at } = props.item;
     const isProfile = props.isProfile;
     const token = useContext(TokenContext);
+
+    function navigateToPost() {
+        props.navigation.navigate('postView', { post_id: post_id})
+    }
 
     const deleteAlert = (post_id) =>
         Alert.alert(

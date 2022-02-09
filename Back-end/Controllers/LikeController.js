@@ -1,0 +1,47 @@
+const { query } = require('express');
+const Like = require('../Models/Like')
+const Post = require('../Models/Post')
+
+module.exports = {
+    
+    addLike: async (req, res) => {
+        const email = req.user_id;
+        let query = `1`
+        Like.create(email, req.body.post_id, (err) => {
+            if (err){
+               console.log(err);
+               return res.status(500).json(err);
+            }
+            Post.getOne(req.body.post_id, (err, post) => {
+                if (err){
+                   return res.status(500).json(err);
+               }
+               console.log(post[0].number_of_likes);
+               if(post[0].number_of_likes != null){
+                   query = `number_of_likes + 1`;
+               }
+               Like.increment(query,req.body.post_id, (err) => {
+                if (err){
+                return res.status(500).json(err);
+                }
+                return res.json();
+                })
+            }) 
+         })   
+     },
+     
+     Dislike: async (req, res) => {
+        const email = req.user_id;
+        Like.delete(email, req.query.id, (err) => {
+            if (err){
+            console.log(err);
+               return res.status(500).json(err);
+            }
+            Like.decrement(req.query.id, (err) => {
+                if (err)
+                   return res.status(500).json(err);
+                return res.json();
+             })
+         })   
+     },
+}
