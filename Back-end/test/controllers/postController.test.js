@@ -8,7 +8,7 @@ const DB = require("../../DB/pool");
 
 describe('Posts controller', function () {
 
-        describe('GET /posts/feed', function () {
+        describe('POST /posts/feed', function () {
             const tests = [
                 {limit:10 , offset :0 },
                 { limit: 10, offset :70 },
@@ -21,7 +21,7 @@ describe('Posts controller', function () {
             tests.forEach(t=>{
                 it('it should retrun an array of the at most the specified size', (done) => {
                     chai.request(server)
-                        .get(`/posts/feed?limit=${t.limit}&offset=${t.offset}`)
+                        .post(`/posts/feed?limit=${t.limit}&offset=${t.offset}`)
                         .set('authorization', process.env.TEST_TOKEN)
                         .send({ email: process.env.TEST_TOKEN })
                         .end((err, res) => {
