@@ -20,7 +20,7 @@ module.exports = {
         }
     },
 
-    increment: async (query,post_id, cb) => {
+    increment: async (query, post_id, cb) => {
         let updateQuery = `UPDATE Post
             SET number_of_comments = ${query}
             WHERE post_id = ${post_id} ;`;
@@ -34,13 +34,13 @@ module.exports = {
             return cb(e);
         }
     },
-    
+
     edit: async (comment, cb) => {
         let editQuery = `UPDATE ${tableName} 
             SET body = "${comment.body}"
             WHERE
             comment_id = ${comment.comment_id};`
-            console.log(editQuery)
+        console.log(editQuery)
         try {
             let res = await DB(editQuery)
             console.log(res)
@@ -65,7 +65,7 @@ module.exports = {
         }
 
     },
-      
+
     decrement: async (post_id, cb) => {
         let updateQuery = `UPDATE Post
             SET number_of_comments = number_of_comments - 1
@@ -80,7 +80,7 @@ module.exports = {
             return cb(e);
         }
     },
-    
+
     getOne: async (comment_id, cb) => {
         if (!comment_id)
             return cb(e, null)
@@ -99,7 +99,7 @@ module.exports = {
 
     getAll: async (post_id, cb) => {
 
-        let selectQuery = `SELECT comment_id ,user.email, body, created_at, updated_at , name , photo FROM ${tableName} Left Join user on comments.email=user.email WHERE post_id = ${post_id};`;
+        let selectQuery = `SELECT comment_id ,user.email, body, created_at, updated_at , name , photo FROM ${tableName} Left Join user on Comments.email=user.email WHERE post_id = ${post_id};`;
 
         try {
             let comments = await DB(selectQuery)

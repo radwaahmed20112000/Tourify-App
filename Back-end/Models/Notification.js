@@ -1,11 +1,14 @@
 const DB = require("../DB/pool");
+const Notification = require('../Services/SendNotification')
+const Account = require('../Models/Account');
+const { reject } = require("async");
 const tableName = 'Notification';
 
 module.exports = {
 
     tableName: tableName,
 
-    findAll: async (reciever_email, cb) => {
+    findAll: async (receiver_email, cb) => {
 
         let selectQuery = `SELECT 
                                 ${tableName}.id, ${tableName}.comment_id, user.name,
@@ -15,7 +18,7 @@ module.exports = {
                                 (${tableName} JOIN user 
                                             ON ${tableName}.sender_email = user.email)
                             WHERE 
-                                receiver_email = '${reciever_email}' 
+                                receiver_email = '${receiver_email}' 
                             ORDER BY 
                                 created_at DESC;`
 
@@ -29,22 +32,21 @@ module.exports = {
         }
     },
 
-    addNotification: async (post_id, sender_email, reciever_email, comment_id = null) => {
+    addNotification: async (post_id, sender_email, receiver_email, comment_id = null) => {
 
-        if (sender_email === reciever_email) return
+        if (sender_email === receiver_email) return
 
         let insertQuery = `INSERT INTO
                                     ${tableName} (post_id, sender_email,
-                                                reciever_email, comment_id, viewed)
+                                                receiver_email, comment_id, viewed)
                             VALUES  
                                     (${post_id}, '${sender_email}', 
-                                    '${reciever_email}', ${comment_id}, false) ;`;
+                                    '${receiver_email}', ${comment_id}, false) ;`;
         try {
-            DB(insertQuery)
-            return
+            return DB(insertQuery)
         }
         catch (e) {
-            return e
+            reject(e)
         }
     },
 
@@ -68,7 +70,37 @@ module.exports = {
         }
     },
 
+    notify: async (sender_email, receiver_email, post_id, comment_id, cb) => {
+        Account.getNotificationToken(receiver_email, (err, token) => {
+            console.log({ err })
+            if (!err) {
+                let body = ''
+                if (comment_id > 0)
+                    body = `'${sender_email} commented on your trip`
+                else
+                    body = `'${sender_email} liked your trip review'`
 
+                const message = {
+                    to: token,
+                    sound: 'default',
+                    body: body,
+                    data: { post_id: post_id, comment_id: comment_id },
+                }
+
+                try {
+                    console.log("SENDINGGGG")
+                    Notification.sendNotification([token], message);
+                    const res = this.addNotification(post_id, sender_email, receiver_email, comment_id)
+                    return cb(null, res);
+                }
+                catch (e) {
+                    return cb(e, null);
+                }
+            }
+            else
+                return cb(err, null);
+        })
+    }
 }
 
 
