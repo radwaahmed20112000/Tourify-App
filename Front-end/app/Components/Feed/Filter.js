@@ -9,13 +9,38 @@ import CurrencyPicker from "react-native-currency-picker";
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-function Filter(props) {
+function Filter({filters, setFilters}) {
     const Theme = React.useContext(ThemeContext);
-    const [numberOfDays, setNumberOfDays] = useState(null);
-    const [rate, setRate] = useState(0);
-    const [organization, setOrganization] = useState(null);
-    const [budget, setBudget] = useState(null);
-    const [currency, setCurrancy] = useState('USD');
+    const [numberOfDays, setNumberOfDays] = useState(filters.numberOfDays);
+    const [rate, setRate] = useState(filters.rate);
+    const [organization, setOrganization] = useState(filters.organization);
+    const [budget, setBudget] = useState(filters.budget);
+    const [currency, setCurrancy] = useState(filters.currency);
+    const [message, setMessage] = useState("")
+    function isNumeric(str) {
+        if (typeof str != "string") return false // we only process strings!  
+        return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+               !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+      }
+    const handleFilters = ()=>{
+        if((isNumeric(numberOfDays) || !numberOfDays) && (isNumeric(budget) || !budget))
+        {
+            setMessage("")
+            setFilters(
+                {
+                    numberOfDays : numberOfDays,
+                    rate : rate,
+                    organization:organization,
+                    budget: budget,
+                    currency: currency
+                }
+            )
+        }
+        else
+        {
+            setMessage("Invalid Data")
+        }
+    }
     return (
       <View style={styles.container}>
         <View style={{flexDirection:"row"}}>
@@ -45,8 +70,8 @@ function Filter(props) {
             </View>
         </View>
         <View style={{flexDirection:"row"}}>
-            <Text style={styles.text}>Max. Budget</Text>
-            <View style={[styles.inputBox, {width:"37%", marginLeft:"9%"}]}>
+            <Text style={styles.text}>Budget ≤</Text>
+            <View style={[styles.inputBox, {width:"37%", marginLeft:"13%"}]}>
             <TextInput style={styles.inputText} keyboardType='numeric' selectionColor={Theme.SecondaryCyan} placeholder="How much?" placeholderTextColor={Theme.subText} onChangeText={text => setBudget(text)} value={budget}></TextInput>
             </View>
             <CurrencyPicker
@@ -79,15 +104,18 @@ function Filter(props) {
                 showModalTitle={true}
             />
         </View>
-        <TouchableOpacity >
-                    <LinearGradient
-                        colors={[Theme.SecondaryCyan, Theme.SecondaryPurple]}
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 1, y: 1 }}
-                        style={styles.button}>
-                        <Text style={{color:"white", fontWeight:"bold"}}>Filter</Text>
-                    </LinearGradient>
-        </TouchableOpacity>
+        <View style={{flexDirection:"row"}}>
+            <Text style={{color:"red", fontWeight:"bold", marginRight:"-35%"}}>{message}</Text>
+            <TouchableOpacity onPress={()=>handleFilters()}>
+                        <LinearGradient
+                            colors={[Theme.SecondaryCyan, Theme.SecondaryPurple]}
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 1, y: 1 }}
+                            style={styles.button}>
+                            <Text style={{color:"white", fontWeight:"bold"}}>Filter</Text>
+                        </LinearGradient>
+            </TouchableOpacity>
+        </View>
       </View>
   );
 }
@@ -135,10 +163,10 @@ const styles = StyleSheet.create({
     button: {
         alignItems: 'center',
         justifyContent: "center",
-        alignSelf:"flex-end",
         width: SCREEN_WIDTH * 0.16,
         height: SCREEN_HEIGHT * 0.048,
-        borderRadius:7
+        borderRadius:7,
+        marginLeft:SCREEN_WIDTH * 0.55
     },
 })
 export default Filter;

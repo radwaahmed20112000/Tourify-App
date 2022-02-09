@@ -15,8 +15,9 @@ function Feed({navigation}) {
   const [message, setMessage] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [name, setName] = useState(null);
+  const [filterObj, setFilterObj] = useState(null)
   useEffect(async () => {
-    const data = await getFeedPosts(token);
+    const data = await getFeedPosts(token, filterObj);
     const userData = await getUserPhoto(token);
     if(data !== false && userData !== false)
     {
@@ -28,6 +29,20 @@ function Feed({navigation}) {
     else
       setMessage("An error occurred, check your network..");
   }, []);
+  useEffect(async ()=>{
+    if(filterObj)
+    {
+      setLoading(true)
+      const data = await getFeedPosts(token, filterObj);
+      if(data !== false)
+      {
+        setPosts(data);
+        setLoading(false);
+      }
+      else
+        setMessage("An error occurred, check your network..");
+    }
+  }, [filterObj])
 
   if(loading)
   {
@@ -42,7 +57,7 @@ function Feed({navigation}) {
     return (
         <SafeAreaView style={styles.container}>
         {photo?<TitleBar photo = {photo} navigation={navigation} style={styles.titleBar}></TitleBar> :null}
-        <TagsBar name = {name}></TagsBar>
+        <TagsBar setFilterObj = {setFilterObj} filterObj= {filterObj} name = {name}></TagsBar>
         {posts? <ListOfPosts posts={posts} isProfile ={false}></ListOfPosts> : null}
         </SafeAreaView>
     );

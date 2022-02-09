@@ -9,15 +9,40 @@ import { useState } from 'react';
 import * as Font from 'expo-font';
 import { useEffect } from 'react';
 import Filter from './Filter';
-function TitleBar(props) {
+function TagsBar({setFilterObj, filterObj, name}) {
     const [font, setFont] = useState(false)
     const [filtering, setFiltering] = useState(false);
+    const [tags, setTags] = useState([])
+    const oldFilter = {
+        numberOfDays : null,
+        rate : 0,
+        organization:null,
+        budget: null,
+        currency:'USD'
+    }
+    const [filters, setFilters] = useState({
+        numberOfDays : null,
+        rate : 0,
+        organization:null,
+        budget: null,
+        currency:'USD'
+    })
     useEffect(()=>{
         Font.loadAsync( {
             'Pattaya': require('../../assets/fonts/Pattaya-Regular.ttf')
         }
         ).then( () => setFont(true)) 
     }, []);
+    useEffect(()=>{
+       if(JSON.stringify(filters) !== JSON.stringify(oldFilter))
+       {
+           var newObj = {
+                tags:tags,
+                ...filters
+           }
+            setFilterObj(newObj)
+       }
+    }, [filters]);
     const Theme = React.useContext(ThemeContext);
     const tagsNames = [
         {name: "Beach", icon: faUmbrellaBeach},{name: "Romantic", icon: faHeart},
@@ -25,7 +50,6 @@ function TitleBar(props) {
         {name:"Relaxation", icon: faSun},{name:"Historical", icon: faLandmark},
         {name:"Volunteer",icon:faPeopleCarry},{name: "Road", icon:faRoad}
     ]
-    const [tags, setTags] = useState([])
     const tagHandler = (name)=>{
         let newTags;
         if(tags.includes(name))
@@ -38,7 +62,11 @@ function TitleBar(props) {
             newTags = tags.concat(name);
             setTags(newTags)
         }
-        console.log(newTags)
+        var newObj = {
+            tags:newTags,
+            ...filters
+       }
+        setFilterObj(newObj)
     }
     return (
       <View style={{width:"100%", height:"15%", alignItems:"flex-start"}}>
@@ -57,13 +85,13 @@ function TitleBar(props) {
             )
           }} />
             <View style={{flex: 1, flexDirection:"row", marginLeft:"5%", marginTop:"-12%"}}>
-                <Text style={{fontSize:normalize(23), color:"#454646" ,fontFamily: font? 'Pattaya' : 'normal',marginRight:SCREEN_WIDTH*0.37 }}>{"Hi, " + (props.name).split(" ")[0] + "!"}</Text>
+                <Text style={{fontSize:normalize(23), color:"#454646" ,fontFamily: font? 'Pattaya' : 'normal',marginRight:SCREEN_WIDTH*0.37 }}>{"Hi, " + (name).split(" ")[0] + "!"}</Text>
                 <TouchableOpacity style={styles.filter} onPress={()=>{setFiltering(!filtering)}}>  
                     <Image source={require('../../assets/filter.png') } style={styles.logo} />
                     <Text style={{color:"black", fontSize:normalize(14), fontWeight:"bold"}}>Filter Posts</Text>
                 </TouchableOpacity>
             </View>
-            {filtering?<Filter></Filter>:null}
+            {filtering && <Filter filters={filters} setFilters={setFilters}></Filter>}
       </View>
   );
 }
@@ -95,4 +123,4 @@ const styles = StyleSheet.create({
         marginRight : "4%"
     },
 })
-export default TitleBar;
+export default TagsBar;

@@ -45,23 +45,64 @@ module.exports = {
         }
     },
 
-    findAll: async (query, limit, offset, cb) => {
+    // findAll: async (query, limit, offset, cb) => {
+
+    //     query = query || '';
+
+    //     let selectQuery = `SELECT
+    //                           Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos ,Post.created_at
+    //                         FROM
+    //                             (Post join user  on user.email = Post.email )
+    //                             LEFT JOIN (
+    //                                 SELECT 
+    //                                     post_id, 
+    //                                     JSON_ARRAYAGG(JSON_OBJECT('photo', photo)) photos 
+    //                                 FROM PostPhoto 
+    //                                 GROUP BY post_id
+    //                             ) ph ON Post.post_id = ph.post_id
+                                
+    //                         ${query ? 'WHERE ' + query : ''}  ORDER BY Post.created_at  DESC  LIMIT ${limit} OFFSET ${offset} ; `
+
+    //     try {
+    //         let posts = await DB(selectQuery)
+    //         posts.forEach(p => {
+    //             if (p.photos)
+    //                 p.photos = JSON.parse(p.photos)
+    //         });
+
+    //         return cb(null, posts);
+
+    //     } catch (e) {
+    //         console.log(e)
+    //         return cb(e, null);
+
+    //     }
+
+
+    // },
+    findAll: async (query,tagQuery,filterQuery, limit, offset, cb) => {
 
         query = query || '';
+        if(filterQuery)
+           filter +='AND ' + filterQuery;
+        else 
+            filter=filterQuery;
 
         let selectQuery = `SELECT
                               Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos ,Post.created_at
                             FROM
-                                (Post join user  on user.email = Post.email )
+                               (
+                                    (Post join user  on user.email = Post.email ) 
                                 LEFT JOIN (
                                     SELECT 
-                                        post_id, 
+                                        PostPhoto.post_id, 
                                         JSON_ARRAYAGG(JSON_OBJECT('photo', photo)) photos 
                                     FROM PostPhoto 
-                                    GROUP BY post_id
+                                    GROUP BY PostPhoto.post_id
                                 ) ph ON Post.post_id = ph.post_id
+                                ) ${tagQuery}
                                 
-                            ${query ? 'WHERE ' + query : ''}  ORDER BY Post.created_at  DESC  LIMIT ${limit} OFFSET ${offset} ; `
+                            ${query ? ' WHERE ' + query + filter : filter}  ORDER BY rate  DESC  LIMIT ${limit} OFFSET ${offset} ; `
 
         try {
             let posts = await DB(selectQuery)
@@ -80,7 +121,6 @@ module.exports = {
 
 
     },
-
     count: async (query, cb) => {
 
         query = query || '';
