@@ -85,7 +85,7 @@ function TagsBar({setFilterObj, filterObj, name}) {
             )
           }} />
             <View style={{flex: 1, flexDirection:"row", marginLeft:"5%", marginTop:"-12%"}}>
-                <Text style={{fontSize:normalize(23), color:"#454646" ,fontFamily: font? 'Pattaya' : 'normal',marginRight:SCREEN_WIDTH*0.37 }}>{"Hi, " + (name).split(" ")[0] + "!"}</Text>
+                <Text style={{fontSize:normalize(23), color:"#454646" ,fontFamily: font? 'Pattaya' : 'normal',marginRight:"35%" }}>{"Hi, " + (name).split(" ")[0] + "!"}</Text>
                 <TouchableOpacity style={styles.filter} onPress={()=>{setFiltering(!filtering)}}>  
                     <Image source={require('../../assets/filter.png') } style={styles.logo} />
                     <Text style={{color:"black", fontSize:normalize(14), fontWeight:"bold"}}>Filter Posts</Text>

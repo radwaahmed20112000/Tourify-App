@@ -89,7 +89,7 @@ findAll: async (query,tagQuery,filterQuery, limit, offset, cb) => {
             filter=filterQuery;
 
         let selectQuery = `SELECT
-                              Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos ,Post.created_at
+                            Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos ,Post.created_at, number_of_likes, number_of_comments
                             FROM
                                (
                                 (Post join user  on user.email = Post.email ) 
