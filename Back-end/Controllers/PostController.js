@@ -12,20 +12,72 @@ const moment = require('moment')
 
 module.exports = {
 
+   // getFeedPosts: (req, res) => {
+   //    let limit = req.query.limit || 100;
+   //    let offset = req.query.offset || 0;
+
+   //    if (!req.user_id)
+   //       res.status(403)
+
+   //    let query = `user.email != '${req.user_id}'`;
+
+   //    Post.findAll(query, limit, offset, (err, posts) => {
+   //       if (err)
+   //          return res.status(500).json(err);
+   //       posts = formatPostsDate(posts)
+   //       console.log("Rrrrrr")
+   //       // console.log(posts)
+   //       return res.send(posts);
+   //    })
+
+   // },
    getFeedPosts: (req, res) => {
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
+      let tagQuery='';
+      let filterQuery='';
 
       if (!req.user_id)
          res.status(403)
 
       let query = `user.email != '${req.user_id}'`;
 
-      Post.findAll(query, limit, offset, (err, posts) => {
+    
+      tags=req.body.tags;
+      for(var i in tags ){
+         if(i==0)
+             tagQuery+= "NATURAL JOIN ";
+         console.log(tags[i]);
+         tagQuery+=`(SELECT PostTags.post_id FROM PostTags AS ${tags[i]} WHERE ${tags[i]}.tag_name = "${tags[i]}")`
+         if(tags.length-i>1)
+             tagQuery+= "NATURAL JOIN ";
+
+      }
+
+      if(req.body.duration){
+         filterQuery+=`duration =  ${parseInt(req.body.duration)}`;
+      }
+      if(req.body.organization){
+         if(filterQuery.length>0)
+            filterQuery+= "AND";
+         filterQuery+=`organisation = '${req.body.organization}'`;
+      }
+      if(req.body.rate){
+         if(filterQuery.length>0)
+             filterQuery+= "AND";
+         filterQuery+=`rate = ${req.body.rate}`;
+      }
+      if(req.body.budget){
+         if(filterQuery.length>0)
+             filterQuery+= "AND";
+         filterQuery+=`budget <= '${ parseInt(req.body.budget)}' AND currency = '${req.body.currency}`;
+      }
+
+      Post.findAll(query,tagQuery, filterQuery,limit, offset, (err, posts) => {
          if (err)
             return res.status(500).json(err);
          posts = formatPostsDate(posts)
-         console.log("Rrrrrr")
+         console.log("MAMA")
          // console.log(posts)
          return res.send(posts);
       })
@@ -158,11 +210,15 @@ module.exports = {
             console.log(err);
             return res.status(500).json(err);
          }
+         let temp = formatPostsDate([post])
+         post = temp[0]
          Comment.getAll(post_id, (err, comments) => {
 
             if (err){
                return res.status(500).json(err);
             }
+            comments = formatPostsDate(comments)
+
             const email = req.user_id;
             comments.forEach(c=>{
                if(c.email==email)
@@ -172,6 +228,10 @@ module.exports = {
                if (err){
                   return res.status(500).json(err);
                }
+               likes.forEach(c => {
+                  if (c.email == email)
+                     post.likeFlag = true
+               })
                post.post_id = post_id
                console.log({post,comments,likes});
                return res.send({post,comments,likes});

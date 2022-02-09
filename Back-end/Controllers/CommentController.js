@@ -7,6 +7,7 @@ module.exports = {
    createComment: async (req, res) => {
       const email = req.user_id;
       let query = `1`
+      Comment.create(email,req.body, (err, comment) => {
       console.log("comment creation")
       console.log(req.body)
 
@@ -42,19 +43,20 @@ module.exports = {
          })
       })
 
-   },
+   })
+},
 
 
-   editComment: async (req, res) => {
-      Comment.getOne(req.body.comment_id, (error, comment) => {
-
-         if (error)
-            return res.status(500).json(err);
-
-         if (!comment || !comment.length || comment[0].email != req.user_id) {
-
-            return res.status(401).json({ error: true, msg: "comment doen't exist or that comment doesn't belong to the loged user" });
-
+     editComment: async (req, res) => {
+      Comment.getOne(req.body.comment_id,(error, comment)=>{
+  
+         if(error)
+            return res.status(500).json(error);
+         
+         if (!comment|| !comment.length || comment[0].email != req.user_id){
+   
+            return res.status(401).json({ error:true ,msg: "comment doen't exist or that comment doesn't belong to the loged user" });
+   
          }
          Comment.edit(req.body, (err, comment) => {
 

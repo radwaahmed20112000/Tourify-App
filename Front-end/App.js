@@ -21,8 +21,7 @@ import { saveNotificationToken } from './app/API/NotificatonAPI'
 import PostView from './app/Components/Shared/PostView';
 import LikeList from './app/Components/PostView/LikeList'
 import EditComment from './app/Components/PostView/EditComment'
-
-
+import Temp from './app/Components/PostView/Temp'
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -181,6 +180,9 @@ export default function App() {
                   <Stack.Screen
                     name="EditComment"
                     component={EditComment} />
+                  <Stack.Screen
+                    name="Temp"
+                    component={Temp} />
                   
                 </Stack.Navigator>
               </NavigationContainer>

@@ -1,12 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useRef,useContext, useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, ImageBackground, RefreshControl, Dimensions, FlatList, TouchableOpacity, ScrollView, StyleSheet, Text, View, Image } from 'react-native';
+import { Modal,TextInput,SafeAreaView, ImageBackground, RefreshControl, Dimensions, FlatList, TouchableOpacity, ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 import ImageView from "react-native-image-viewing";
 import { RFValue } from 'react-native-responsive-fontsize';
 import Comment from '../PostView/Comment';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { TokenContext } from '../../Context/TokenContext';
-
+import { LinearGradient } from 'expo-linear-gradient';
+import { createComment } from '../../API/CommentApi';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -17,17 +18,34 @@ import ImageViewer from '../Shared/ImageViewer';
 import PostDetails from '../PostView/PostDetails'
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device widthmport { ThemeContext } from '../../Context/ThemeContext';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faArrowLeft, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { useIsFocused } from "@react-navigation/native";
 
-export default function PostComp(props) {   /// images  as props   
+import LikeList from './LikeList' 
+import EditComment from './EditComment';
+
+export default function PostComp(props) {
+    const isFocused = useIsFocused();  
+   //  props = props.route.params.props
+    /// images  as props   
     const [commentList, setComments] = useState([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }]);
     const [refreshing, setRefreshing] = React.useState(false);
     const [liked , setLiked] = useState(false);
+    const [view, setView] = useState(1);
+
     const theme = useContext(ThemeContext);
     const token = useContext(TokenContext);
-   
+    const [text, setText] = useState('');
+   const [f , setF] = useState(false);
+    const ref = useRef();
+    const { likeFlag,  post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState, created_at } = props.post;
+    const [modalVisible, setModalVisible] = useState(true);
+    const [modalVisible2, setModalVisible2] = useState(false);
 
-    const { post_id, email, body, rating, userName, userPhoto, photos, deletePostFromState, created_at } = props.post;
-  
+    const [cc, setCC] = useState(null);
+
+
     
     // const fetchData = async () => {
     //     setLoading(true);
@@ -70,12 +88,26 @@ export default function PostComp(props) {   /// images  as props
     //     console.log(resp.json() );
     // };
     console.log("FFFfwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", props)
-
+     const modalView =()=>{
+         setModalVisible(true)
+     }
+    const unsubscribe = props.navigation.addListener('focus', () => {
+        console.log('focussed');
+        setModalVisible(true)
+    });
     useEffect( () => {
         setComments(props.comments)
+        if (likeFlag)
+            setLiked(true)
+        
+        // if (isFocused) {
+        //     modalView()
+        //     console.log("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
+           
+        // }
 
         console.log("FFFfwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", props.comments)
-    }, []);
+    }, [  ]);
 
     const updateCommentBody = (comment)=>{
         let l = [...commentList] ;
@@ -87,15 +119,41 @@ export default function PostComp(props) {   /// images  as props
       
     }
     const commentOnPost = () => {
+        ref.current.focus()
+        console.log("dd lni")
 
     }
-    const likePost = () => {
-        setLiked(!liked);
+    const likePost =async () => {
+        try {
+            const resp = await fetch(IPAdress + `likes/${liked?'dislike':'like'}?id=${post_id}`,
+                {
+                    method: `${liked?'delete': 'post'}`,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    body:JSON.stringify({post_id:post_id})
+                }).catch((err) => { console.log("eee", err); return false });
+            if (resp.status !== 200) { console.log("rr", resp); return false; }
+            else {
+                setLiked(!liked);
+                return true }
+        }
+        catch { () => false }
+        
 
     }
     const viewLikes = () => {
-        props.navigation.navigate('LikesList',{likes : props.likes})
+      setView(2)
+        //  setModalVisible(true)
+        
+      //  props.navigation.navigate('LikesList',{likes : props.likes , post_id: post_id})
 
+    }
+
+    const viewmain =()=>{
+       setView(1)
     }
 
     const deleteCommentFromList = (id)=>{
@@ -105,18 +163,56 @@ export default function PostComp(props) {   /// images  as props
     }
     const Contstyles = {
         maxHeight: photos ? 1000000000000 : 0.5 * SCREEN_HEIGHT,
-        paddingTop: RFValue(22),
+        paddingTop: RFValue(32),
         backgroundColor: 'white',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        paddingHorizontal: RFValue(12),
-        marginRight: RFValue(33),
+       // paddingHorizontal: RFValue(12),
+        //marginRight: RFValue(33),
         elevation: 5,
        }
 
+    const fffff = async ()=>{
+        let b = { post_id: post_id, body: text }
+
+        const data = await createComment(token, b);
+        console.log("inssssssssssssssssssssss" , data)
+        let newComm = {
+            photo : userPhoto,
+            name: userName ,
+            body : text ,
+            created_at :  '0m',
+            comment_id : data.id,
+            ownerFlag : true
+
+        }
+        let y =[...commentList]
+        y.push(newComm)
+        setComments(y)
+        
+    }
+    const goBack = ()=>{
+        setModalVisible(false)
+        props.navigation.goBack(null);
+    }
+    const upComment = (comment)=>{
+        setCC(comment)
+        setView(3)
+    }
 //    let photos = null
     return (
-            <View style={styles.maincontainer}>
+        <View>
+    { view==1?
+        <Modal style={styles.maincontainer}
+        
+            visible={modalVisible}
+            onRequestClose={() => {
+               // Alert.alert("Modal has been closed.");
+                props.navigation.goBack(null);
+                setModalVisible(!modalVisible);
+            }}
+        >
+            
                 {/* <ScrollView  style={{flex:1}}> */}
 
                 {/* {
@@ -133,6 +229,8 @@ export default function PostComp(props) {   /// images  as props
 
                 {/* </ScrollView> */}
                 <FlatList
+                
+                
                 data={commentList}
                     showsVerticalScrollIndicator={false}
                     // contentContainerStyle={{ paddingBottom: SCREEN_HEIGHT * 0.07 }}
@@ -143,6 +241,15 @@ export default function PostComp(props) {   /// images  as props
                     //keyExtractor={(item) => item.post_id}
                     ListHeaderComponent={() => {
                         return <View key={-1} style={Contstyles}>
+                           
+                            <TouchableOpacity
+                            style={{
+                                marginBottom:RFValue(22),
+                                marginLeft:RFValue(12)
+                            }}
+                            onPress={() => goBack()} >
+                                <FontAwesomeIcon icon={faArrowLeft} size={RFValue(18)} color={theme.SecondaryPurple} style={{ marginRight: SCREEN_WIDTH * 0.68, marginTop: SCREEN_WIDTH * 0.028 }} />
+                            </TouchableOpacity>
 
                             <View style={styles.user}>
                                 <View style={{
@@ -176,7 +283,7 @@ export default function PostComp(props) {   /// images  as props
                                     <Text style={{ textAlign: 'left', fontSize: RFValue(12), color: theme.PrimaryColor }}>{ body}</Text>
                                 </SafeAreaView>
                             </View>
-                              <View style={photos && photos.length ? { height: RFValue(300), width: "100%", paddingVertical: RFValue(10) , paddingRight:RFValue(18)} : { height: RFValue(100), width: "100%", paddingVertical: RFValue(10) }}>
+                              <View style={photos && photos.length ? { height: RFValue(300), width: "100%", paddingVertical: RFValue(10) } : { height: RFValue(100), width: "100%", paddingVertical: RFValue(10) }}>
                                 {photos && photos.length ?
                                     <ImageViewer images={photos}  ></ImageViewer>
                                     :
@@ -184,9 +291,9 @@ export default function PostComp(props) {   /// images  as props
                             </View>  
                             <View style={styles.counts}>
                                 <TouchableOpacity onPress={() => viewLikes()}>
-                                    <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{props.likes && props.likes.length?props.likes.length: 0} likes</Text>
+                                    <Text numberOfLines={1} style={{ fontSize: RFValue(12),paddingHorizontal:RFValue(12), color: theme.SubText }}>{props.likes && props.likes.length?props.likes.length: 0} likes</Text>
                                 </TouchableOpacity>
-                                <View style={{ flex: 1, alignItems: "flex-end", paddingRight: RFValue(32) }}>
+                                <View style={{ flex: 1, alignItems: "flex-end", paddingRight: RFValue(12) }}>
                                     <Text numberOfLines={1} style={{ fontSize: RFValue(12), color: theme.SubText }}>{props.comments && props.comments.length ? props.comments.length : 0}  comments</Text>
                                 </View>
                             </View>
@@ -216,10 +323,84 @@ export default function PostComp(props) {   /// images  as props
                     }
                     renderItem={({ item }) => {
                         return (
-                            <Comment updateCommentBody={updateCommentBody} deleteCommentFromList={deleteCommentFromList} navigation ={props.navigation} key={item.comment_id} item = {item} />
+                            <Comment upComment={upComment} updateCommentBody={updateCommentBody} deleteCommentFromList={deleteCommentFromList} navigation ={props.navigation} key={item.comment_id} item = {item} />
                         )
                     }} />
-            </View >
+
+        <View styles={styles.footer}>
+                <View style={{display:'flex' , flexDirection:'row' ,padding:RFValue(5),
+                paddingLeft:RFValue(7)
+              , borderTopWidth: RFValue(3),
+                    borderColor: 'rgba(226, 226, 226, 1)',
+                    width: SCREEN_WIDTH,
+                  //  margin: RFValue(3)
+            
+            
+            }}>
+                  <ImageBackground style={{ flex: 1 }} source={{ uri: userPhoto }} style={styles.commentIMG} imageStyle={{
+                    borderRadius: SCREEN_WIDTH * 0.1, borderColor: theme.PrimaryColor,
+                    borderWidth: 0.15
+                }}></ImageBackground>
+                <TextInput
+                  multiline
+                  
+                        ref={ref}
+                    style={{marginHorizontal:RFValue(5), height: 40  ,width:0.67* SCREEN_WIDTH 
+                    ,borderWidth:RFValue(1)
+                   , borderRadius:RFValue(12)
+                    , padding:RFValue(5),
+                        borderColor:'rgba(226, 226, 226, 0.5)'
+                    }}
+                    placeholder="write a comment ..."
+                    onChangeText={newText => setText(newText)}
+                    defaultValue={text}
+                    
+                />
+                    <View style={{  alignSelf: 'flex-end' }}>
+                    <TouchableOpacity  onPress={() => fffff()}>
+                        <LinearGradient
+                            colors={[theme.SecondaryCyan, theme.SecondaryPurple]}
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 1, y: 1 }}
+                            style={styles.button}>
+
+                            <Text style={{ color: "white" }}>  post</Text>
+
+                        </LinearGradient>
+                    </TouchableOpacity>
+                        </View>
+                </View>
+                    </View>
+
+          <Modal
+          
+                visible={modalVisible2}
+                onRequestClose={() => {
+                    // Alert.alert("Modal has been closed.");
+                   // props.navigation.goBack(null);
+                    setModalVisible2(!modalVisible2);
+                }}
+          >
+              
+          </Modal>
+               
+        </Modal >
+
+            :null}
+
+        {
+            view==2?
+                    <LikeList viewmain={viewmain} likes={props.likes} post_id={post_id} > </LikeList>:null
+        }
+
+            {
+                view ==3 ?
+                    <EditComment viewmain={viewmain} comment={cc} updateCommentBody={updateCommentBody}  />  : null
+            }
+
+
+
+        </View>
 
 
 
@@ -227,11 +408,34 @@ export default function PostComp(props) {   /// images  as props
 }
 
 const styles = StyleSheet.create({
+    footer:{
+        display:'flex',
+        flexDirection:'row',
+   position : 'absolute',
+   width:SCREEN_WIDTH,
+   height:100,
+   top:0,
+   bottom:100,
+   zIndex:100000000000000000000000,
+   elevation:5,
+   marginTop:-1222
+
+    
+    },
+    commentIMG:{
+        width: SCREEN_WIDTH * 0.1,
+        height: SCREEN_WIDTH * 0.1,
+    },
     maincontainer: {
         flex: 1,
         display: 'flex',
         alignItems: 'flex-start',
-        paddingVertical: 12,
+        paddingVertical: 42,
+        position: 'absolute' ,
+        zIndex:100000,
+        marginTop:-30,
+        height: SCREEN_HEIGHT + 0.1 * SCREEN_HEIGHT,
+        elevation:5
     },
     comments: {
         display: 'flex',
@@ -270,8 +474,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        paddingHorizontal: RFValue(12),
-        marginRight: RFValue(33),
+        paddingHorizontal: RFValue(0),
+        marginRight: RFValue(0),
         elevation: 5,
     },
 
@@ -329,6 +533,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: RFValue(6),
         elevation:2
-    }
+    },
+    button: {
+        alignItems: 'center',
+        justifyContent: "center",
+        width: SCREEN_WIDTH * 0.12,
+        height: SCREEN_HEIGHT * 0.038,
+        borderRadius: SCREEN_WIDTH * 0.1,
+        paddingRight:RFValue(5),
+        marginBottom:RFValue(2)
+    },
 
 });

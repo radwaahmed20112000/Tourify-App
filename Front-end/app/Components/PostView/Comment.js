@@ -26,7 +26,8 @@ export default function Comment(props) {   /// images  as props
 
 
     const editComment = () => {
-        props.navigation.navigate('EditComment', { comment: props.item, updateCommentBody: props.updateCommentBody })
+        props.upComment(props.item)
+       // props.navigation.navigate('EditComment', { comment: props.item, updateCommentBody: props.updateCommentBody })
     }
  
     return (
@@ -117,7 +118,8 @@ const styles = StyleSheet.create({
     commentActions:{
         display : 'flex',
         flexDirection: 'row',
-        marginLeft:20
+        marginLeft:20,
+        marginBottom:RFValue(5)
 
     },
 

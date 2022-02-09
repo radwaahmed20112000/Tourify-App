@@ -5,23 +5,44 @@ import { TokenContext } from '../Context/TokenContext';
 import ListOfPosts from '../Components/Shared/ListOfPosts';
 import {getFeedPosts} from '../API/PostListAPI';
 import { normalize } from '../util/FontNormalization';
-
+import {getUserPhoto} from '../API/ProfileAPI';
+import TitleBar from '../Components/Feed/TitleBar';
+import TagsBar from '../Components/Feed/TagsBar';
 function Feed({navigation}) {
   const token = useContext(TokenContext);
   const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
-
+  const [photo, setPhoto] = useState(null);
+  const [name, setName] = useState(null);
+  const [filterObj, setFilterObj] = useState(null)
   useEffect(async () => {
-    const data = await getFeedPosts(token);
-    if(data !== false)
+    const data = await getFeedPosts(token, filterObj);
+    const userData = await getUserPhoto(token);
+    if(data !== false && userData !== false)
     {
       setPosts(data);
+      setPhoto(userData.photo);
+      setName(userData.name)
       setLoading(false);
     }
     else
       setMessage("An error occurred, check your network..");
   }, []);
+  useEffect(async ()=>{
+    if(filterObj)
+    {
+      setLoading(true)
+      const data = await getFeedPosts(token, filterObj);
+      if(data !== false)
+      {
+        setPosts(data);
+        setLoading(false);
+      }
+      else
+        setMessage("An error occurred, check your network..");
+    }
+  }, [filterObj])
 
   if(loading)
   {
@@ -35,7 +56,9 @@ function Feed({navigation}) {
   }else{
     return (
         <SafeAreaView style={styles.container}>
-        {posts ? <ListOfPosts navigation={navigation} posts={posts} isProfile ={false}></ListOfPosts> : null}
+        {photo?<TitleBar photo = {photo} navigation={navigation} style={styles.titleBar}></TitleBar> :null}
+        <TagsBar setFilterObj = {setFilterObj} filterObj= {filterObj} name = {name}></TagsBar>
+        {posts? <ListOfPosts posts={posts} isProfile ={false}></ListOfPosts> : null}
         </SafeAreaView>
     );
   }
@@ -47,7 +70,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: RFValue(50)
+    // marginVertical: RFValue(50)
   }
+
 });
 export default Feed;
