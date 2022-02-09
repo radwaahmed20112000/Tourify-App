@@ -101,13 +101,13 @@ module.exports = {
     },
 
     getNotificationToken: async (email, cb) => {
-        let selectQuery = `SELECT notify_token
+        let selectQuery = `SELECT notify_token,name
                             FROM ${tableName} 
                             WHERE email = "${email}" ;`;
         try {
             let token = await DB(selectQuery)
-            console.log(token[0].notify_token)
-            return cb(null, token[0].notify_token);
+            console.log(token[0])
+            return cb(null, token[0]);
 
         } catch (e) {
             console.log(e)

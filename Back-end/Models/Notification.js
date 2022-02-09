@@ -71,17 +71,17 @@ module.exports = {
     },
 
     notify: async (sender_email, receiver_email, post_id, comment_id, cb) => {
-        Account.getNotificationToken(receiver_email, (err, token) => {
+        Account.getNotificationToken(receiver_email, (err, user) => {
             console.log({ err })
             if (!err) {
                 let body = ''
                 if (comment_id > 0)
-                    body = `'${sender_email} commented on your trip`
+                    body = `${user.name} commented on your trip`
                 else
-                    body = `'${sender_email} liked your trip review'`
+                    body = `${user.name} liked your trip review'`
 
                 const message = {
-                    to: token,
+                    to: user.notify_token,
                     sound: 'default',
                     body: body,
                     data: { post_id: post_id, comment_id: comment_id },
@@ -89,7 +89,7 @@ module.exports = {
 
                 try {
                     console.log("SENDINGGGG")
-                    Notification.sendNotification([token], message);
+                    Notification.sendNotification([user.notify_token], message);
                     const res = this.addNotification(post_id, sender_email, receiver_email, comment_id)
                     return cb(null, res);
                 }
