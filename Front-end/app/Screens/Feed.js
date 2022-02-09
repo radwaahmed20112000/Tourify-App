@@ -58,7 +58,7 @@ function Feed({navigation}) {
         <SafeAreaView style={styles.container}>
         {photo?<TitleBar photo = {photo} navigation={navigation} style={styles.titleBar}></TitleBar> :null}
         <TagsBar setFilterObj = {setFilterObj} filterObj= {filterObj} name = {name}></TagsBar>
-        {posts? <ListOfPosts posts={posts} isProfile ={false}></ListOfPosts> : null}
+        {posts ? <ListOfPosts posts={posts} navigation={navigation}  isProfile ={false}></ListOfPosts> : null}
         </SafeAreaView>
     );
   }

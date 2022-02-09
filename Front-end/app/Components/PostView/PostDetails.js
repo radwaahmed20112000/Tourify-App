@@ -15,7 +15,9 @@ import { color } from 'react-native-elements/dist/helpers';
 export default function PostDetails(props) {   /// images  as props   
     const theme = useContext(ThemeContext);
     
-    const { budget, currency, duration, latitude, longitude, tags } = props.post;
+    const {organisation,rate, budget, currency, duration, latitude, longitude, tags } = props.post;
+   const [rateList , setRate ] =useState([])
+   
     let tagsL= tags
     const tag = {
 
@@ -28,6 +30,19 @@ export default function PostDetails(props) {   /// images  as props
 
 
     };
+    useEffect(() => {
+        let l =[]
+        let r =rate
+       for(var i=0; i<5; i++){
+         if(r>0)
+            l.push(1)
+         else
+            l.push(0)
+        r--;
+       }
+       setRate(l)
+    }, []);
+
 
     return (
         <View style={styles.container}>
@@ -37,6 +52,25 @@ export default function PostDetails(props) {   /// images  as props
                 <Text> {longitude} , {latitude}</Text>
             </View>
             :null}
+            {rate?
+                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                  
+                   {
+                       rateList.map(r=>{
+                          if(r==1)
+                              return <AntDesign name="star" size={24} color="orange" />
+                          else 
+                             return  <AntDesign name="staro" size={24} color="black" />
+                       })
+                   }
+                   
+                   
+            </View>
+                
+
+                : null
+
+            }
 
             {budget?
             <View style={styles.attr}>
@@ -51,6 +85,12 @@ export default function PostDetails(props) {   /// images  as props
                 <Text> {duration} days</Text>
             </View>
             :null}
+            {organisation ?
+                <View style={styles.attr}>
+                    <FontAwesome style={{ marginRight: RFValue(12) }} name="building-o" size={24} color={theme.SecondaryPurple}/>
+                    <Text> {organisation} </Text>
+                </View>
+                : null}
             
             
             {tagsL?
