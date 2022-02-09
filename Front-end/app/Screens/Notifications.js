@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native';
+import { Dimensions, SafeAreaView, Text } from 'react-native';
 import { getAllNotifications } from '../API/NotificatonAPI';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { TokenContext } from '../Context/TokenContext';
 import { useContext } from 'react';
 import NotificationList from '../Components/Notification/NotificationList';
 import { NotificationsContext } from '../Context/NotificationsContext';
+const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
+const SCREEN_WIDTH = Dimensions.get('screen').width; // device height
 
 function Notifications({ navigation }) {
 
@@ -31,7 +33,8 @@ function Notifications({ navigation }) {
     }, [])
 
     return (
-        <SafeAreaView style={{ paddingTop: "8%" }}>
+        <SafeAreaView style={{ paddingTop: "8%", flexDirection:"column", backgroundColor:"white", height: SCREEN_HEIGHT }}>
+            <Text style={{fontWeight: "bold", fontSize: 30, margin:SCREEN_WIDTH*0.04 }}>Notifications</Text>
             {processing &&
                 <Spinner
                     visible={processing}

@@ -45,7 +45,7 @@ module.exports = {
 
             console.log("Successfully Viewed!")
 
-            return res.json();
+            return res.status(200).json({ message : "Successfully Viewed!"});
         })
     },
 }

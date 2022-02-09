@@ -16,7 +16,7 @@ module.exports = {
         catch (e) {
             return e
         }
-    },
+    }, 
 
     editPostLocation: async  (editedPost) => {
         let editQuery = `UPDATE ${tableName} 

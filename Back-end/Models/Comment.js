@@ -99,7 +99,7 @@ module.exports = {
 
     getAll: async (post_id, cb) => {
 
-        let selectQuery = `SELECT comment_id ,user.email, body, created_at, updated_at , name , photo FROM ${tableName} Left Join user on comments.email=user.email WHERE post_id = ${post_id};`;
+        let selectQuery = `SELECT comment_id ,user.email, body, created_at, updated_at , name , photo FROM ${tableName} Left Join user on Comments.email=user.email WHERE post_id = ${post_id};`;
 
         try {
             let comments = await DB(selectQuery)
