@@ -33,11 +33,11 @@ module.exports = {
                      if (err) {
                         return res.status(500).json(err);
                      }
-                     return res.json();
+                     return res.json({ comment_id: comment_id});
                   })
                }
                else
-                  return res.json();
+                  return res.json({ comment_id: comment_id});
             })
 
          })
