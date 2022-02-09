@@ -26,6 +26,7 @@ function PostListComponent(props) {
     const token = useContext(TokenContext);
 
     function navigateToPost() {
+        console.log(post_id)
         props.navigation.navigate('postView', { post_id: post_id})
     }
 
