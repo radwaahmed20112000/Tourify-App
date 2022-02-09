@@ -75,10 +75,10 @@ module.exports = {
             console.log({ err })
             if (!err) {
                 let body = ''
-                if (comment_id > 0)
+                if (comment_id !== null)
                     body = `${user.name} commented on your trip`
                 else
-                    body = `${user.name} liked your trip review'`
+                    body = `${user.name} liked your trip review`
 
                 const message = {
                     to: user.notify_token,

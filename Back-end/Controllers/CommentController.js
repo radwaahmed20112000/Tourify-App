@@ -1,6 +1,5 @@
 const Comment = require('../Models/Comment')
 const Notification = require('../Models/Notification')
-const Account = require('../Models/Account.js');
 const Post = require('../Models/Post')
 
 module.exports = {
@@ -28,12 +27,16 @@ module.exports = {
                if (err) {
                   return res.status(500).json(err);
                }
-               Notification.notify(email, post[0].email, req.body.post_id, comment_id, (err) => {
-                  if (err) {
-                     return res.status(500).json(err);
-                  }
+               if (email !== post[0].email) {
+                  Notification.notify(email, post[0].email, req.body.post_id, comment_id, (err) => {
+                     if (err) {
+                        return res.status(500).json(err);
+                     }
+                     return res.json();
+                  })
+               }
+               else
                   return res.json();
-               })
             })
 
          })
