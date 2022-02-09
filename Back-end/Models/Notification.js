@@ -43,7 +43,9 @@ module.exports = {
                                     (${post_id}, '${sender_email}', 
                                     '${receiver_email}', ${comment_id}, false) ;`;
         try {
-            return DB(insertQuery)
+            Account.incrementNotificationsCount(receiver_email, () => {
+                return DB(insertQuery)
+            })
         }
         catch (e) {
             reject(e)
@@ -103,7 +105,7 @@ module.exports = {
 
 
     notify: async (sender_email, receiver_email, post_id, comment_id, cb) => {
-        
+
         Account.getNotificationToken(receiver_email, (err, user) => {
             console.log({ err })
             if (!err) {

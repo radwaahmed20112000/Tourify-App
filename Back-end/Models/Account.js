@@ -130,6 +130,11 @@ module.exports = {
             return cb(e, null);
 
         }
+    },
+
+    incrementNotificationsCount: async (email, cb) => {
+        var query = ` notifications_count = notifications_count + 1`;
+        return this.editUser(email, query, cb);
     }
 
 }
