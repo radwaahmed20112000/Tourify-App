@@ -58,7 +58,7 @@ function ListOfPosts(props) {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          keyExtractor={(item) => item.post_id}
+          keyExtractor={(item) =>item.post_id}
           renderItem={({ item }) => {
             item.deletePostFromState = deletePostFromState;
             return (
