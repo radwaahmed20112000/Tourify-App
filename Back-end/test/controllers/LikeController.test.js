@@ -20,7 +20,7 @@ describe('Likes controller', function () {
         };
         it('it should retrun Ok response', (done) => {
 
-            let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL}','${testPost.body}');`
+            let query = `insert  ignore into  Post(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL}','${testPost.body}');`
             DB(query).then(() => {
                 console.log(query);
                 chai.request(server)
@@ -54,7 +54,7 @@ describe('Likes controller', function () {
     
         it('it should delete likes and decrement number of likes', (done) => {
     
-            let query = `insert  ignore into  POST(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL }','${testPost.body}');`
+            let query = `insert  ignore into  Post(post_id,email, body) values(${testPost.post_id},'${process.env.TEST_EMAIL }','${testPost.body}');`
             console.log(query)
             DB(query).then(() => {
                 console.log("inside  t")

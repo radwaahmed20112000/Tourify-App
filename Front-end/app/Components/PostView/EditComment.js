@@ -7,6 +7,9 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import {editComment ,deleteComment} from '../../API/CommentApi'
 import { TokenContext } from '../../Context/TokenContext';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faArrowLeft, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { useIsFocused } from "@react-navigation/native";
 
 export default function EditComment(props) {   /// images  as props   
     const theme = useContext(ThemeContext);
@@ -14,22 +17,31 @@ export default function EditComment(props) {   /// images  as props
     const token = useContext(TokenContext);
 
     useEffect(async () => {
-        setBody(props.route.params.comment.body)
+        setBody(props.comment.body)
     }, []);
 
     const EditComment = async ()=>{
         console.log("hh")
-        let b = { comment_id: props.route.params.comment.comment_id , body : body}
+        let b = { comment_id: props.comment.comment_id , body : body}
 
         const data = await editComment(token ,b);
-        props.route.params.comment.body =body
-        props.route.params.updateCommentBody(props.route.params.comment)
-       props.navigation.goBack(null ,{data : data});
+        props.comment.body =body
+        props.updateCommentBody(props.comment)
+        props.viewmain()
+      // props.navigation.goBack(null ,{data : data});
  
     }
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity
+                style={{
+                    marginBottom: RFValue(22),
+                    marginLeft: RFValue(0)
+                }}
+                onPress={() => props.viewmain()} >
+                <FontAwesomeIcon icon={faArrowLeft} size={RFValue(18)} color={theme.SecondaryPurple} style={{ marginRight: SCREEN_WIDTH * 0.78, marginTop: SCREEN_WIDTH * 0.028 }} />
+            </TouchableOpacity>
 
             <TextInput
                 value={body}

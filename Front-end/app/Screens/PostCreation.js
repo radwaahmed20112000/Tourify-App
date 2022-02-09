@@ -12,7 +12,6 @@ import ImageSharing from '../Components/PostCreation/ImageSharing';
 import BudgetInput from '../Components/PostCreation/BudgetInput';
 import PhotosList from '../Components/PostCreation/PhotosList';
 import baseUrl from "../API/IPAdress" 
-import { NavigationActions, StackActions } from 'react-navigation';
 import { goHome, createPost } from '../API/PostCreation';
 const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const SCREEN_WIDTH = Dimensions.get('screen').width; // device width

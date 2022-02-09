@@ -19,6 +19,7 @@ function PostView(props) {
 
     useEffect(async () => {
         const data = await getPostView(token, props.route.params.post_id);
+        console.log("jjjjjjjjjjj ", props.route.params.post_id)
         if (data !== false) {
             setPosts(data.post);
             setComm(data.comments)

@@ -3,7 +3,9 @@ const { Expo } = require('expo-server-sdk');
 const expo = new Expo();
 
 exports.sendNotification = (pushTokens, message) => {
-
+    console.log("lollipop")
+    console.log({ pushTokens })
+    console.log({ message })
     let messages = [];
     for (let pushToken of pushTokens) {
 
@@ -26,7 +28,7 @@ exports.sendNotification = (pushTokens, message) => {
                 tickets.push(...ticketChunk);
 
             } catch (error) {
-                console.error(error);
+                return reject(error)
             }
         }
     })();
@@ -66,7 +68,7 @@ exports.sendNotification = (pushTokens, message) => {
                     }
                 }
             } catch (error) {
-                console.error(error);
+                return reject(error)
             }
         }
     })();
