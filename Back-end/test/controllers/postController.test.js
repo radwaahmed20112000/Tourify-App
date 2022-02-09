@@ -367,10 +367,3 @@ describe('Posts controller', function () {
     });
 
 });   
-
-   
-
-
-
-
-

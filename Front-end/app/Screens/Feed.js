@@ -1,12 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
-import {StyleSheet, Dimensions, FlatList, SafeAreaView, View, ActivityIndicator, Text } from 'react-native';
-import { ThemeContext } from '../Context/ThemeContext';
+import {StyleSheet, SafeAreaView, View, ActivityIndicator, Text } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TokenContext } from '../Context/TokenContext';
-import IPAdress from '../API/IPAdress';
 import ListOfPosts from '../Components/Shared/ListOfPosts';
-const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
-const WINDOW_HEIGHT = Dimensions.get('window').height;
 import {getFeedPosts} from '../API/PostListAPI';
 import { normalize } from '../util/FontNormalization';
 
