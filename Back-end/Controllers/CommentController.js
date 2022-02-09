@@ -47,7 +47,7 @@ module.exports = {
 },
 
 
-     editComment: async (req, res) => {
+   editComment: async (req, res) => {
       Comment.getOne(req.body.comment_id,(error, comment)=>{
   
          if(error)
