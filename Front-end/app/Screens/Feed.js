@@ -32,15 +32,17 @@ function Feed({navigation}) {
   useEffect(async ()=>{
     if(filterObj)
     {
-      setLoading(true)
+      setMessage("");
+      setPosts(null)
       const data = await getFeedPosts(token, filterObj);
       if(data !== false)
       {
         setPosts(data);
-        setLoading(false);
       }
       else
+      {
         setMessage("An error occurred, check your network..");
+      }
     }
   }, [filterObj])
 
@@ -58,7 +60,15 @@ function Feed({navigation}) {
         <SafeAreaView style={styles.container}>
         {photo?<TitleBar photo = {photo} navigation={navigation} style={styles.titleBar}></TitleBar> :null}
         <TagsBar setFilterObj = {setFilterObj} filterObj= {filterObj} name = {name}></TagsBar>
-        {posts? <ListOfPosts posts={posts} isProfile ={false}></ListOfPosts> : null}
+        {posts? <ListOfPosts posts={posts} isProfile ={false}  navigation={navigation}></ListOfPosts> : 
+        message?
+        <View style={{justifyContent:"center", alignItems:"center", flex:1}}>
+         <Text style={{color:"#999999", fontSize:normalize(17)}}>{message}</Text>
+         </View>
+          :
+          <View style={{justifyContent:"center", alignItems:"center", flex:1}}>
+           <ActivityIndicator size={50} color="#999999" animating={true} />
+           </View>}
         </SafeAreaView>
     );
   }

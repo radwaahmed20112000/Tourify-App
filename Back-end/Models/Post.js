@@ -80,8 +80,8 @@ module.exports = {
 
 
     // },
-    findAll: async (query,tagQuery,filterQuery, limit, offset, cb) => {
-
+findAll: async (query,tagQuery,filterQuery, limit, offset, cb) => {
+        filter="";
         query = query || '';
         if(filterQuery)
            filter +='AND ' + filterQuery;
@@ -92,15 +92,16 @@ module.exports = {
                               Post.post_id , user.email,  body,name as userName , photo as userPhoto , photos ,Post.created_at
                             FROM
                                (
-                                    (Post join user  on user.email = Post.email ) 
-                                LEFT JOIN (
+                                (Post join user  on user.email = Post.email ) 
+                                natural JOIN (
                                     SELECT 
                                         PostPhoto.post_id, 
                                         JSON_ARRAYAGG(JSON_OBJECT('photo', photo)) photos 
                                     FROM PostPhoto 
                                     GROUP BY PostPhoto.post_id
-                                ) ph ON Post.post_id = ph.post_id
-                                ) ${tagQuery}
+                                ) as ph 
+                                )
+                                 ${tagQuery}
                                 
                             ${query ? ' WHERE ' + query + filter : filter}  ORDER BY rate  DESC  LIMIT ${limit} OFFSET ${offset} ; `
 
@@ -110,7 +111,7 @@ module.exports = {
                 if (p.photos)
                     p.photos = JSON.parse(p.photos)
             });
-
+            console.log(posts)
             return cb(null, posts);
 
         } catch (e) {

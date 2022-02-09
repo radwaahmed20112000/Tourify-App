@@ -40,37 +40,37 @@ module.exports = {
       if (!req.user_id)
          res.status(403)
 
-      let query = `user.email != '${req.user_id}'`;
+      let query = `user.email != '${req.user_id}' `;
 
     
       tags=req.body.tags;
       for(var i in tags ){
          if(i==0)
-             tagQuery+= "NATURAL JOIN ";
+             tagQuery+= "natural join ";
          console.log(tags[i]);
-         tagQuery+=`(SELECT PostTags.post_id FROM PostTags AS ${tags[i]} WHERE ${tags[i]}.tag_name = "${tags[i]}")`
+         tagQuery+=`( SELECT post_id FROM PostTags where ( tag_name = "${tags[i]}" ) ) as ${tags[i]} `
          if(tags.length-i>1)
-             tagQuery+= "NATURAL JOIN ";
+             tagQuery+= " natural join ";
 
       }
 
-      if(req.body.duration){
-         filterQuery+=`duration =  ${parseInt(req.body.duration)}`;
+      if(req.body.numberOfDays){
+         filterQuery+=` duration =  ${parseInt(req.body.numberOfDays)}`;
       }
       if(req.body.organization){
          if(filterQuery.length>0)
-            filterQuery+= "AND";
+            filterQuery+= " AND ";
          filterQuery+=`organisation = '${req.body.organization}'`;
       }
       if(req.body.rate){
          if(filterQuery.length>0)
-             filterQuery+= "AND";
+             filterQuery+= " AND " ;
          filterQuery+=`rate = ${req.body.rate}`;
       }
       if(req.body.budget){
          if(filterQuery.length>0)
-             filterQuery+= "AND";
-         filterQuery+=`budget <= '${ parseInt(req.body.budget)}' AND currency = '${req.body.currency}`;
+             filterQuery+= " AND ";
+         filterQuery+=`budget <= ${ parseInt(req.body.budget)} AND currency = '${req.body.currency}' `;
       }
 
       Post.findAll(query,tagQuery, filterQuery,limit, offset, (err, posts) => {
@@ -83,14 +83,13 @@ module.exports = {
       })
 
    },
-
    getProfilePosts: (req, res) => {
       let limit = req.query.limit || 100;
       let offset = req.query.offset || 0;
 
       let query = `user.email = '${req.user_id}'`;
 
-      Post.findAll(query, limit, offset, (err, posts) => {
+      Post.findAll(query, "", "", limit, offset, (err, posts) => {
 
          if (err)
             return res.status(500).json(err);
@@ -146,7 +145,6 @@ module.exports = {
             console.log(err);
             return res.status(500).json(err);
          }
-         // console.log(post);
          return res.send(post);
       })
 
