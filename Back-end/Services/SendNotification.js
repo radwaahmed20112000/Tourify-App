@@ -43,35 +43,35 @@ exports.sendNotification = (pushTokens, message) => {
     }
 
     let receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
-    (async () => {
-        // Like sending notifications, there are different strategies you could use
-        // to retrieve batches of receipts from the Expo service.
-        for (let chunk of receiptIdChunks) {
-            try {
-                let receipts = await expo.getPushNotificationReceiptsAsync(chunk);
-                console.log(receipts);
+    // (async () => {
+    //     // Like sending notifications, there are different strategies you could use
+    //     // to retrieve batches of receipts from the Expo service.
+    //     for (let chunk of receiptIdChunks) {
+    //         try {
+    //             let receipts = await expo.getPushNotificationReceiptsAsync(chunk);
+    //             console.log(receipts);
 
-                // The receipts specify whether Apple or Google successfully received the
-                // notification and information about an error, if one occurred.
-                for (let receiptId in receipts) {
-                    let { status, message, details } = receipts[receiptId];
-                    if (status === 'ok') {
-                        continue;
-                    } else if (status === 'error') {
-                        console.error(
-                            `There was an error sending a notification: ${message}`
-                        );
-                        if (details && details.error) {
+    //             // The receipts specify whether Apple or Google successfully received the
+    //             // notification and information about an error, if one occurred.
+    //             for (let receiptId in receipts) {
+    //                 let { status, message, details } = receipts[receiptId];
+    //                 if (status === 'ok') {
+    //                     continue;
+    //                 } else if (status === 'error') {
+    //                     console.error(
+    //                         `There was an error sending a notification: ${message}`
+    //                     );
+    //                     if (details && details.error) {
 
-                            console.error(`The error code is ${details.error}`);
-                        }
-                    }
-                }
-            } catch (error) {
-                return reject(error)
-            }
-        }
-    })();
+    //                         console.error(`The error code is ${details.error}`);
+    //                     }
+    //                 }
+    //             }
+    //         } catch (error) {
+    //             return reject(error)
+    //         }
+    //     }
+    // })();
 
 }
 
