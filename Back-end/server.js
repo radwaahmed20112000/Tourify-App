@@ -32,6 +32,6 @@ app.listen(process.env.PORT || '3000', () => {
 // deployUsers.deploy()
 
 //posts
-// const deployPosts = require('./DB/deployPosts');
-// deployPosts.deploy();
-// module.exports = app; 
+const deployPosts = require('./DB/deployPosts');
+deployPosts.deploy();
+module.exports = app; 
