@@ -134,7 +134,20 @@ module.exports = {
 
     incrementNotificationsCount: async (email, cb) => {
         var query = ` notifications_count = notifications_count + 1`;
-        return this.editUser(email, query, cb);
+        let editQuery = `UPDATE ${tableName} 
+                            SET  ${query} 
+                            WHERE email = "${email}" ;`;
+
+        try {
+            let res = await DB(editQuery)
+            console.log("edited account : ", email)
+            return cb(null, res);
+        }
+        catch (e) {
+            console.log(e)
+            return cb(e, null);
+        }
+
     }
 
 }
