@@ -81,7 +81,7 @@ module.exports = {
 
     // },
 findAll: async (query,tagQuery,filterQuery, limit, offset, cb) => {
-    console.log(tagQuery)
+    console.log("TAG QUERY" + tagQuery)
         filter="";
         query = query || '';
         if(filterQuery)
