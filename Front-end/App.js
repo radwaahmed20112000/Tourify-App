@@ -115,10 +115,11 @@ export default function App() {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
+      console.log(response.data.post_id);
+      console.log("NOTIFICAAATION")
 
       return () => {
-        <PostView post_id = {response.data.id}></PostView>
+        < PostView post_id={response.data.post_id} ></PostView >
       }
       // navigation.navigate('postView', {post_id:response.data.post_id})
     });
@@ -189,7 +190,7 @@ export default function App() {
                   <Stack.Screen
                     name="Temp"
                     component={Temp} />
-                  
+
                 </Stack.Navigator>
               </NavigationContainer>
             </NotificationsContext.Provider>

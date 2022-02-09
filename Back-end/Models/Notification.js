@@ -33,8 +33,8 @@ module.exports = {
     },
 
     addNotification: async (post_id, sender_email, receiver_email, comment_id = null) => {
-
-        if (sender_email === receiver_email) return
+        console.log("AOAOAAOO")
+        if (sender_email !== receiver_email) return
 
         let insertQuery = `INSERT INTO
                                     ${tableName} (post_id, sender_email,
@@ -42,6 +42,8 @@ module.exports = {
                             VALUES  
                                     (${post_id}, '${sender_email}', 
                                     '${receiver_email}', ${comment_id}, false) ;`;
+
+        console.log(insertQuery)
         try {
             Account.incrementNotificationsCount(receiver_email, () => {
                 return DB(insertQuery)
@@ -79,7 +81,7 @@ module.exports = {
                             WHERE  
                                     post_id = ${post_id} 
                                     AND sender_email = '${sender_email}' ;`;
-        console.log({deleteQuery})     
+        console.log({ deleteQuery })
         try {
             let res = DB(deleteQuery)
             console.log(res)
@@ -112,9 +114,27 @@ module.exports = {
                 try {
                     console.log("SENDINGGGG")
                     Notification.sendNotification([user.notify_token], message);
-                    const res = this.addNotification(post_id, sender_email, receiver_email, comment_id)
-                    console.log(res)
-                    return cb(null, res);
+
+                    if (sender_email === receiver_email) return
+
+                    let insertQuery = `INSERT INTO
+                                    ${tableName} (post_id, sender_email,
+                                                receiver_email, comment_id, viewed)
+                            VALUES  
+                                    (${post_id}, '${sender_email}', 
+                                    '${receiver_email}', ${comment_id}, false) ;`;
+
+                    console.log(insertQuery)
+                    try {
+                        Account.incrementNotificationsCount(receiver_email, () => {
+                            DB(insertQuery)
+                            return cb(null, true);
+
+                        })
+                    }
+                    catch (e) {
+                        return cb(e, null);
+                    }
                 }
                 catch (e) {
                     return cb(e, null);
