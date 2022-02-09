@@ -115,13 +115,15 @@ export default function App() {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response.data.post_id);
+      console.log(response.notification.request.content.data);
+
+      console.log(response.notification.request.content.data.post_id);
       console.log("NOTIFICAAATION")
 
-      return () => {
-        < PostView post_id={response.data.post_id} ></PostView >
-      }
-      // navigation.navigate('postView', {post_id:response.data.post_id})
+      // return () => {
+      //   < PostView post_id={response.data.post_id} ></PostView >
+      // }
+      // navigation.navigate('postView', { post_id: response.data.post_id })
     });
 
     return () => {
