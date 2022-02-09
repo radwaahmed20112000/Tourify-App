@@ -13,6 +13,7 @@ module.exports = {
                 console.log(photo.name)
                 const imgUrl = `https://tourifyphotos.blob.core.windows.net/images/${photo.name}`;
                 let insertQuery = `INSERT INTO ${tableName}  VALUES  (${post_id},"${imgUrl}" ) ;`;
+                console.log(insertQuery)
                 DB(insertQuery)
                 });
                 return

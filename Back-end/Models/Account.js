@@ -6,10 +6,10 @@ module.exports = {
 
 
 
-    findEmail : async ( email, cb )=>{
-    
+    findEmail: async (email, cb) => {
+
         email = email || '';
-      
+
         let selectQuery = `SELECT * FROM ${tableName} WHERE email = "${email}" ;`;
 
         try {
@@ -22,14 +22,14 @@ module.exports = {
             return cb(e, null);
 
         }
-    
-     
+
+
     },
 
-    getPassword : async ( email, cb )=>{
-    
+    getPassword: async (email, cb) => {
+
         email = email || '';
-      
+
         let selectQuery = `SELECT password FROM ${tableName} WHERE email = "${email}" ;`;
 
         try {
@@ -39,7 +39,7 @@ module.exports = {
         } catch (e) {
             console.log(e)
             return cb(e, null);
-    
+
         }
     },
 
@@ -66,7 +66,7 @@ module.exports = {
 
     },
 
-    
+
     editUser: async (email, query, cb) => {
 
         let editQuery = `UPDATE ${tableName} 
@@ -75,7 +75,7 @@ module.exports = {
 
         try {
             let res = await DB(editQuery)
-            console.log("edited account : ", res.length)
+            console.log("edited account : ", email)
             return cb(null, res);
         }
         catch (e) {
@@ -85,20 +85,35 @@ module.exports = {
 
     },
 
-    // saveNotificationToken: (email, token, cb) => {
+    saveNotificationToken: (email, token, cb) => {
 
-    //     let updateQuery = `UPDATE ${tableName} 
-    //                         SET notify_token = '${token}'
-    //                         WHERE email = '${email}'`
-        
-    //     try {
-    //         console.log(DB(updateQuery))
-    //         return cb(null)
-    //     }
-    //     catch(e) {
-    //         return cb(e)
-    //     }
-    // }
+        let updateQuery = `UPDATE ${tableName} 
+                            SET notify_token = '${token}'
+                            WHERE email = '${email}'`
 
+        try {
+            console.log(DB(updateQuery))
+            return cb(null)
+        }
+        catch (e) {
+            return cb(e)
+        }
+    },
+
+    getNotificationsCount: async (email, cb) => {
+        let selectQuery = `SELECT notifications_count 
+                            FROM ${tableName} 
+                            WHERE email = "${email}" ;`;
+        try {
+            let count = await DB(selectQuery)
+            console.log(count[0].notifications_count)
+            return cb(null, count[0].notifications_count);
+
+        } catch (e) {
+            console.log(e)
+            return cb(e, null);
+
+        }
+    }
 
 }

@@ -7,11 +7,12 @@ module.exports = {
 
     tableName: tableName,
 
-    findOne: async (post_id, email, cb) => {
+    findOne: async (post_id, cb) => {
         let selectQuery = `SELECT
-                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags
+                                body, duration, organisation, rate, budget, currency, latitude, longitude, photos, tags, number_of_likes, number_of_comments ,user.email ,name as userName , photo as userPhoto , photos ,Post.created_at
                                 FROM
-                                    (Post NATURAL LEFT JOIN PostLocation)
+                                
+                                    (Post join user  on user.email = Post.email  NATURAL LEFT JOIN PostLocation)
                                     LEFT JOIN (
                                         SELECT 
                                             post_id, 
@@ -26,9 +27,10 @@ module.exports = {
                                         FROM PostTags 
                                         GROUP BY post_id
                                     ) t ON Post.post_id = t.post_id
-                                WHERE Post.post_id = ${post_id} AND email = "${email}" `
+                                WHERE Post.post_id = ${post_id} `
         try {
             let post = await DB(selectQuery)
+            post =post[0]
             if (post.photos)
                 post.photos = JSON.parse(post.photos)
 
@@ -96,6 +98,7 @@ module.exports = {
 
         }
     },
+
     delete: async (postId, cb) => {
 
         let query = `DELETE FROM  ${tableName} WHERE  post_id = ${postId} `;
@@ -131,13 +134,13 @@ module.exports = {
         }
     },
 
-    editPost: async (email, editedPost) => {
+    editPost: async (editedPost) => {
         let editQuery = `UPDATE ${tableName} 
             SET body = "${editedPost.body}" , duration = ${editedPost.duration},
                 organisation = "${editedPost.organisation}", rate = ${editedPost.rate},
                 budget = ${editedPost.budget}, currency = "${editedPost.currency}"  
             WHERE
-                email = "${email}" AND post_id = ${editedPost.postId};`
+                post_id = ${editedPost.postId};`
         console.log(editQuery)
         try {
             let res = await DB(editQuery)
@@ -166,6 +169,8 @@ module.exports = {
             return cb(e, null);
 
         }
-    }
+    },
+
+
 
 }

@@ -210,7 +210,7 @@ module.exports = {
             else {
                 console.log("baba")
                 res.send(imgUrl);
-            } 
+            }
 
         });
     },
@@ -218,24 +218,38 @@ module.exports = {
     saveNotificationToken: (req, res) => {
 
         console.log("HOOOHHOH")
-        
+
         let email = req.user_id
         let token = req.body.notificationToken
 
         console.log("Save Notification Token:")
-        console.log({token})
+        console.log({ token })
         var query = ` notify_token = '${token}' `;
 
         Account.editUser(email, query, (err, user) => {
-            
+
             if (err) return res.status(500).json(err);
 
             console.log("Notification Token Saved successfully")
-            delete user.password;
             res.status(200).json({ message: "Notification Token Saved successfully" });
 
         });
-    }
+    },
 
+    getNotificationsCount: (req, res) => {
+        console.log("strawberry")
+        var email = req.user_id
+
+        Account.getNotificationsCount(email, (err, count) => {
+            if (err) {
+                return res.status(500).json(err);
+
+            }
+            console.log(count)
+            return res.status(200).json(count);
+
+        })
+
+    }
 
 }

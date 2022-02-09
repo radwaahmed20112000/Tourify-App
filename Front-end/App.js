@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
 import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
+import { getNotificationsCount } from './app/API/ProfileAPI';
+
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
 import Map from './app/Screens/Map';
@@ -16,7 +18,9 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { NotificationsContext } from './app/Context/NotificationsContext';
 import { saveNotificationToken } from './app/API/NotificatonAPI'
-
+import PostView from './app/Components/Shared/PostView';
+import LikeList from './app/Components/PostView/LikeList'
+import EditComment from './app/Components/PostView/EditComment'
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -30,7 +34,6 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const user_token = useContext(TokenContext)
 
   //navigation:
   const Stack = createStackNavigator();
@@ -60,6 +63,13 @@ export default function App() {
         } catch (e) {
           console.log(e);
         }
+        registerForPushNotificationsAsync().then(async (token) => {
+          setExpoPushToken(token)
+          await saveNotificationToken(userToken, token);
+        });
+        const count = await getNotificationsCount(userToken);
+        console.log({ count })
+        setNotificationsCount(count)
         dispatch({ type: 'Login', userToken });
       },
       signUp: async (email, userName, password, country, photo, googleBool) => {
@@ -74,6 +84,10 @@ export default function App() {
         } catch (e) {
           console.log(e);
         }
+        registerForPushNotificationsAsync().then(async (token) => {
+          setExpoPushToken(token)
+          await saveNotificationToken(userToken, token);
+        });
         dispatch({ type: 'Register', userToken });
       },
       signOut: async () => {
@@ -89,13 +103,6 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => {
-      setExpoPushToken(token)
-      // Save Notification token to database
-      console.log({token})
-      // saveNotificationToken(user_token, token)
-    });
-
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
       setNotificationsCount(notificationsCount => notificationsCount + 1)
@@ -116,11 +123,20 @@ export default function App() {
     setTimeout(async () => {
       try {
         userToken = await AsyncStorage.getItem('userToken')
+
+        if (userToken) {
+          //get notifications
+          const count = await getNotificationsCount(userToken);
+          console.log({ count })
+          setNotificationsCount(count)
+        }
+
       } catch (e) {
         console.log(e);
       }
       dispatch({ type: "RetrieveToken", userToken })
     }, 1000)
+
   }, [])
 
   if (loginState.isLoading) {
@@ -134,7 +150,7 @@ export default function App() {
       <ThemeContext.Provider value={Theme}>
         <AuthContext.Provider value={authContext}>
           <TokenContext.Provider value={loginState.userToken}>
-            <NotificationsContext.Provider value={notificationsCount}>
+            <NotificationsContext.Provider value={[notificationsCount, setNotificationsCount]}>
               <NavigationContainer>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                   {loginState.userToken ?
@@ -150,6 +166,16 @@ export default function App() {
                   <Stack.Screen
                     name="Map"
                     component={Map} />
+                  <Stack.Screen
+                    name="postView"
+                    component={PostView} />
+                  <Stack.Screen
+                    name="LikesList"
+                    component={LikeList} />
+                  <Stack.Screen
+                    name="EditComment"
+                    component={EditComment} />
+                  
                 </Stack.Navigator>
               </NavigationContainer>
             </NotificationsContext.Provider>

@@ -31,4 +31,23 @@ const getUserPosts = async(token)=>{
         else return resp.json();
     }catch{()=>{return false;}}
 }
-export {getFeedPosts, getUserPosts}
+
+
+const getPostView = async (token,id) => {
+    try {
+        const resp = await fetch(IPAdress + `posts/viewPost?id=${id}`,
+            {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+            }).catch((err) => { return false });
+        if (resp.status !== 200) return false;
+        else
+            return resp.json();
+    }
+    catch { () => false }
+}
+export { getFeedPosts, getUserPosts, getPostView}
