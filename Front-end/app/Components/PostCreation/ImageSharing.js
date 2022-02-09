@@ -38,7 +38,7 @@ function ImageSharing({setPhotos, photos}) {
     return (
         <SafeAreaView style={styles.container}>
             <TouchableOpacity onPress={openImagePickerAsync}>
-                <FontAwesomeIcon icon={faImage} size={ SCREEN_WIDTH*0.075 }  color={theme.SecondaryPurple}  style={{color:theme.SecondaryPurple }}/>
+                <FontAwesomeIcon icon={faImage} size={ SCREEN_WIDTH*0.075 }  color={theme.SecondaryCyan}  />
             </TouchableOpacity>
         </SafeAreaView>
         

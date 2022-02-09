@@ -90,6 +90,7 @@ module.exports = {
             Comment.decrement(req.query.id, (err) => {
                if (err)
                   return res.status(500).json(err);
+               
                return res.json();
             })
          })

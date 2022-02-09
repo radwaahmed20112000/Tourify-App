@@ -70,21 +70,6 @@ module.exports = {
         }
     },
 
-    deleteCommentNotification(comment_id) {
-
-        let deleteQuery = `DELETE FROM
-                                    ${tableName} 
-                            WHERE  
-                                    comment_id = ${comment_id} ;`;
-        try {
-            DB(deleteQuery)
-            return
-        }
-        catch (e) {
-            return e
-        }
-    },
-
     deleteLikeNotification(post_id, sender_email) {
 
         let deleteQuery = `DELETE FROM
@@ -92,8 +77,10 @@ module.exports = {
                             WHERE  
                                     post_id = ${post_id} 
                                     AND sender_email = ${sender_email} ;`;
+        console.log({deleteQuery})     
         try {
-            DB(deleteQuery)
+            let res = DB(deleteQuery)
+            console.log(res)
             return
         }
         catch (e) {
@@ -124,6 +111,7 @@ module.exports = {
                     console.log("SENDINGGGG")
                     Notification.sendNotification([user.notify_token], message);
                     const res = this.addNotification(post_id, sender_email, receiver_email, comment_id)
+                    console.log(res)
                     return cb(null, res);
                 }
                 catch (e) {

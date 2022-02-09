@@ -10,7 +10,7 @@ import { loginReducer, initialLoginState } from './app/Context/LoginReducer';
 import { signInRequest, signUpRequest } from './app/API/RegisterationAPI';
 import Registeration from './app/Screens/Registeration';
 import { getNotificationsCount } from './app/API/ProfileAPI';
-
+import { useNavigation } from '@react-navigation/native';
 import NavigationTabs from './app/Components/Navigation/NavigationTabs'
 import { TokenContext } from './app/Context/TokenContext';
 import Map from './app/Screens/Map';
@@ -21,6 +21,8 @@ import { saveNotificationToken } from './app/API/NotificatonAPI'
 import PostView from './app/Components/Shared/PostView';
 import LikeList from './app/Components/PostView/LikeList'
 import EditComment from './app/Components/PostView/EditComment'
+
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -28,6 +30,7 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+
 export default function App() {
   //notifications
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -50,6 +53,7 @@ export default function App() {
   //authuntication
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
   const authContext = React.useMemo(() => {
+
     return {
       signIn: async (email, password, googleBool) => {
         let response = await signInRequest(email, password, googleBool);
@@ -110,6 +114,8 @@ export default function App() {
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
+      const navigation = useNavigation();
+      navigation.navigate('postView', {post_id:response.data.post_id})
     });
 
     return () => {
