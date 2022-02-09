@@ -100,6 +100,22 @@ module.exports = {
         }
     },
 
+    getNotificationToken: async (email, cb) => {
+        let selectQuery = `SELECT notify_token,name
+                            FROM ${tableName} 
+                            WHERE email = "${email}" ;`;
+        try {
+            let token = await DB(selectQuery)
+            console.log(token[0])
+            return cb(null, token[0]);
+
+        } catch (e) {
+            console.log(e)
+            return cb(e, null);
+
+        }
+    },
+
     getNotificationsCount: async (email, cb) => {
         let selectQuery = `SELECT notifications_count 
                             FROM ${tableName} 
