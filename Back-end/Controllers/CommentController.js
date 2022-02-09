@@ -33,11 +33,11 @@ module.exports = {
                      if (err) {
                         return res.status(500).json(err);
                      }
-                     return res.json();
+                     return res.json({ comment_id: comment_id});
                   })
                }
                else
-                  return res.json();
+                  return res.json({ comment_id: comment_id});
             })
 
          })
@@ -47,7 +47,7 @@ module.exports = {
 },
 
 
-     editComment: async (req, res) => {
+   editComment: async (req, res) => {
       Comment.getOne(req.body.comment_id,(error, comment)=>{
   
          if(error)
@@ -92,6 +92,7 @@ module.exports = {
             Comment.decrement(req.query.id, (err) => {
                if (err)
                   return res.status(500).json(err);
+               
                return res.json();
             })
          })

@@ -16,9 +16,11 @@ function PostView(props) {
     const [message, setMessage] = useState(null);
     const [comments, setComm] = useState(null);
     const [likes, setLikes] = useState(null);
+    const [user, setUser] = useState(null);
 
     useEffect(async () => {
         const data = await getPostView(token, props.route.params.post_id);
+        setUser(props.route.params.user)
         console.log("jjjjjjjjjjj ", props.route.params.post_id)
         if (data !== false) {
             setPosts(data.post);
@@ -43,7 +45,7 @@ function PostView(props) {
     } else {
         return (
             <SafeAreaView style={styles.container}>
-                {posts ? <PostComp navigation={navigation} comments={comments} likes={likes} post={posts} isProfile={false}></PostComp> : null}
+                {posts ? <PostComp user={user} navigation={navigation} comments={comments} likes={likes} post={posts} isProfile={false}></PostComp> : null}
 
                 
             </SafeAreaView>

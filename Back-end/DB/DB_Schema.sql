@@ -74,7 +74,7 @@ CREATE TABLE Notification(
 	post_id INT REFERENCES Post(post_id),
 	sender_email VARCHAR(200) NOT NULL REFERENCES user(email),
 	receiver_email VARCHAR(200) NOT NULL REFERENCES user(email),
-	comment_id INT REFERENCES Comments(comment_id),
+	comment_id INT REFERENCES Comments(comment_id) ON DELETE CASCADE,
 	viewed boolean,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

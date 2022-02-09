@@ -54,20 +54,16 @@ function NavigationTabs(props) {
                         let text
                         if (route.name === 'Feed') {
                             iconName = 'home';
-                            text = 'Feed'
                         }
                         else if (route.name === 'Notifications') {
                             hidden = false;
                             iconName = 'notifications'
-                            text = 'Notification'
                         }
                         else if (route.name === 'Profile') {
                             iconName = 'person'
-                            text = 'Profile'
                         }
                         else if (route.name === 'PostCreation') {
                             iconName = 'add'
-                            text = 'New Trip'
                         }
 
                         if (focused)

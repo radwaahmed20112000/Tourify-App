@@ -14,7 +14,7 @@ export default function Comment(props) {   /// images  as props
     const token = useContext(TokenContext);
 
     const DeleteComment = async()=>{
-        console.log("ffff")
+        console.log("ffff", props.item)
         const res = await deleteComment(token, props.item.comment_id)
         //console.log(res)
         if(!res)

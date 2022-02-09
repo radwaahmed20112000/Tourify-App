@@ -62,7 +62,7 @@ function ListOfPosts(props) {
           renderItem={({ item }) => {
             item.deletePostFromState = deletePostFromState;
             return (
-              <PostListComponent item={item} navigation={props.navigation} isProfile={isProfile}/>
+              <PostListComponent user ={props.user} item={item} navigation={props.navigation} isProfile={isProfile}/>
             )
           }} />
       </SafeAreaView>
