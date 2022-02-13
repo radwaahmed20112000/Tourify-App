@@ -38,7 +38,7 @@ Tourify is a social app for sharing travel experiences. Users can share the mome
 
 ## Application screenshots:
 
-## 1- Registeration
+## 1- Registration
 
 Sign in
 
