@@ -32,7 +32,7 @@ module.exports = {
         });
 
 
-        for (let i = 20; i < 25; i++) {
+        for (let i = 0; i < 10; i++) {
             var post_id;
             const len = Math.floor(Math.random() * 5 + 1);
             let photos = []
@@ -44,7 +44,7 @@ module.exports = {
                 tags: ["Fun"],
                 photos: photos,
                 organisation: "hehe",
-                rate: 4,
+                rate: 5,
                 duration: 15,
                 budget: 3000,
                 currency: 'USD',
