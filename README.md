@@ -43,7 +43,7 @@ Tourify is a social app for sharing travel experiences. Users can share the mome
 ## Application screenshots:
 ## 1- Feed
 ![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/screenshots/1.jpg)
-![](./screenshots/1.jpg =100x20)
+![](https://github.com/radwaahmed20112000/Tourify-App/blob/main/screenshots/1.jpg =100x20)
 
 User can filter posts according to some tag from the above or the certain characteristics shown in the picture:
 ![alt text](https://github.com/radwaahmed20112000/Tourify-App/blob/main/screenshots/2.jpg)
