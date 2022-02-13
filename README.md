@@ -13,20 +13,20 @@ Tourify is a social app for sharing travel experiences. Users can share the mome
 
 
 
-1-Users can sign in and sign up.  
-2-Keep users signed in after closing the app.  
-3-Users can create posts and add their trip details.   
-4-Users can view others’ posts in the Feed Screen.  
-5-Users can view their profile info.  
-6-Users can view their profile posts.  
-7-Users can change profile photos.  
-8-Users can edit or delete posts.  
-9-Users can filter posts according to Filtering options.  
-10-Users can view each post and add comments or likes.  
-11-Users receive push notifications.  
-12-Users can show their notifications.  
-13-Users can edit or delete comments.  
-14-Users can delete likes.  
+1. Users can sign in and sign up.  
+2. Keep users signed in after closing the app.  
+3. Users can create posts and add their trip details.   
+4. Users can view others’ posts in the Feed Screen.  
+5. Users can view their profile info.  
+6. Users can view their profile posts.  
+7. Users can change profile photos.  
+8. Users can edit or delete posts.  
+9. Users can filter posts according to Filtering options.  
+10. Users can view each post and add comments or likes.  
+11. Users receive push notifications.  
+12. Users can show their notifications.  
+13. Users can edit or delete comments.  
+14. Users can delete likes.  
 
 
 ## Non-Functional Requirements
@@ -36,13 +36,9 @@ Tourify is a social app for sharing travel experiences. Users can share the mome
 2. App responsiveness with any mobile. 
 3. App Deployment.
 
-
-# Detailed class diagram in design phase  :
-![alt text](https://drive.google.com/file/d/1QEraF9HnXCDt2FAQs6pykjUaW9Hc4MrU/view)
-
 ## Application screenshots:
 
-## 3- Registeration
+## 1- Registeration
 
 Sign in
 
